@@ -1,0 +1,23 @@
+# Node
+node_modules/
+.next/
+out/
+build/
+
+# Java / Maven
+target/
+*.jar
+*.class
+.mvn/
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Local envs
+.env
+.env.local

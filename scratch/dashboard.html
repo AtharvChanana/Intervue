@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>InterviewAI | Candidate Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#353534",
+                    "tertiary": "#e3e2e2",
+                    "on-background": "#e5e2e1",
+                    "on-error-container": "#ffdad6",
+                    "outline": "#919191",
+                    "surface-container-low": "#1c1b1b",
+                    "surface-container-highest": "#353534",
+                    "on-tertiary-container": "#000000",
+                    "background": "#131313",
+                    "secondary": "#c6c6c6",
+                    "primary-fixed": "#5d5f5f",
+                    "secondary-fixed-dim": "#ababab",
+                    "surface-container": "#201f1f",
+                    "error": "#ffb4ab",
+                    "on-error": "#690005",
+                    "on-secondary-fixed": "#1a1c1c",
+                    "primary-fixed-dim": "#454747",
+                    "surface-tint": "#c6c6c7",
+                    "on-primary-fixed": "#ffffff",
+                    "on-primary-fixed-variant": "#e2e2e2",
+                    "secondary-container": "#454747",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-bright": "#3a3939",
+                    "on-primary-container": "#000000",
+                    "tertiary-fixed-dim": "#464747",
+                    "on-tertiary-fixed-variant": "#e3e2e2",
+                    "inverse-primary": "#5d5f5f",
+                    "surface-container-lowest": "#0e0e0e",
+                    "primary": "#ffffff",
+                    "on-secondary-container": "#e2e2e2",
+                    "on-surface": "#e5e2e1",
+                    "on-tertiary": "#1a1c1c",
+                    "surface": "#131313",
+                    "surface-container-high": "#2a2a2a",
+                    "secondary-fixed": "#c6c6c6",
+                    "inverse-on-surface": "#313030",
+                    "error-container": "#93000a",
+                    "primary-container": "#d4d4d4",
+                    "on-tertiary-fixed": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            font-family: 'Manrope', sans-serif;
+            color: #E5E2E1;
+            overflow-x: hidden;
+        }
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .ghost-border {
+            border: 1px solid rgba(71, 71, 71, 0.15);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        .radial-sheen {
+            background: radial-gradient(circle at top left, rgba(255,255,255,0.03) 0%, transparent 70%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="antialiased">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 h-screen w-72 bg-[#0E0E0E]/80 backdrop-blur-[25px] border-r border-white/[0.03] shadow-[40px_0_80px_rgba(0,0,0,0.9)] z-50 flex flex-col py-8 font-manrope text-sm tracking-wide">
+<div class="px-8 mb-12">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-white flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined text-black text-sm">filter_drama</span>
+</div>
+<div>
+<h1 class="font-bold text-lg text-white">InterviewAI</h1>
+<p class="text-[10px] text-zinc-500 uppercase tracking-[0.2em]">Precision Training</p>
+</div>
+</div>
+</div>
+<nav class="flex-grow">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 bg-white/5 text-white border-l-2 border-white py-3 px-8 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">grid_view</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-zinc-500 py-3 px-8 hover:text-white hover:bg-white/[0.02] transition-colors group" href="#">
+<span class="material-symbols-outlined text-xl">video_call</span>
+<span>Mock Sessions</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-zinc-500 py-3 px-8 hover:text-white hover:bg-white/[0.02] transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">analytics</span>
+<span>Feedback</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-zinc-500 py-3 px-8 hover:text-white hover:bg-white/[0.02] transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">menu_book</span>
+<span>Resources</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-zinc-500 py-3 px-8 hover:text-white hover:bg-white/[0.02] transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span>Community</span>
+</a>
+</li>
+</ul>
+<div class="mt-10 px-8">
+<button class="w-full bg-primary text-on-primary py-3 px-4 rounded-md font-bold tracking-tight text-sm hover:opacity-90 transition-all">
+                    New Session
+                </button>
+</div>
+</nav>
+<div class="px-8 space-y-2">
+<a class="flex items-center gap-3 text-zinc-500 py-2 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">help_outline</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 text-zinc-500 py-2 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 left-72 right-0 h-20 z-40 bg-[#131313]/60 backdrop-blur-[20px] border-b border-white/5 flex justify-between items-center px-10">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-zinc-500">search</span>
+<input class="bg-transparent border-none text-sm text-zinc-300 focus:ring-0 w-64 placeholder:text-zinc-600" placeholder="Search sessions, resources, or analytics..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-zinc-400 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-1.5 h-1.5 bg-white rounded-full"></span>
+</button>
+<button class="text-zinc-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="flex items-center gap-3 pl-6 border-l border-white/10">
+<div class="text-right">
+<p class="text-xs font-bold text-white uppercase tracking-wider">Julian Voss</p>
+<p class="text-[10px] text-zinc-500">Pro Tier</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover grayscale" data-alt="Professional headshot of a young male professional in dark attire with neutral lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXfftJeO8kwHbyvXqICGg6ue0AhqhDuMQ2tISX5QQnnkW8ci9qj1j3g-iY6Hy_nHtHB_2w18XVHmdWvU-SlZMa8YUHs9LUhcq0_IOwtJl-rmNKiLwxc7OjRbNnN-hqeXu0Do0yGbyc1BA1n5FE0y2hciOF08cvELFREOZVbuXHDHsUyoN1sJrFkX7o-gXV2niIGR-NeTOvO4pV05DF4wFNu_VuGYaMGOrWlGLPVbnssVX62vjax_KVZlmOc9yQvZ4IygSjERot0hk"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-72 mt-20 p-12 min-h-screen">
+<!-- Hero Header -->
+<div class="flex justify-between items-end mb-16">
+<div class="max-w-2xl">
+<h2 class="text-[3.5rem] font-bold leading-none tracking-tighter mb-4 text-glow">Dashboard</h2>
+<p class="text-secondary text-lg leading-relaxed opacity-80">Welcome back, Julian. Your interview readiness score has increased by 12% this week. Focus on your system design technicals today.</p>
+</div>
+<div class="text-right">
+<p class="text-[0.6875rem] uppercase tracking-[0.2em] text-zinc-500 mb-1">Session Streak</p>
+<div class="flex items-center gap-2">
+<span class="text-4xl font-light">14</span>
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid: Stats Cards -->
+<div class="grid grid-cols-12 gap-6 mb-12">
+<div class="col-span-12 md:col-span-4 liquid-glass ghost-border rounded-xl p-8 radial-sheen">
+<div class="flex justify-between items-start mb-6">
+<span class="text-[0.6875rem] uppercase tracking-[0.2em] text-zinc-500">Readiness Score</span>
+<span class="material-symbols-outlined text-zinc-400">trending_up</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-5xl font-extrabold text-white">84</h3>
+<span class="text-zinc-500 text-sm">/ 100</span>
+</div>
+<div class="mt-8 h-1 w-full bg-white/5 overflow-hidden">
+<div class="h-full bg-white w-[84%]"></div>
+</div>
+</div>
+<div class="col-span-12 md:col-span-4 liquid-glass ghost-border rounded-xl p-8 radial-sheen">
+<div class="flex justify-between items-start mb-6">
+<span class="text-[0.6875rem] uppercase tracking-[0.2em] text-zinc-500">Sessions Completed</span>
+<span class="material-symbols-outlined text-zinc-400">check_circle</span>
+</div>
+<h3 class="text-5xl font-extrabold text-white">32</h3>
+<p class="text-xs text-zinc-500 mt-4">+4 from last week</p>
+</div>
+<div class="col-span-12 md:col-span-4 liquid-glass ghost-border rounded-xl p-8 radial-sheen">
+<div class="flex justify-between items-start mb-6">
+<span class="text-[0.6875rem] uppercase tracking-[0.2em] text-zinc-500">Time Practiced</span>
+<span class="material-symbols-outlined text-zinc-400">schedule</span>
+</div>
+<div class="flex items-baseline gap-2">
+<h3 class="text-5xl font-extrabold text-white">18.5</h3>
+<span class="text-zinc-500 text-sm">hrs</span>
+</div>
+<p class="text-xs text-zinc-500 mt-4">Top 5% of candidates</p>
+</div>
+</div>
+<!-- Main Workspace Row -->
+<div class="grid grid-cols-12 gap-8 mb-12">
+<!-- Resume & Resume Analysis (Asymmetric Main Panel) -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<section class="liquid-glass ghost-border rounded-xl overflow-hidden relative">
+<div class="absolute inset-0 bg-cover bg-center opacity-10 grayscale" data-alt="Abstract monochrome texture of scanned document edges and ink textures on dark paper" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-9SZnmdfXm7P1FBeznB7qphHIZkWbY0HlMzFmXX1BkusGS7rRx2L9DRL7iwy_LuMY8uIQxop7iFcMxN6B9JoZF8Fq674oo3zdRyoTTJEtyRudl2i6wLfxDJJuDl5kPmLrczZO2ErzkKgWhpGZDzFKPnu8yhV1u7GdO1-oy84QH6RkI6Z46yIfGPbxDzXAJw2J6C0COZfVcD8RM0P_owRiuV1zlzAuKVpl6KTC9MHvgERQLFqOSdFaa8UxnuBni7r0GAk57dYGglo')"></div>
+<div class="relative p-10 flex flex-col items-center justify-center min-h-[300px]">
+<div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-3xl text-white">upload_file</span>
+</div>
+<h3 class="text-2xl font-bold mb-2">Resume Intelligence</h3>
+<p class="text-zinc-400 text-center max-w-sm mb-8">Upload your latest CV to generate custom behavioral questions and tailored technical prompts.</p>
+<button class="bg-white text-black px-8 py-3 font-bold rounded-md hover:scale-105 transition-transform">
+                            Update Resume
+                        </button>
+</div>
+</section>
+<section class="grid grid-cols-2 gap-8">
+<div class="space-y-4">
+<span class="text-[0.6875rem] uppercase tracking-[0.2em] text-zinc-500">Next Recommended Action</span>
+<div class="p-6 liquid-glass ghost-border rounded-lg border-l-2 border-white">
+<h4 class="font-bold text-white mb-2">System Design: Scalability</h4>
+<p class="text-sm text-zinc-400">Based on your recent Amazon mock, you should review load balancing patterns.</p>
+</div>
+</div>
+<div class="space-y-4">
+<span class="text-[0.6875rem] uppercase tracking-[0.2em] text-zinc-500">Live Community Feedback</span>
+<div class="p-6 bg-surface-container-low ghost-border rounded-lg">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-6 h-6 rounded-full bg-white/10 overflow-hidden">
+<img class="w-full h-full object-cover grayscale" data-alt="Close up of a woman's face with dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD_kcxg1SH3kCrpLocI8ccAuHkCTrpFtsZuP9UfAdoctxySRIbdR5l-_QITypgnSzGEWAsAc2GkZpC30rv8uH70LJ91lnBWevWWe32ja52v0aBd44HoyqAUCgBTeS2Ek3zbZBJd8GrpyqF70-aICzdjmJjtdaYHjpakfRqZ932PUmlly27Px6qLX1FENr5nn1uAUeXUhTtXy0lFKN0LHKd6uyHuCc9IHSbKduze8vav9L8Y8kvbQ7BFi-smmb2-lVqywVCdIziMik"/>
+</div>
+<span class="text-xs font-bold text-zinc-300">Elena G.</span>
+</div>
+<p class="text-sm text-zinc-400 italic">"Great structure on your last mock! Try to pause more for emphasis..."</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Recent Sessions List -->
+<div class="col-span-12 lg:col-span-4">
+<div class="liquid-glass ghost-border rounded-xl p-8 h-full">
+<div class="flex justify-between items-center mb-10">
+<h3 class="text-xl font-bold">Recent History</h3>
+<span class="text-xs text-white/50 cursor-pointer hover:text-white underline underline-offset-4 transition-all">View All</span>
+</div>
+<div class="space-y-8">
+<div class="flex gap-4 group cursor-pointer">
+<div class="w-12 h-12 flex-shrink-0 bg-white/5 rounded-md flex items-center justify-center group-hover:bg-white transition-all">
+<span class="material-symbols-outlined text-white group-hover:text-black">psychology</span>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm mb-1 group-hover:translate-x-1 transition-transform">Behavioral Mastery</h4>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Oct 12 • 45 Mins • 92% Match</p>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<div class="w-12 h-12 flex-shrink-0 bg-white/5 rounded-md flex items-center justify-center group-hover:bg-white transition-all">
+<span class="material-symbols-outlined text-white group-hover:text-black">code</span>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm mb-1 group-hover:translate-x-1 transition-transform">DSA: Trees &amp; Graphs</h4>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Oct 10 • 60 Mins • 78% Match</p>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<div class="w-12 h-12 flex-shrink-0 bg-white/5 rounded-md flex items-center justify-center group-hover:bg-white transition-all">
+<span class="material-symbols-outlined text-white group-hover:text-black">terminal</span>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm mb-1 group-hover:translate-x-1 transition-transform">Fullstack Debugging</h4>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Oct 08 • 30 Mins • 85% Match</p>
+</div>
+</div>
+<div class="flex gap-4 group cursor-pointer">
+<div class="w-12 h-12 flex-shrink-0 bg-white/5 rounded-md flex items-center justify-center group-hover:bg-white transition-all">
+<span class="material-symbols-outlined text-white group-hover:text-black">settings_ethernet</span>
+</div>
+<div>
+<h4 class="font-bold text-white text-sm mb-1 group-hover:translate-x-1 transition-transform">System Arch: Redis</h4>
+<p class="text-[10px] text-zinc-500 uppercase tracking-widest">Oct 05 • 50 Mins • 81% Match</p>
+</div>
+</div>
+</div>
+<div class="mt-12 pt-12 border-t border-white/5">
+<div class="p-6 bg-white/[0.02] rounded-lg">
+<p class="text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-2">Upgrade Status</p>
+<p class="text-xs text-white/70 mb-4 leading-relaxed">You've used 12 of 20 monthly Pro sessions. Renew early for extra credits.</p>
+<div class="h-1 bg-white/10 w-full mb-2">
+<div class="h-full bg-zinc-500 w-[60%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Insights Footer Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
+<div class="liquid-glass ghost-border rounded-xl p-8 radial-sheen group hover:border-white/20 transition-all">
+<span class="material-symbols-outlined text-zinc-600 mb-6 group-hover:text-white transition-colors">mic</span>
+<h4 class="text-lg font-bold mb-2">Tone &amp; Confidence</h4>
+<p class="text-sm text-zinc-500 leading-relaxed">Your "filler word" frequency dropped by 15% this week. Maintain current pacing for high-stakes calls.</p>
+</div>
+<div class="liquid-glass ghost-border rounded-xl p-8 radial-sheen group hover:border-white/20 transition-all">
+<span class="material-symbols-outlined text-zinc-600 mb-6 group-hover:text-white transition-colors">history_edu</span>
+<h4 class="text-lg font-bold mb-2">Narrative Arc</h4>
+<p class="text-sm text-zinc-500 leading-relaxed">STAR method compliance is at 98%. Work on making your "Results" more quantifiable with metrics.</p>
+</div>
+<div class="liquid-glass ghost-border rounded-xl p-8 radial-sheen group hover:border-white/20 transition-all">
+<span class="material-symbols-outlined text-zinc-600 mb-6 group-hover:text-white transition-colors">visibility</span>
+<h4 class="text-lg font-bold mb-2">Body Language</h4>
+<p class="text-sm text-zinc-500 leading-relaxed">Eye contact was consistent in 90% of your mock session. Hand gestures helped illustrate your points well.</p>
+</div>
+</div>
+</main>
+<!-- Floating Action Button (FAB) suppressed per logic check as this is a multi-view dashboard, not a single task focus -->
+</body></html>

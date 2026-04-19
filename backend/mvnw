@@ -1,0 +1,13 @@
+#!/bin/sh
+# Maven Wrapper script for unix-like systems
+MAVEN_WRAPPER_DOWNLOAD_URL="https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar"
+WRAPPER_JAR=".mvn/wrapper/maven-wrapper.jar"
+WRAPPER_PROPERTIES=".mvn/wrapper/maven-wrapper.properties"
+DISTRIBUTION_URL=$(sed -n "s/^distributionUrl=//p" "$WRAPPER_PROPERTIES")
+MAVEN_HOME="$HOME/.m2/wrapper/dists/$(basename $DISTRIBUTION_URL .zip)"
+
+if [ ! -f "$WRAPPER_JAR" ]; then
+    curl -o "$WRAPPER_JAR" "$MAVEN_WRAPPER_DOWNLOAD_URL" || wget --no-verbose -O "$WRAPPER_JAR" "$MAVEN_WRAPPER_DOWNLOAD_URL"
+fi
+
+exec java -classpath "$WRAPPER_JAR" org.apache.maven.wrapper.MavenWrapperMain "$@"
