@@ -10,4 +10,4 @@ FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 10000
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Xms256m", "-Xmx350m", "-XX:+UseSerialGC", "-jar", "app.jar"]
