@@ -24,8 +24,12 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        seedJobRoles();
-        seedAdminUser();
+        try {
+            seedJobRoles();
+            seedAdminUser();
+        } catch (Exception e) {
+            log.warn("⚠️ DataSeeder encountered an error (non-fatal): {}", e.getMessage());
+        }
     }
 
     private void seedJobRoles() {

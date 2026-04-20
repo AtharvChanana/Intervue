@@ -803,7 +803,7 @@ export default function DashboardLayout({
             <div className="relative" ref={profileMenuRef}>
               <button onClick={() => { if (isSessionActive) return; setShowProfileDropdown(!showProfileDropdown); }} disabled={isSessionActive} className={`flex items-center justify-center p-1 rounded-full border border-white/10 relative overflow-hidden h-8 w-8 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed bg-transparent' : 'text-zinc-400 hover:text-white bg-white/5'}`}>
                 {userProfile?.profilePictureUrl ? (
-                  <img src={`http://localhost:8080${userProfile.profilePictureUrl}`} alt="Profile" className="w-full h-full object-cover" />
+                  <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${userProfile.profilePictureUrl}`} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
                   <span className="material-symbols-outlined text-white text-sm">person</span>
                 )}
@@ -909,7 +909,7 @@ export default function DashboardLayout({
               <div className="flex flex-col items-center mb-8">
                 <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                   {userProfile.profilePictureUrl ? (
-                    <img src={`http://localhost:8080${userProfile.profilePictureUrl}`} alt="Profile Avatar" className="w-24 h-24 rounded-full object-cover border-2 border-white/20 group-hover:opacity-50 transition-opacity" />
+                    <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${userProfile.profilePictureUrl}`} alt="Profile Avatar" className="w-24 h-24 rounded-full object-cover border-2 border-white/20 group-hover:opacity-50 transition-opacity" />
                   ) : (
                     <div className="w-24 h-24 rounded-full bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
                       <span className="material-symbols-outlined text-3xl text-zinc-400">add_a_photo</span>

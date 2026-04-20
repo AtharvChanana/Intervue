@@ -127,7 +127,7 @@ export default function AdminDashboard() {
                         <td className="p-5">
                           <div className="flex items-center gap-4">
                             {u.profilePictureUrl ? (
-                              <img src={`http://localhost:8080${u.profilePictureUrl}`} alt={u.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
+                              <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${u.profilePictureUrl}`} alt={u.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
                             ) : (
                               <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
                                 <span className="material-symbols-outlined text-sm text-zinc-500">person</span>
