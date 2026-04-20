@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service @RequiredArgsConstructor @Slf4j
 public class InterviewService {
@@ -98,21 +99,102 @@ public class InterviewService {
         if (answerRepository.findByQuestionId(question.getId()).isPresent())
             throw new IllegalStateException("Question already answered");
 
+        // Pre-calculate isLast so we can start parallel AI calls immediately
+        int existingAnswers = answerRepository.findBySessionId(sessionId).size();
+        int answeredCount = existingAnswers + 1;
+        boolean isLast = answeredCount >= session.getTotalQuestions();
+        final int nextOrderIndex = question.getOrderIndex() + 1;
+
         int score = 0;
         String feedback = "";
         String idealAnswer = "";
         String strengths = "";
         String areasForImprovement = "";
+        QuestionResponse nextQuestion = null;
 
         if ("OPEN_ENDED".equals(question.getQuestionFormat())) {
-            Map<String, Object> eval = geminiService.evaluateAnswer(
-                question.getQuestionText(), request.getAnswerText(), session.getJobRole().getTitle(), session.getDifficulty());
-            score = (Integer) eval.get("score");
-            feedback = (String) eval.get("feedback");
-            idealAnswer = (String) eval.get("idealAnswer");
-            strengths = (String) eval.get("strengths");
-            areasForImprovement = (String) eval.get("areasForImprovement");
+            // === PARALLEL AI CALLS: Fire eval + nextQ generation at the same time ===
+            // Capture all values as finals to use inside lambdas safely (avoids lazy-load issues)
+            final String questionText = question.getQuestionText();
+            final String answerText = request.getAnswerText();
+            final String jobRoleTitle = session.getJobRole().getTitle();
+            final Difficulty difficulty = session.getDifficulty();
+            final String resumeContext = session.getResumeContext();
+            final InterviewType interviewType = session.getInterviewType();
+            final int totalQuestions = session.getTotalQuestions();
+
+            // Build previous Q&A context synchronously (DB call, can't be in lambda)
+            List<Question> prevQuestions = questionRepository.findBySessionIdOrderByOrderIndex(session.getId());
+            StringBuilder prevQABuilder = new StringBuilder();
+            for (Question q : prevQuestions) {
+                prevQABuilder.append("Q: ").append(q.getQuestionText()).append("\n");
+                answerRepository.findByQuestionId(q.getId())
+                        .ifPresent(a -> prevQABuilder.append("A: ").append(a.getAnswerText()).append("\n\n"));
+            }
+            final String prevQA = prevQABuilder.toString();
+
+            // Fire evaluation and (if not last) next question generation IN PARALLEL
+            CompletableFuture<Map<String, Object>> evalFuture = CompletableFuture.supplyAsync(() ->
+                    geminiService.evaluateAnswer(questionText, answerText, jobRoleTitle, difficulty));
+
+            CompletableFuture<Map<String, String>> nextQFuture = isLast ? null :
+                    CompletableFuture.supplyAsync(() -> geminiService.generateInterviewQuestion(
+                            jobRoleTitle, resumeContext, difficulty, interviewType,
+                            nextOrderIndex, totalQuestions, prevQA));
+
+            try {
+                // Wait for evaluation result
+                Map<String, Object> eval = evalFuture.get();
+                score = (Integer) eval.get("score");
+                feedback = (String) eval.get("feedback");
+                idealAnswer = (String) eval.get("idealAnswer");
+                strengths = (String) eval.get("strengths");
+                areasForImprovement = (String) eval.get("areasForImprovement");
+
+                // Save the answer to DB
+                Answer answer = Answer.builder()
+                        .question(question).answerText(request.getAnswerText())
+                        .score(score).feedback(feedback).idealAnswer(idealAnswer)
+                        .strengths(strengths).areasForImprovement(areasForImprovement).build();
+                answerRepository.save(answer);
+
+                if (isLast) {
+                    List<Answer> allAnswers = answerRepository.findBySessionId(sessionId);
+                    completeSession(session, allAnswers);
+                } else if (nextQFuture != null) {
+                    // Next question was being generated in parallel — just pick up the result
+                    Map<String, String> mcq = nextQFuture.get();
+                    Question nextQ = Question.builder().session(session)
+                            .questionFormat(mcq.get("questionFormat") != null ? mcq.get("questionFormat") : "MCQ")
+                            .questionText(mcq.get("questionText"))
+                            .optionA(mcq.get("optionA")).optionB(mcq.get("optionB"))
+                            .optionC(mcq.get("optionC")).optionD(mcq.get("optionD"))
+                            .correctOption(mcq.get("correctOption"))
+                            .explanation(mcq.get("explanation"))
+                            .questionCategory(categoryFor(interviewType, nextOrderIndex))
+                            .orderIndex(nextOrderIndex).generatedByAI(true).build();
+                    nextQuestion = toQuestionResponse(questionRepository.save(nextQ));
+                }
+
+                return AnswerFeedbackResponse.builder()
+                        .answerId(answer.getId()).score(score)
+                        .feedback(feedback).idealAnswer(idealAnswer)
+                        .areasForImprovement(areasForImprovement)
+                        .nextQuestion(nextQuestion).isSessionComplete(isLast)
+                        .questionNumber(answeredCount).totalQuestions(session.getTotalQuestions()).build();
+
+            } catch (Exception e) {
+                log.error("Parallel AI task error, falling back to sequential: {}", e.getMessage());
+                // Graceful fallback: re-run sequentially
+                Map<String, Object> eval = geminiService.evaluateAnswer(questionText, answerText, jobRoleTitle, difficulty);
+                score = (Integer) eval.get("score");
+                feedback = (String) eval.get("feedback");
+                idealAnswer = (String) eval.get("idealAnswer");
+                strengths = (String) eval.get("strengths");
+                areasForImprovement = (String) eval.get("areasForImprovement");
+            }
         } else {
+            // MCQ: instant scoring, no AI needed
             boolean isCorrect = request.getAnswerText().equalsIgnoreCase(question.getCorrectOption());
             score = isCorrect ? 100 : 0;
             feedback = isCorrect ? "Correct!" : "Incorrect. The correct option was " + question.getCorrectOption() + ".";
@@ -123,26 +205,20 @@ public class InterviewService {
 
         Answer answer = Answer.builder()
                 .question(question).answerText(request.getAnswerText())
-                .score(score).feedback(feedback)
-                .idealAnswer(idealAnswer)
-                .strengths(strengths)
-                .areasForImprovement(areasForImprovement).build();
+                .score(score).feedback(feedback).idealAnswer(idealAnswer)
+                .strengths(strengths).areasForImprovement(areasForImprovement).build();
         answerRepository.save(answer);
 
         List<Answer> allAnswers = answerRepository.findBySessionId(sessionId);
-        int answeredCount = allAnswers.size();
-        boolean isLast = answeredCount >= session.getTotalQuestions();
-
-        QuestionResponse nextQuestion = null;
         if (!isLast) {
-            nextQuestion = generateNextQuestion(session, question.getOrderIndex() + 1);
+            nextQuestion = generateNextQuestion(session, nextOrderIndex);
         } else {
             completeSession(session, allAnswers);
         }
 
         return AnswerFeedbackResponse.builder()
                 .answerId(answer.getId()).score(score)
-                .feedback(feedback).idealAnswer(question.getCorrectOption())
+                .feedback(feedback).idealAnswer(idealAnswer)
                 .areasForImprovement(areasForImprovement)
                 .nextQuestion(nextQuestion).isSessionComplete(isLast)
                 .questionNumber(answeredCount).totalQuestions(session.getTotalQuestions()).build();
