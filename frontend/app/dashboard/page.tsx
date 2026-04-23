@@ -40,6 +40,7 @@ export default function DashboardPage() {
   const [history, setHistory] = useState<SessionHistory[]>([]);
   const [latestReport, setLatestReport] = useState<SessionReport | null>(null);
   const [activeResume, setActiveResume] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(false);
@@ -60,13 +61,15 @@ export default function DashboardPage() {
 
     const loadDashboard = async () => {
       try {
-        const [statsData, historyData, resumeData] = await Promise.all([
+        const [statsData, historyData, resumeData, profileData] = await Promise.all([
           fetchApi('/dashboard/stats').catch(() => null),
           fetchApi('/dashboard/history').catch(() => []),
-          fetchApi('/resume/latest').catch(() => null)
+          fetchApi('/resume/latest').catch(() => null),
+          fetchApi('/user/profile').catch(() => null)
         ]);
         
         if (statsData) setStats(statsData);
+        if (profileData) setUserProfile(profileData);
         if (historyData) {
             setHistory(historyData);
             const latestCompleted = historyData.find((h: any) => h.status === 'COMPLETED');
@@ -249,6 +252,12 @@ export default function DashboardPage() {
                       type="file" accept=".pdf" className="hidden" disabled={isUploading}
                       onChange={async (e) => {
                         if (e.target.files && e.target.files.length > 0) {
+                          // Block unverified users — direct them to verify from Profile
+                          if (userProfile && !userProfile.emailVerified) {
+                            showToast('Email not verified. Please go to your Profile and verify your email first.', 'error');
+                            e.target.value = ''; // reset the input
+                            return;
+                          }
                           const file = e.target.files[0];
                           const formData = new FormData();
                           formData.append("file", file);

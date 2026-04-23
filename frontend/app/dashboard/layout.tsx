@@ -751,8 +751,7 @@ export default function DashboardLayout({
               onClick={() => { 
                 if(isSessionActive) { setNavAlertMessage("Please complete or end your current session before starting a new one."); return; } 
                 if(userProfile && !userProfile.emailVerified) {
-                  setSystemToast({title: 'Verification Required', message: 'You must verify your email to start a session. Sending OTP...', isError: true});
-                  handleSendVerification();
+                  setSystemToast({title: 'Verification Required', message: 'Your email is not verified. Please open your Profile and verify your email before starting a session.', isError: true});
                   return;
                 }
                 handleOpenModal(); 
