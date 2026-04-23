@@ -193,8 +193,8 @@ export default function DashboardPage() {
   };
 
   // === PROGRESS CHART (last 8 weeks of completed sessions) ===
-  const SVG_W = 700, SVG_H = 160;
-  const PAD = { l: 32, r: 12, t: 15, b: 30 };
+  const SVG_W = 700, SVG_H = 170;
+  const PAD = { l: 32, r: 30, t: 20, b: 30 };
   const chartPW = SVG_W - PAD.l - PAD.r;
   const chartPH = SVG_H - PAD.t - PAD.b;
   const chartWeeks = Array.from({ length: 8 }, (_, i) => {
@@ -481,9 +481,12 @@ export default function DashboardPage() {
                     <title>{chartWeeks[i].label}: avg {pt.score.toFixed(0)} ({chartWeeks[i].count} sessions)</title>
                   </g>
                 ))}
-                {/* X axis week labels */}
+                {/* X axis week labels — start/end anchors for edge items so they don't clip */}
                 {chartWeeks.map((w, i) => (
-                  <text key={i} x={gx(i)} y={SVG_H - 6} fill="white" fillOpacity="0.25" fontSize="8" textAnchor="middle">{w.label}</text>
+                  <text key={i} x={gx(i)} y={SVG_H - 5} fill="white" fillOpacity="0.3" fontSize="8"
+                    textAnchor={i === 0 ? 'start' : i === chartWeeks.length - 1 ? 'end' : 'middle'}>
+                    {w.label}
+                  </text>
                 ))}
 
               </svg>
