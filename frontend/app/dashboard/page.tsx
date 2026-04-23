@@ -117,6 +117,81 @@ export default function DashboardPage() {
       </div>
   );
 
+  // === STREAK & ACTIVITY COMPUTATION (derived from history, no extra API call) ===
+  const activityMap: Record<string, number> = {};
+  history.forEach(h => {
+    const day = new Date(h.createdAt).toISOString().split('T')[0];
+    activityMap[day] = (activityMap[day] || 0) + 1;
+  });
+  const activeDays = Object.keys(activityMap).sort();
+  const totalActiveDays = activeDays.length;
+
+  // Current streak — count backwards from today; still counts if last session was yesterday
+  const todayStr = new Date().toISOString().split('T')[0];
+  const yesterdayStr = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  let currentStreak = 0;
+  if (activeDays.length > 0) {
+    const lastDay = activeDays[activeDays.length - 1];
+    if (lastDay === todayStr || lastDay === yesterdayStr) {
+      const cursor = new Date();
+      cursor.setHours(0, 0, 0, 0);
+      while (true) {
+        const d = cursor.toISOString().split('T')[0];
+        if (activityMap[d]) { currentStreak++; cursor.setDate(cursor.getDate() - 1); }
+        else break;
+      }
+    }
+  }
+
+  // Longest streak — scan sorted active-days
+  let longestStreak = 0, tempStreak = 0;
+  let prevDay: Date | null = null;
+  for (const day of activeDays) {
+    const d = new Date(day);
+    if (prevDay && (d.getTime() - prevDay.getTime()) / 86400000 === 1) {
+      tempStreak++;
+    } else {
+      tempStreak = 1;
+    }
+    longestStreak = Math.max(longestStreak, tempStreak);
+    prevDay = d;
+  }
+  longestStreak = Math.max(longestStreak, currentStreak);
+
+  // Build 27-week calendar grid (col = week, row = day-of-week Sun–Sat)
+  const calendarStart = new Date();
+  calendarStart.setHours(0, 0, 0, 0);
+  calendarStart.setDate(calendarStart.getDate() - 188); // ~27 weeks back
+  calendarStart.setDate(calendarStart.getDate() - calendarStart.getDay()); // align to Sunday
+  const calendarWeeks: string[][] = [];
+  for (let w = 0; w < 27; w++) {
+    const week: string[] = [];
+    for (let d = 0; d < 7; d++) {
+      const dt = new Date(calendarStart);
+      dt.setDate(calendarStart.getDate() + w * 7 + d);
+      week.push(dt.toISOString().split('T')[0]);
+    }
+    calendarWeeks.push(week);
+  }
+
+  // Generate month labels (one label per month change)
+  const monthLabels: { weekIndex: number; label: string }[] = [];
+  let lastMonth = -1;
+  calendarWeeks.forEach((week, wi) => {
+    const m = new Date(week[0]).getMonth();
+    if (m !== lastMonth) {
+      monthLabels.push({ weekIndex: wi, label: new Date(week[0]).toLocaleString('default', { month: 'short' }) });
+      lastMonth = m;
+    }
+  });
+
+  const cellColor = (count: number) => {
+    if (!count) return 'bg-white/[0.04] border border-white/[0.06]';
+    if (count === 1) return 'bg-blue-950 border border-blue-800/40';
+    if (count === 2) return 'bg-blue-700/80';
+    return 'bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.6)]';
+  };
+
   return (
     <div className="animate-in fade-in duration-1000 pb-20">
       <div className="flex justify-between items-end mb-16">
@@ -220,6 +295,111 @@ export default function DashboardPage() {
                   </div>
               </div>
           </div>
+      </div>
+
+      {/* STREAK TRACKER */}
+      <div className="mb-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
+        <div className="absolute inset-[-150%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#1e40af_50%,#000000_100%)] opacity-0 group-hover/box:opacity-20 transition-opacity duration-700"></div>
+        <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl relative">
+          <div className="flex flex-col lg:flex-row gap-10">
+
+            {/* Left: Streak stats */}
+            <div className="flex-shrink-0 flex flex-col justify-between gap-6 lg:w-52">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="material-symbols-outlined text-white text-2xl">local_fire_department</span>
+                  <h3 className="text-white text-xl font-black tracking-widest uppercase">Streak</h3>
+                </div>
+                <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest">Practice consistency tracker</p>
+              </div>
+
+              <div className="space-y-3">
+                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-5">
+                  <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-2">Current Streak</p>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-5xl font-black text-white">{currentStreak}</span>
+                    <span className="text-zinc-600 text-xs font-bold uppercase">days</span>
+                  </div>
+                  {currentStreak > 0
+                    ? <p className="text-blue-400 text-[10px] font-bold uppercase tracking-widest mt-2 animate-pulse">● Active streak</p>
+                    : <p className="text-zinc-700 text-[10px] font-bold uppercase tracking-widest mt-2">— Start today</p>}
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                    <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest mb-1">Best</p>
+                    <p className="text-2xl font-black text-white">{longestStreak}<span className="text-zinc-600 text-[10px] font-bold ml-1">d</span></p>
+                  </div>
+                  <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
+                    <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest mb-1">Total</p>
+                    <p className="text-2xl font-black text-white">{totalActiveDays}<span className="text-zinc-600 text-[10px] font-bold ml-1">d</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Calendar heatmap */}
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between items-center mb-3">
+                <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-[0.2em]">Last 6 months activity</p>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-zinc-700 text-[9px] font-bold uppercase">Less</span>
+                  {['bg-white/[0.04] border border-white/[0.06]','bg-blue-950 border border-blue-800/40','bg-blue-700/80','bg-blue-400'].map((c,i) => (
+                    <div key={i} className={`w-2.5 h-2.5 rounded-[2px] ${c}`} />
+                  ))}
+                  <span className="text-zinc-700 text-[9px] font-bold uppercase">More</span>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto pb-2">
+                <div className="inline-block min-w-max">
+                  {/* Month labels */}
+                  <div className="flex mb-1 pl-6">
+                    {calendarWeeks.map((week, wi) => {
+                      const ml = monthLabels.find(m => m.weekIndex === wi);
+                      return (
+                        <div key={wi} className="w-4 flex-shrink-0 mr-[3px]">
+                          {ml && <span className="text-[9px] text-zinc-500 font-bold uppercase">{ml.label}</span>}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Grid: rows = days (Sun–Sat), cols = weeks */}
+                  <div className="flex gap-[3px]">
+                    {/* Day-of-week labels */}
+                    <div className="flex flex-col gap-[3px] mr-1 mt-[1px]">
+                      {['S','M','T','W','T','F','S'].map((label, i) => (
+                        <div key={i} className="w-4 h-4 flex items-center justify-center">
+                          {i % 2 !== 0 && <span className="text-[8px] text-zinc-700 font-bold">{label}</span>}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Week columns */}
+                    {calendarWeeks.map((week, wi) => (
+                      <div key={wi} className="flex flex-col gap-[3px]">
+                        {week.map(dayStr => {
+                          const count = activityMap[dayStr] || 0;
+                          const isFuture = dayStr > todayStr;
+                          return (
+                            <div
+                              key={dayStr}
+                              title={isFuture ? '' : `${dayStr}: ${count} session${count !== 1 ? 's' : ''}`}
+                              className={`w-4 h-4 rounded-[2px] transition-all duration-200 cursor-default hover:scale-125 hover:z-10 relative ${
+                                isFuture ? 'opacity-0' : cellColor(count)
+                              }`}
+                            />
+                          );
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-12 gap-8 mb-12 items-start">
