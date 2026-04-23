@@ -23,6 +23,8 @@ export default function DashboardLayout({
   const [type, setType] = useState('TECHNICAL');
   const [numQuestions, setNumQuestions] = useState(5);
   const [isStarting, setIsStarting] = useState(false);
+  const [isCustomMode, setIsCustomMode] = useState(false);
+  const [customJobRoleText, setCustomJobRoleText] = useState('');
 
   // Profile Modal State
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -145,18 +147,26 @@ export default function DashboardLayout({
   };
 
   const handleStartSession = async () => {
+    if (isCustomMode && !customJobRoleText.trim()) {
+      setSystemToast({title: 'Input Required', message: 'Please describe the role you want to practice.', isError: true});
+      return;
+    }
     setIsStarting(true);
     try {
-      const response = await fetchApi('/interview/start', {
-        method: 'POST',
-        body: JSON.stringify({
-          jobRoleId: selectedRole,
-          difficulty: difficulty,
-          interviewType: type,
-          numberOfQuestions: numQuestions
-        })
-      });
+      const body: any = {
+        difficulty,
+        interviewType: type,
+        numberOfQuestions: numQuestions
+      };
+      if (isCustomMode) {
+        body.customJobRoleName = customJobRoleText.trim();
+      } else {
+        body.jobRoleId = selectedRole;
+      }
+      const response = await fetchApi('/interview/start', { method: 'POST', body: JSON.stringify(body) });
       setShowModal(false);
+      setIsCustomMode(false);
+      setCustomJobRoleText('');
       router.push('/dashboard/session/' + response.sessionId);
     } catch (e: any) {
       setSystemToast({title: 'Session Error', message: 'Failed to start session: ' + e.message, isError: true});
@@ -384,20 +394,44 @@ export default function DashboardLayout({
         <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
           <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-300">
             <h2 className="text-3xl font-black text-white mb-2">Setup Mock Interview</h2>
-            <p className="text-zinc-500 text-sm mb-8 block">Choose your settings to begin the interview.</p>
-            
+            <p className="text-zinc-500 text-sm mb-6 block">Choose your settings to begin the interview.</p>
+
+            {/* Custom Session Toggle */}
+            <button
+              onClick={() => { setIsCustomMode(!isCustomMode); setCustomJobRoleText(''); }}
+              className={`w-full mb-6 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-xs font-bold uppercase tracking-widest ${
+                isCustomMode
+                  ? 'bg-white text-black border-white'
+                  : 'bg-white/5 text-zinc-400 border-white/10 hover:border-white/20 hover:text-white'
+              }`}
+            >
+              <span className="material-symbols-outlined text-sm">{isCustomMode ? 'edit_note' : 'tune'}</span>
+              {isCustomMode ? 'Custom Session Active — Click to Use Preset Roles' : 'Custom Session — Type Any Role'}
+            </button>
+
             <div className="space-y-6 mb-10">
+              {/* Job Role — toggle between dropdown and text input */}
               <div>
                 <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Job Role</label>
-                <div className="relative">
-                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
-                          value={selectedRole} onChange={e => setSelectedRole(Number(e.target.value))}>
-                    {roles.map(r => <option key={r.id} value={r.id} className="bg-[#111]">{r.title}</option>)}
-                  </select>
-                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
-                </div>
+                {isCustomMode ? (
+                  <textarea
+                    rows={3}
+                    placeholder="e.g. Senior iOS Engineer at a fintech startup, Quant Researcher, Startup CTO..."
+                    className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg p-4 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-white/30 transition-colors resize-none"
+                    value={customJobRoleText}
+                    onChange={e => setCustomJobRoleText(e.target.value)}
+                  />
+                ) : (
+                  <div className="relative">
+                    <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
+                            value={selectedRole} onChange={e => setSelectedRole(Number(e.target.value))}>
+                      {roles.map(r => <option key={r.id} value={r.id} className="bg-[#111]">{r.title}</option>)}
+                    </select>
+                    <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+                  </div>
+                )}
               </div>
-              
+
               <div>
                 <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Difficulty</label>
                 <div className="relative">
@@ -428,7 +462,7 @@ export default function DashboardLayout({
               <div>
                 <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Number of Questions</label>
                 <div className="relative">
-                  <input 
+                  <input
                     type="number" min="1" max="20"
                     className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
                     value={numQuestions} onChange={e => setNumQuestions(parseInt(e.target.value))} />
@@ -437,9 +471,9 @@ export default function DashboardLayout({
             </div>
 
             <div className="flex gap-4">
-               <button onClick={() => setShowModal(false)} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
-               <button onClick={handleStartSession} disabled={isStarting} className="flex-1 bg-white text-black py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform disabled:opacity-50">
-                {isStarting ? "Initializing..." : "Start Session"}
+               <button onClick={() => { setShowModal(false); setIsCustomMode(false); setCustomJobRoleText(''); }} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
+               <button onClick={handleStartSession} disabled={isStarting || (isCustomMode && !customJobRoleText.trim())} className="flex-1 bg-white text-black py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform disabled:opacity-50">
+                {isStarting ? 'Initializing...' : 'Start Session'}
               </button>
             </div>
           </div>

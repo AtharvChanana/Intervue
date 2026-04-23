@@ -37,8 +37,24 @@ public class InterviewService {
     public SessionResponse startSession(Long userId, StartSessionRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        JobRole jobRole = jobRoleRepository.findById(request.getJobRoleId())
-                .orElseThrow(() -> new ResourceNotFoundException("Job role not found"));
+
+        // Custom job role takes priority: find by name or create dynamically
+        JobRole jobRole;
+        if (request.getCustomJobRoleName() != null && !request.getCustomJobRoleName().isBlank()) {
+            String name = request.getCustomJobRoleName().trim();
+            jobRole = jobRoleRepository.findByTitleIgnoreCase(name)
+                    .orElseGet(() -> jobRoleRepository.save(
+                            JobRole.builder()
+                                    .title(name)
+                                    .description("Custom role created by user")
+                                    .category("Custom")
+                                    .active(true)
+                                    .build()
+                    ));
+        } else {
+            jobRole = jobRoleRepository.findById(request.getJobRoleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Job role not found"));
+        }
 
         String resumeContext = resumeRepository.findTopByUserIdOrderByUploadedAtDesc(userId)
                 .map(r -> {

@@ -9,4 +9,5 @@ import java.util.List;
 public interface JobRoleRepository extends JpaRepository<JobRole, Long> {
     List<JobRole> findByActiveTrue();
     boolean existsByTitle(String title);
+    java.util.Optional<JobRole> findByTitleIgnoreCase(String title);
 }
