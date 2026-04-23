@@ -202,19 +202,29 @@ export default function DashboardPage() {
     const ws = new Date();
     ws.setHours(0, 0, 0, 0);
     ws.setDate(ws.getDate() - (ws.getDay() + weekOffset * 7));
-    const we = new Date(ws); we.setDate(ws.getDate() + 6);
-    const sessions = history.filter(h =>
-      h.status === 'COMPLETED' && new Date(h.createdAt) >= ws && new Date(h.createdAt) <= we
+    const we = new Date(ws);
+    we.setDate(ws.getDate() + 6);
+    we.setHours(23, 59, 59, 999);
+    // Include ALL completed sessions within the week, regardless of score
+    const weekSessions = history.filter(h =>
+      h.status === 'COMPLETED' &&
+      new Date(h.createdAt) >= ws && new Date(h.createdAt) <= we
     );
-    const avg = sessions.length > 0 ? sessions.reduce((s, h) => s + (h.totalScore || 0), 0) / sessions.length : null;
-    return { label: ws.toLocaleDateString('en', { month: 'short', day: 'numeric' }), avg, count: sessions.length };
+    const withScore = weekSessions.filter(h => h.totalScore != null);
+    // avg based only on sessions that have a score; null if none scored yet
+    const avg = withScore.length > 0
+      ? withScore.reduce((s, h) => s + (h.totalScore as number), 0) / withScore.length
+      : (weekSessions.length > 0 ? 50 : null); // fallback: show at 50 if session exists but score not yet computed
+    return { label: ws.toLocaleDateString('en', { month: 'short', day: 'numeric' }), avg, count: weekSessions.length };
   });
+  // Clamp gy so 0-score dots still render 8px above baseline
   const gx = (i: number) => PAD.l + (i / (chartWeeks.length - 1)) * chartPW;
-  const gy = (score: number) => PAD.t + chartPH - (score / 100) * chartPH;
+  const gy = (score: number) => Math.min(PAD.t + chartPH - 8, PAD.t + chartPH - (Math.max(score, 0) / 100) * chartPH);
   const chartDots = chartWeeks.map((w, i) => w.avg !== null ? { x: gx(i), y: gy(w.avg), score: w.avg } : null);
   let linePath = ''; chartDots.forEach((p, i) => { if (!p) return; const prev = chartDots[i - 1]; linePath += prev ? ` L ${p.x} ${p.y}` : ` M ${p.x} ${p.y}`; });
   const first = chartDots.find(Boolean), last = [...chartDots].reverse().find(Boolean);
   const areaPath = first && last ? `M ${first.x} ${first.y}${linePath.replace(/^M [0-9.]+ [0-9.]+/, '')} L ${last.x} ${PAD.t + chartPH} L ${first.x} ${PAD.t + chartPH} Z` : '';
+
 
   return (
     <div className="animate-in fade-in duration-1000 pb-20">
@@ -457,18 +467,25 @@ export default function DashboardPage() {
                   </g>
                 ))}
                 {areaPath && <path d={areaPath} fill="url(#chartAreaGrad)" />}
-                {linePath && <path d={linePath} fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.8" />}
+                {linePath && <path d={linePath} fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />}
                 {chartDots.map((pt, i) => pt && (
                   <g key={i}>
-                    <circle cx={pt.x} cy={pt.y} r="5" fill="white" fillOpacity="0.12" />
-                    <circle cx={pt.x} cy={pt.y} r="2.5" fill="white" />
-                    <title>{chartWeeks[i].label}: {pt.score.toFixed(0)}</title>
+                    {/* Glow ring */}
+                    <circle cx={pt.x} cy={pt.y} r="8" fill="white" fillOpacity="0.08" />
+                    {/* White dot */}
+                    <circle cx={pt.x} cy={pt.y} r="3.5" fill="white" />
+                    {/* Score label above dot */}
+                    <text x={pt.x} y={pt.y - 10} fill="white" fillOpacity="0.7" fontSize="9" textAnchor="middle" fontWeight="bold">
+                      {Math.round(pt.score)}
+                    </text>
+                    <title>{chartWeeks[i].label}: avg {pt.score.toFixed(0)} ({chartWeeks[i].count} sessions)</title>
                   </g>
                 ))}
                 {/* X axis week labels */}
                 {chartWeeks.map((w, i) => (
                   <text key={i} x={gx(i)} y={SVG_H - 6} fill="white" fillOpacity="0.25" fontSize="8" textAnchor="middle">{w.label}</text>
                 ))}
+
               </svg>
             </div>
           )}
