@@ -159,10 +159,13 @@ export default function DashboardPage() {
   longestStreak = Math.max(longestStreak, currentStreak);
 
   // Build 27-week calendar grid (col = week, row = day-of-week Sun–Sat)
-  const calendarStart = new Date();
-  calendarStart.setHours(0, 0, 0, 0);
-  calendarStart.setDate(calendarStart.getDate() - 188); // ~27 weeks back
-  calendarStart.setDate(calendarStart.getDate() - calendarStart.getDay()); // align to Sunday
+  // Anchor to THIS week's Sunday so the rightmost column is always the current week
+  const todayCal = new Date();
+  todayCal.setHours(0, 0, 0, 0);
+  const thisWeekSunCal = new Date(todayCal);
+  thisWeekSunCal.setDate(todayCal.getDate() - todayCal.getDay()); // roll back to Sunday
+  const calendarStart = new Date(thisWeekSunCal);
+  calendarStart.setDate(thisWeekSunCal.getDate() - 26 * 7); // 26 weeks back = start of 27-week window
   const calendarWeeks: string[][] = [];
   for (let w = 0; w < 27; w++) {
     const week: string[] = [];
@@ -192,38 +195,54 @@ export default function DashboardPage() {
     return 'bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.6)]';
   };
 
-  // === PROGRESS CHART (last 8 weeks of completed sessions) ===
-  const SVG_W = 700, SVG_H = 170;
-  const PAD = { l: 32, r: 30, t: 20, b: 30 };
+  // === PROGRESS CHART — 52 rolling weeks, rightmost = current week ===
+  const NUM_WEEKS = 52;
+  const SVG_W = 700, SVG_H = 160;
+  const PAD = { l: 35, r: 20, t: 18, b: 28 };
   const chartPW = SVG_W - PAD.l - PAD.r;
   const chartPH = SVG_H - PAD.t - PAD.b;
-  const chartWeeks = Array.from({ length: 8 }, (_, i) => {
-    const weekOffset = 7 - i;
-    const ws = new Date();
-    ws.setHours(0, 0, 0, 0);
-    ws.setDate(ws.getDate() - (ws.getDay() + weekOffset * 7));
+
+  // Anchor: find THIS week's Sunday so rightmost column is always the current week
+  const todayChart = new Date();
+  todayChart.setHours(0, 0, 0, 0);
+  const thisWeekSun = new Date(todayChart);
+  thisWeekSun.setDate(todayChart.getDate() - todayChart.getDay()); // roll back to Sunday
+
+  const chartWeeks = Array.from({ length: NUM_WEEKS }, (_, i) => {
+    const weeksAgo = NUM_WEEKS - 1 - i; // i=0 = oldest, i=51 = THIS week
+    const ws = new Date(thisWeekSun);
+    ws.setDate(thisWeekSun.getDate() - weeksAgo * 7);
     const we = new Date(ws);
     we.setDate(ws.getDate() + 6);
     we.setHours(23, 59, 59, 999);
-    // Include ALL completed sessions within the week, regardless of score
     const weekSessions = history.filter(h =>
       h.status === 'COMPLETED' &&
       new Date(h.createdAt) >= ws && new Date(h.createdAt) <= we
     );
     const withScore = weekSessions.filter(h => h.totalScore != null);
-    // avg based only on sessions that have a score; null if none scored yet
     const avg = withScore.length > 0
       ? withScore.reduce((s, h) => s + (h.totalScore as number), 0) / withScore.length
-      : (weekSessions.length > 0 ? 50 : null); // fallback: show at 50 if session exists but score not yet computed
-    return { label: ws.toLocaleDateString('en', { month: 'short', day: 'numeric' }), avg, count: weekSessions.length };
+      : (weekSessions.length > 0 ? 50 : null);
+    const monthLabel = ws.getDate() <= 7 ? ws.toLocaleDateString('en', { month: 'short' }) : null;
+    return { label: ws.toLocaleDateString('en', { month: 'short', day: 'numeric' }), monthLabel, avg, count: weekSessions.length, isCurrent: weeksAgo === 0 };
   });
-  // Clamp gy so 0-score dots still render 8px above baseline
-  const gx = (i: number) => PAD.l + (i / (chartWeeks.length - 1)) * chartPW;
-  const gy = (score: number) => Math.min(PAD.t + chartPH - 8, PAD.t + chartPH - (Math.max(score, 0) / 100) * chartPH);
-  const chartDots = chartWeeks.map((w, i) => w.avg !== null ? { x: gx(i), y: gy(w.avg), score: w.avg } : null);
-  let linePath = ''; chartDots.forEach((p, i) => { if (!p) return; const prev = chartDots[i - 1]; linePath += prev ? ` L ${p.x} ${p.y}` : ` M ${p.x} ${p.y}`; });
+
+  const gx = (i: number) => PAD.l + (i / (NUM_WEEKS - 1)) * chartPW;
+  const gy = (score: number) => Math.max(PAD.t + 4, Math.min(PAD.t + chartPH - 4, PAD.t + chartPH - (score / 100) * chartPH));
+  const chartDots = chartWeeks.map((w, i) => w.avg !== null ? { x: gx(i), y: gy(w.avg), score: w.avg, isCurrent: w.isCurrent } : null);
+  // Build linePath — connect only consecutive non-null points (gaps for null weeks)
+  let linePath = '';
+  chartDots.forEach((p, i) => {
+    if (!p) return;
+    const prevDot = chartDots.slice(0, i).reverse().find(Boolean);
+    linePath += prevDot && prevDot === chartDots[i - 1] ? ` L ${p.x} ${p.y}` : ` M ${p.x} ${p.y}`;
+  });
   const first = chartDots.find(Boolean), last = [...chartDots].reverse().find(Boolean);
-  const areaPath = first && last ? `M ${first.x} ${first.y}${linePath.replace(/^M [0-9.]+ [0-9.]+/, '')} L ${last.x} ${PAD.t + chartPH} L ${first.x} ${PAD.t + chartPH} Z` : '';
+  const areaPath = first && last
+    ? `M ${first.x} ${first.y}${linePath.replace(/^M [0-9.]+ [0-9.]+/, '')} L ${last.x} ${PAD.t + chartPH} L ${first.x} ${PAD.t + chartPH} Z`
+    : '';
+
+
 
 
   return (
@@ -436,14 +455,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* PROGRESS CHART */}
+        {/* PROGRESS CHART */}
       <div className="mb-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
         <div className="absolute inset-[-150%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-15 transition-opacity duration-700"></div>
         <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
             <span className="material-symbols-outlined text-white">trending_up</span>
             <h3 className="text-white text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
-            <span className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 8 weeks</span>
+            <span className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
           </div>
           {history.filter(h => h.status === 'COMPLETED').length === 0 ? (
             <div className="h-40 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl">
@@ -467,27 +486,30 @@ export default function DashboardPage() {
                   </g>
                 ))}
                 {areaPath && <path d={areaPath} fill="url(#chartAreaGrad)" />}
-                {linePath && <path d={linePath} fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />}
+                {linePath && <path d={linePath} fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.85" />}
+                {/* Dots: small for history, larger+bright for current week */}
                 {chartDots.map((pt, i) => pt && (
                   <g key={i}>
-                    {/* Glow ring */}
-                    <circle cx={pt.x} cy={pt.y} r="8" fill="white" fillOpacity="0.08" />
-                    {/* White dot */}
-                    <circle cx={pt.x} cy={pt.y} r="3.5" fill="white" />
-                    {/* Score label above dot */}
-                    <text x={pt.x} y={pt.y - 10} fill="white" fillOpacity="0.7" fontSize="9" textAnchor="middle" fontWeight="bold">
-                      {Math.round(pt.score)}
-                    </text>
-                    <title>{chartWeeks[i].label}: avg {pt.score.toFixed(0)} ({chartWeeks[i].count} sessions)</title>
+                    {pt.isCurrent ? (
+                      <>
+                        <circle cx={pt.x} cy={pt.y} r="7" fill="white" fillOpacity="0.12" />
+                        <circle cx={pt.x} cy={pt.y} r="4" fill="white" />
+                        <text x={pt.x} y={pt.y - 10} fill="white" fillOpacity="0.9" fontSize="9" textAnchor="middle" fontWeight="bold">{Math.round(pt.score)}</text>
+                      </>
+                    ) : (
+                      <circle cx={pt.x} cy={pt.y} r="2" fill="white" fillOpacity="0.7" />
+                    )}
+                    <title>{chartWeeks[i].label}: avg {pt.score.toFixed(0)} ({chartWeeks[i].count} session{chartWeeks[i].count !== 1 ? 's' : ''})</title>
                   </g>
                 ))}
-                {/* X axis week labels — start/end anchors for edge items so they don't clip */}
-                {chartWeeks.map((w, i) => (
+                {/* X axis: month labels only (at first week of each month) */}
+                {chartWeeks.map((w, i) => w.monthLabel && (
                   <text key={i} x={gx(i)} y={SVG_H - 5} fill="white" fillOpacity="0.3" fontSize="8"
-                    textAnchor={i === 0 ? 'start' : i === chartWeeks.length - 1 ? 'end' : 'middle'}>
-                    {w.label}
+                    textAnchor={i === 0 ? 'start' : i >= NUM_WEEKS - 2 ? 'end' : 'middle'}>
+                    {w.monthLabel}
                   </text>
                 ))}
+
 
               </svg>
             </div>
