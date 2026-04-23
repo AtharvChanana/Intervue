@@ -59,4 +59,12 @@ public class InterviewController {
     public ResponseEntity<List<com.mockinterview.interview.dto.LeaderboardResponse>> getLeaderboard() {
         return ResponseEntity.ok(interviewService.getGlobalLeaderboard());
     }
+
+    @GetMapping("/{sessionId}/hint/{questionId}")
+    public ResponseEntity<java.util.Map<String, String>> getHint(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long sessionId,
+            @PathVariable Long questionId) {
+        return ResponseEntity.ok(interviewService.generateHint(user.getId(), sessionId, questionId));
+    }
 }

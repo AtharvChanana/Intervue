@@ -192,6 +192,30 @@ export default function DashboardPage() {
     return 'bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.6)]';
   };
 
+  // === PROGRESS CHART (last 8 weeks of completed sessions) ===
+  const SVG_W = 700, SVG_H = 160;
+  const PAD = { l: 32, r: 12, t: 15, b: 30 };
+  const chartPW = SVG_W - PAD.l - PAD.r;
+  const chartPH = SVG_H - PAD.t - PAD.b;
+  const chartWeeks = Array.from({ length: 8 }, (_, i) => {
+    const weekOffset = 7 - i;
+    const ws = new Date();
+    ws.setHours(0, 0, 0, 0);
+    ws.setDate(ws.getDate() - (ws.getDay() + weekOffset * 7));
+    const we = new Date(ws); we.setDate(ws.getDate() + 6);
+    const sessions = history.filter(h =>
+      h.status === 'COMPLETED' && new Date(h.createdAt) >= ws && new Date(h.createdAt) <= we
+    );
+    const avg = sessions.length > 0 ? sessions.reduce((s, h) => s + (h.totalScore || 0), 0) / sessions.length : null;
+    return { label: ws.toLocaleDateString('en', { month: 'short', day: 'numeric' }), avg, count: sessions.length };
+  });
+  const gx = (i: number) => PAD.l + (i / (chartWeeks.length - 1)) * chartPW;
+  const gy = (score: number) => PAD.t + chartPH - (score / 100) * chartPH;
+  const chartDots = chartWeeks.map((w, i) => w.avg !== null ? { x: gx(i), y: gy(w.avg), score: w.avg } : null);
+  let linePath = ''; chartDots.forEach((p, i) => { if (!p) return; const prev = chartDots[i - 1]; linePath += prev ? ` L ${p.x} ${p.y}` : ` M ${p.x} ${p.y}`; });
+  const first = chartDots.find(Boolean), last = [...chartDots].reverse().find(Boolean);
+  const areaPath = first && last ? `M ${first.x} ${first.y}${linePath.replace(/^M [0-9.]+ [0-9.]+/, '')} L ${last.x} ${PAD.t + chartPH} L ${first.x} ${PAD.t + chartPH} Z` : '';
+
   return (
     <div className="animate-in fade-in duration-1000 pb-20">
       <div className="flex justify-between items-end mb-16">
@@ -399,6 +423,55 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* PROGRESS CHART */}
+      <div className="mb-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
+        <div className="absolute inset-[-150%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-15 transition-opacity duration-700"></div>
+        <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="material-symbols-outlined text-white">trending_up</span>
+            <h3 className="text-white text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
+            <span className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 8 weeks</span>
+          </div>
+          {history.filter(h => h.status === 'COMPLETED').length === 0 ? (
+            <div className="h-40 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl">
+              <span className="material-symbols-outlined text-zinc-700 text-3xl mb-3">show_chart</span>
+              <p className="text-zinc-700 text-xs font-bold uppercase tracking-widest">Complete sessions to see your trend</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full min-w-[340px]" style={{ height: SVG_H }}>
+                <defs>
+                  <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="white" stopOpacity="0.08" />
+                    <stop offset="100%" stopColor="white" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                {/* Grid lines */}
+                {[0, 25, 50, 75, 100].map(score => (
+                  <g key={score}>
+                    <line x1={PAD.l} y1={gy(score)} x2={PAD.l + chartPW} y2={gy(score)} stroke="white" strokeOpacity="0.04" />
+                    <text x={PAD.l - 4} y={gy(score) + 4} fill="white" fillOpacity="0.25" fontSize="9" textAnchor="end">{score}</text>
+                  </g>
+                ))}
+                {areaPath && <path d={areaPath} fill="url(#chartAreaGrad)" />}
+                {linePath && <path d={linePath} fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.8" />}
+                {chartDots.map((pt, i) => pt && (
+                  <g key={i}>
+                    <circle cx={pt.x} cy={pt.y} r="5" fill="white" fillOpacity="0.12" />
+                    <circle cx={pt.x} cy={pt.y} r="2.5" fill="white" />
+                    <title>{chartWeeks[i].label}: {pt.score.toFixed(0)}</title>
+                  </g>
+                ))}
+                {/* X axis week labels */}
+                {chartWeeks.map((w, i) => (
+                  <text key={i} x={gx(i)} y={SVG_H - 6} fill="white" fillOpacity="0.25" fontSize="8" textAnchor="middle">{w.label}</text>
+                ))}
+              </svg>
+            </div>
+          )}
         </div>
       </div>
 

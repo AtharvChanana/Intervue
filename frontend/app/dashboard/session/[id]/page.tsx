@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 
@@ -43,6 +43,18 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
   const [report, setReport] = useState<any>(null);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
 
+  // Timer
+  const [timeLimit, setTimeLimit] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
+  const [timesUp, setTimesUp] = useState(false);
+  // Hint
+  const [hintText, setHintText] = useState('');
+  const [isLoadingHint, setIsLoadingHint] = useState(false);
+  const [hintRevealed, setHintRevealed] = useState(false);
+  // Ref to avoid stale closure on auto-submit
+  const currentAnswerRef = useRef('');
+
   useEffect(() => {
     if (isCompleted) {
       const getReport = async () => {
@@ -75,8 +87,46 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
     initSession();
   }, [id]);
 
-  const submitAnswer = async (selectedOption: string) => {
+  // Read time limit from localStorage (set by layout on session start)
+  useEffect(() => {
+    const stored = localStorage.getItem(`sessionTimer_${id}`);
+    if (stored) setTimeLimit(parseInt(stored) || 0);
+  }, [id]);
+
+  // Restart timer whenever a new question appears
+  useEffect(() => {
+    if (!currentQuestion || timeLimit <= 0) return;
+    setTimeLeft(timeLimit);
+    setTimerActive(true);
+    setTimesUp(false);
+    setHintText('');
+    setHintRevealed(false);
+  }, [currentQuestion?.questionId, timeLimit]);
+
+  // Countdown tick (uses setTimeout so deps stay fresh)
+  useEffect(() => {
+    if (!timerActive || !!feedback) return;
+    if (timeLeft <= 0) { setTimesUp(true); setTimerActive(false); return; }
+    const tick = setTimeout(() => setTimeLeft(t => t - 1), 1000);
+    return () => clearTimeout(tick);
+  }, [timerActive, timeLeft, feedback]);
+
+  // Keep answer ref fresh for auto-submit closure
+  useEffect(() => { currentAnswerRef.current = selectedOption || answerText; }, [selectedOption, answerText]);
+
+  // Auto-submit when timer expires
+  useEffect(() => {
+    if (!timesUp || isSubmitting || !currentQuestion || !!feedback) return;
+    const ans = currentAnswerRef.current ||
+      (currentQuestion.questionFormat === 'OPEN_ENDED' ? 'Time expired — no answer provided.' : 'A');
+    submitAnswer(ans);
+    setTimesUp(false);
+  }, [timesUp, isSubmitting, currentQuestion, feedback]);
+
+  const submitAnswer = async (answerToSubmit: string) => {
     if (!currentQuestion) return;
+    setTimerActive(false); // stop countdown immediately
+    setTimesUp(false);
     setAnswerText(selectedOption);
     setIsSubmitting(true);
     try {
@@ -84,7 +134,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
         method: 'POST',
         body: JSON.stringify({
           questionId: currentQuestion.questionId,
-          answerText: selectedOption
+          answerText: answerToSubmit
         })
       });
       
@@ -113,6 +163,22 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
       setAnswerText("");
       setSelectedOption("");
       setFeedback(null);
+      setHintText('');
+      setHintRevealed(false);
+    }
+  };
+
+  const revealHint = async () => {
+    if (!currentQuestion || hintRevealed) return;
+    setHintRevealed(true);
+    setIsLoadingHint(true);
+    try {
+      const resp = await fetchApi(`/interview/${id}/hint/${currentQuestion.questionId}`);
+      setHintText(resp.hint || 'Think about the core concepts related to this topic.');
+    } catch {
+      setHintText('Consider the fundamental principles underlying this type of question.');
+    } finally {
+      setIsLoadingHint(false);
     }
   };
 
@@ -266,9 +332,24 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                 {currentQuestion.questionCategory}
               </span>
             </div>
-            <h3 className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-4">
+            <h3 className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-3">
               Query 0{currentQuestion.questionNumber}
             </h3>
+            {/* Timer display */}
+            {timeLimit > 0 && (
+              <div className={`flex items-center gap-2 mb-4 ${
+                timeLeft / timeLimit > 0.5 ? 'text-emerald-400' :
+                timeLeft / timeLimit > 0.25 ? 'text-amber-400' : 'text-red-400'
+              } ${timeLeft / timeLimit <= 0.25 && timerActive ? 'animate-pulse' : ''}`}>
+                <span className="material-symbols-outlined text-base">timer</span>
+                <span className="text-xl font-black font-mono">
+                  {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+                </span>
+                {timesUp
+                  ? <span className="text-red-400 text-xs font-bold uppercase tracking-widest ml-1">Time&apos;s up!</span>
+                  : <span className="text-[10px] uppercase tracking-widest opacity-40">left</span>}
+              </div>
+            )}
             <p className="text-2xl text-white font-medium leading-relaxed">
               {currentQuestion.questionText}
             </p>
@@ -312,9 +393,28 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
             </div>
           )}
 
-          <div className="flex justify-end pt-6">
-            <button 
-              onClick={() => submitAnswer(selectedOption)} 
+          <div className="flex justify-between items-center pt-6">
+            {/* Hint button */}
+            <div>
+              {!hintRevealed ? (
+                <button
+                  onClick={revealHint}
+                  className="flex items-center gap-2 text-zinc-600 text-xs font-bold uppercase tracking-wider hover:text-amber-400 transition-colors py-2"
+                >
+                  <span className="material-symbols-outlined text-sm">lightbulb</span>
+                  Need a hint?
+                </button>
+              ) : (
+                <div className="flex items-start gap-2 p-3 bg-amber-500/5 border border-amber-400/20 rounded-xl max-w-sm">
+                  <span className="material-symbols-outlined text-amber-400 text-sm flex-shrink-0 mt-0.5">lightbulb</span>
+                  {isLoadingHint
+                    ? <p className="text-amber-400/50 text-[10px] animate-pulse uppercase tracking-widest">Generating hint...</p>
+                    : <p className="text-amber-200 text-xs leading-relaxed">{hintText}</p>}
+                </div>
+              )}
+            </div>
+            <button
+              onClick={() => submitAnswer(selectedOption)}
               disabled={!selectedOption || isSubmitting}
               className="bg-white text-black px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
             >

@@ -390,4 +390,14 @@ public class InterviewService {
                     .build();
         }).toList();
     }
+
+    public Map<String, String> generateHint(Long userId, Long sessionId, Long questionId) {
+        InterviewSession session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
+        if (!session.getUser().getId().equals(userId))
+            throw new SecurityException("Unauthorized access to session");
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found"));
+        return geminiService.generateHint(question.getQuestionText());
+    }
 }

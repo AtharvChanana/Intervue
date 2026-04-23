@@ -25,6 +25,7 @@ export default function DashboardLayout({
   const [isStarting, setIsStarting] = useState(false);
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [customJobRoleText, setCustomJobRoleText] = useState('');
+  const [timePerQuestion, setTimePerQuestion] = useState(0); // 0 = unlimited
 
   // Profile Modal State
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -167,6 +168,9 @@ export default function DashboardLayout({
       setShowModal(false);
       setIsCustomMode(false);
       setCustomJobRoleText('');
+      // Store time limit so session page can read it
+      if (timePerQuestion > 0) localStorage.setItem(`sessionTimer_${response.sessionId}`, String(timePerQuestion));
+      else localStorage.removeItem(`sessionTimer_${response.sessionId}`);
       router.push('/dashboard/session/' + response.sessionId);
     } catch (e: any) {
       setSystemToast({title: 'Session Error', message: 'Failed to start session: ' + e.message, isError: true});
@@ -466,6 +470,21 @@ export default function DashboardLayout({
                     type="number" min="1" max="20"
                     className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
                     value={numQuestions} onChange={e => setNumQuestions(parseInt(e.target.value))} />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Time per Question</label>
+                <div className="relative">
+                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
+                          value={timePerQuestion} onChange={e => setTimePerQuestion(Number(e.target.value))}>
+                    <option value={0} className="bg-[#111]">Unlimited</option>
+                    <option value={60} className="bg-[#111]">1 minute</option>
+                    <option value={120} className="bg-[#111]">2 minutes</option>
+                    <option value={180} className="bg-[#111]">3 minutes</option>
+                    <option value={300} className="bg-[#111]">5 minutes</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
                 </div>
               </div>
             </div>

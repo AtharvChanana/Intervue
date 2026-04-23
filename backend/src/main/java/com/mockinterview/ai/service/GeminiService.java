@@ -264,6 +264,29 @@ public class GeminiService {
         return r;
     }
 
+    public Map<String, String> generateHint(String questionText) {
+        String prompt = String.format("""
+                You are a supportive interview coach. A candidate is working on this question:
+                "%s"
+                
+                Provide ONE concise hint (1-2 sentences) that nudges them toward the correct approach WITHOUT giving away the answer.
+                Be Socratic: point to the key concept, methodology, or ask a guiding sub-question.
+                
+                Respond with ONLY valid JSON (no markdown): {"hint": "<your hint>"}
+                """, questionText);
+        Map<String, String> r = new HashMap<>();
+        try {
+            JsonNode n = objectMapper.readTree(clean(callGemini(prompt)));
+            r.put("hint", n.path("hint").asText("Think about the core principles underlying this topic."));
+        } catch (Exception e) {
+            log.error("Hint generation error: {}", e.getMessage());
+            r.put("hint", "Consider the fundamental concepts that apply to this type of problem.");
+        }
+        return r;
+    }
+
+
+
     private String clean(String s) {
         s = s.trim();
         if (s.startsWith("```json")) s = s.substring(7);
