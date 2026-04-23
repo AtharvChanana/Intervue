@@ -149,7 +149,7 @@ export default function DsaSessionPage() {
   const isCompleted = session.status === "COMPLETED";
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-[#0A0A0A] text-white overflow-hidden font-sans">
+    <div className="fixed inset-0 z-[100] flex flex-col bg-[#0A0A0A] text-white overflow-hidden font-sans">
       
       {/* Top Navbar */}
       <header className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-[#0F0F0F] shrink-0 z-50">
