@@ -285,6 +285,64 @@ public class GeminiService {
         return r;
     }
 
+    public String generateDsaProblem(com.mockinterview.dsa.model.DsaTopic topic, com.mockinterview.interview.model.Difficulty difficulty) {
+        String prompt = String.format("""
+                You are an expert LeetCode problem setter. Generate a coding problem for a mock interview.
+                Topic: %s
+                Difficulty: %s
+                
+                Respond ONLY with valid JSON in this exact structure (no markdown wrapper):
+                {
+                  "title": "Problem Title",
+                  "description": "Clear problem statement formatted in HTML or Markdown.",
+                  "examples": [
+                    { "input": "...", "output": "...", "explanation": "..." }
+                  ],
+                  "constraints": ["Constraint 1", "Constraint 2"],
+                  "hints": ["Hint 1", "Hint 2"]
+                }
+                """, topic != null ? topic.name() : "RANDOM", difficulty.name());
+        try {
+            return clean(callGemini(prompt));
+        } catch (Exception e) {
+            log.error("DSA Gen error: {}", e.getMessage());
+            return "{\"title\":\"Error\",\"description\":\"Failed to load.\",\"examples\":[],\"constraints\":[],\"hints\":[]}";
+        }
+    }
+
+    public String evaluateDsaCode(String problemJson, String code, String language) {
+        String prompt = String.format("""
+                You are an expert technical interviewer evaluating a candidate's code submission.
+                
+                Problem Context:
+                %s
+                
+                Candidate's Code (%s):
+                %s
+                
+                Evaluate this code WITHOUT running it. Predict if it will pass standard test cases for this problem.
+                Look for syntax errors, logical errors, edge cases, and time/space complexity.
+                
+                Respond ONLY with valid JSON in this exact structure (no markdown wrapper):
+                {
+                  "score": <0-100>,
+                  "feedback": "Overall summary of the candidate's approach and mistakes.",
+                  "timeComplexity": "O(N) etc",
+                  "spaceComplexity": "O(1) etc",
+                  "testResults": [
+                    { "name": "Basic Case", "passed": true, "details": "Worked as expected." },
+                    { "name": "Edge Case (Empty input)", "passed": false, "details": "Throws NullPointerException" },
+                    { "name": "Large Input", "passed": true, "details": "Optimal time complexity handles it." }
+                  ]
+                }
+                """, problemJson, language, code);
+        try {
+            return clean(callGemini(prompt));
+        } catch (Exception e) {
+            log.error("DSA Eval error: {}", e.getMessage());
+            return "{\"score\":0,\"feedback\":\"Evaluation failed.\",\"timeComplexity\":\"N/A\",\"spaceComplexity\":\"N/A\",\"testResults\":[]}";
+        }
+    }
 
 
     private String clean(String s) {

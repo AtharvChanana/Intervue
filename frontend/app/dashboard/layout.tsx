@@ -27,6 +27,13 @@ export default function DashboardLayout({
   const [customJobRoleText, setCustomJobRoleText] = useState('');
   const [timePerQuestion, setTimePerQuestion] = useState(0); // 0 = unlimited
 
+  // DSA Modal State
+  const [showDsaModal, setShowDsaModal] = useState(false);
+  const [dsaTopic, setDsaTopic] = useState('RANDOM');
+  const [dsaDifficulty, setDsaDifficulty] = useState('MEDIUM');
+  const [dsaTimer, setDsaTimer] = useState(30);
+  const [isStartingDsa, setIsStartingDsa] = useState(false);
+
   // Profile Modal State
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [profileAge, setProfileAge] = useState<number | ''>('');
@@ -176,6 +183,24 @@ export default function DashboardLayout({
       setSystemToast({title: 'Session Error', message: 'Failed to start session: ' + e.message, isError: true});
     } finally {
       setIsStarting(false);
+    }
+  };
+
+  const handleStartDsa = async () => {
+    setIsStartingDsa(true);
+    try {
+      const body = {
+        topic: dsaTopic,
+        difficulty: dsaDifficulty,
+        timerMinutes: dsaTimer > 0 ? dsaTimer : null
+      };
+      const response = await fetchApi('/dsa/start', { method: 'POST', body: JSON.stringify(body) });
+      setShowDsaModal(false);
+      router.push('/dashboard/dsa/' + response.sessionId);
+    } catch (e: any) {
+      setSystemToast({title: 'DSA Error', message: 'Failed to start assessment: ' + e.message, isError: true});
+    } finally {
+      setIsStartingDsa(false);
     }
   };
 
@@ -499,6 +524,76 @@ export default function DashboardLayout({
         </div>
       )}
 
+      {/* DSA Config Modal */}
+      {showDsaModal && (
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
+          <div className="bg-black border border-blue-500/20 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
+            <h2 className="text-3xl font-black text-white mb-2">Code Assessment</h2>
+            <p className="text-zinc-500 text-sm mb-6 block">Configure your algorithmic coding challenge.</p>
+
+            <div className="space-y-6 mb-10">
+              {/* Topic Selector */}
+              <div>
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Topic</label>
+                <div className="relative">
+                  <select className="w-full bg-[#1A1A1A] border border-blue-500/10 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-blue-500/50 transition-colors"
+                          value={dsaTopic} onChange={e => setDsaTopic(e.target.value)}>
+                    <option value="RANDOM" className="bg-[#111]">Random Topic</option>
+                    <option value="ARRAYS" className="bg-[#111]">Arrays & Hashing</option>
+                    <option value="STRINGS" className="bg-[#111]">Strings</option>
+                    <option value="LINKED_LIST" className="bg-[#111]">Linked Lists</option>
+                    <option value="TREES" className="bg-[#111]">Trees & BST</option>
+                    <option value="GRAPHS" className="bg-[#111]">Graphs</option>
+                    <option value="DYNAMIC_PROGRAMMING" className="bg-[#111]">Dynamic Programming</option>
+                    <option value="BINARY_SEARCH" className="bg-[#111]">Binary Search</option>
+                    <option value="STACK_QUEUE" className="bg-[#111]">Stacks & Queues</option>
+                    <option value="BIT_MANIPULATION" className="bg-[#111]">Bit Manipulation</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+                </div>
+              </div>
+
+              {/* Difficulty */}
+              <div>
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Difficulty</label>
+                <div className="relative">
+                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
+                          value={dsaDifficulty} onChange={e => setDsaDifficulty(e.target.value)}>
+                    <option value="EASY" className="bg-[#111]">Easy (Warm up)</option>
+                    <option value="MEDIUM" className="bg-[#111]">Medium (Standard)</option>
+                    <option value="HARD" className="bg-[#111]">Hard (Advanced)</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+                </div>
+              </div>
+
+              {/* Timer */}
+              <div>
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Time Limit (Minutes)</label>
+                <div className="relative">
+                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
+                          value={dsaTimer} onChange={e => setDsaTimer(Number(e.target.value))}>
+                    <option value={0} className="bg-[#111]">Unlimited</option>
+                    <option value={15} className="bg-[#111]">15 mins</option>
+                    <option value={30} className="bg-[#111]">30 mins</option>
+                    <option value={45} className="bg-[#111]">45 mins</option>
+                    <option value={60} className="bg-[#111]">60 mins</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+               <button onClick={() => setShowDsaModal(false)} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
+               <button onClick={handleStartDsa} disabled={isStartingDsa} className="flex-1 bg-blue-600 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors disabled:opacity-50">
+                {isStartingDsa ? 'Generating...' : 'Start Assessment'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Settings Modal */}
       {showSettingsModal && (
         <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
@@ -799,6 +894,22 @@ export default function DashboardLayout({
               Leaderboard
             </Link>
             
+            <button 
+              disabled={isSessionActive}
+              onClick={() => { 
+                if(isSessionActive) { setNavAlertMessage("Please complete or end your current session before starting a new one."); return; } 
+                if(userProfile && !userProfile.emailVerified) {
+                  setSystemToast({title: 'Verification Required', message: 'Your email is not verified.', isError: true});
+                  return;
+                }
+                setShowDsaModal(true); 
+              }} 
+              className={`flex items-center gap-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 py-2.5 px-6 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-[0_0_20px_rgba(59,130,246,0.1)] transition-transform ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'hover:scale-105 hover:bg-blue-600/30'}`}
+            >
+              <span className="material-symbols-outlined text-[14px]">code</span>
+              Code Assessment
+            </button>
+
             <button 
               disabled={isSessionActive}
               onClick={() => { 
