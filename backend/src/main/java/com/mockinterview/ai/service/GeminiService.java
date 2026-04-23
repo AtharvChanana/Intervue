@@ -299,7 +299,17 @@ public class GeminiService {
                     { "input": "...", "output": "...", "explanation": "..." }
                   ],
                   "constraints": ["Constraint 1", "Constraint 2"],
-                  "hints": ["Hint 1", "Hint 2"]
+                  "hints": ["Hint 1", "Hint 2"],
+                  "starterCode": {
+                     "python": "class Solution:\\n    def solve(self, nums):\\n        pass\\n",
+                     "javascript": "/**\\n * @param {number[]} nums\\n * @return {number}\\n */\\nvar solve = function(nums) {\\n    \\n};\\n",
+                     "java": "class Solution {\\n    public int solve(int[] nums) {\\n        return 0;\\n    }\\n}\\n",
+                     "cpp": "class Solution {\\npublic:\\n    int solve(vector<int>& nums) {\\n        return 0;\\n    }\\n};\\n"
+                  },
+                  "publicTestCases": [
+                     { "input": "...", "expectedOutput": "..." },
+                     { "input": "...", "expectedOutput": "..." }
+                  ]
                 }
                 """, topic != null ? topic.name() : "RANDOM", difficulty.name());
         try {
@@ -321,7 +331,7 @@ public class GeminiService {
                 %s
                 
                 Evaluate this code WITHOUT running it. Predict if it will pass standard test cases for this problem.
-                Look for syntax errors, logical errors, edge cases, and time/space complexity.
+                Note: The candidate is submitting a class/function. Evaluate the returned value, do not expect them to print the output. Look for syntax errors, logical errors, edge cases, and time/space complexity.
                 
                 Respond ONLY with valid JSON in this exact structure (no markdown wrapper):
                 {
@@ -341,6 +351,42 @@ public class GeminiService {
         } catch (Exception e) {
             log.error("DSA Eval error: {}", e.getMessage());
             return "{\"score\":0,\"feedback\":\"Evaluation failed.\",\"timeComplexity\":\"N/A\",\"spaceComplexity\":\"N/A\",\"testResults\":[]}";
+        }
+    }
+
+    public String simulateRunCode(String problemJson, String code, String language) {
+        String prompt = String.format("""
+                You are a code execution simulator.
+                
+                Problem Context (including publicTestCases):
+                %s
+                
+                Candidate's Code (%s):
+                %s
+                
+                Simulate executing this code against ONLY the `publicTestCases` listed in the problem context.
+                The code is a function/class implementation. Predict what it would return for those test cases.
+                If the code contains print statements, simulate what would be printed.
+                
+                Respond ONLY with valid JSON exactly in this structure (no markdown):
+                {
+                  "status": "Accepted", // or "Wrong Answer", "Compile Error", "Runtime Error"
+                  "results": [
+                    {
+                      "input": "...",
+                      "expectedOutput": "...",
+                      "actualOutput": "...",
+                      "passed": true,
+                      "stdout": "Any printed logs simulated here."
+                    }
+                  ]
+                }
+                """, problemJson, language, code);
+        try {
+            return clean(callGemini(prompt));
+        } catch (Exception e) {
+            log.error("DSA Run error: {}", e.getMessage());
+            return "{\"status\":\"Error\",\"results\":[]}";
         }
     }
 

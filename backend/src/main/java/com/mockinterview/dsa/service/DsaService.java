@@ -67,6 +67,27 @@ public class DsaService {
     }
 
     @Transactional
+    public Map<String, Object> runSolution(Long userId, Long sessionId, DsaSubmitRequest request) {
+        DsaSession session = dsaSessionRepository.findByIdAndUserId(sessionId, userId)
+                .orElseThrow(() -> new ResourceNotFoundException("DSA Session not found"));
+
+        if ("COMPLETED".equals(session.getStatus())) {
+            throw new IllegalStateException("Session already completed");
+        }
+
+        // Just run simulation, do not save or mark completed
+        String runJsonStr = geminiService.simulateRunCode(session.getProblemJson(), request.getCode(), request.getLanguage());
+
+        Map<String, Object> response = new java.util.HashMap<>();
+        try {
+            response.put("runResult", objectMapper.readValue(runJsonStr, new TypeReference<Map<String, Object>>() {}));
+        } catch (Exception e) {
+            response.put("error", "Failed to parse simulated run JSON");
+        }
+        return response;
+    }
+
+    @Transactional
     public Map<String, Object> submitSolution(Long userId, Long sessionId, DsaSubmitRequest request) {
         DsaSession session = dsaSessionRepository.findByIdAndUserId(sessionId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("DSA Session not found"));

@@ -27,6 +27,13 @@ public class DsaController {
             @Valid @RequestBody DsaStartRequest request) {
         return ResponseEntity.ok(dsaService.startSession(user.getId(), request));
     }
+    @PostMapping("/{sessionId}/run")
+    public ResponseEntity<Map<String, Object>> runSolution(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long sessionId,
+            @Valid @RequestBody DsaSubmitRequest request) {
+        return ResponseEntity.ok(dsaService.runSolution(user.getId(), sessionId, request));
+    }
 
     @PostMapping("/{sessionId}/submit")
     public ResponseEntity<Map<String, Object>> submitSolution(
