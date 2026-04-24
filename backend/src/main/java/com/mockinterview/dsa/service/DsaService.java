@@ -117,6 +117,17 @@ public class DsaService {
         session.setCompletedAt(LocalDateTime.now());
         dsaSessionRepository.save(session);
 
+        int maxXp = switch (session.getDifficulty()) {
+            case EASY -> 20;
+            case MEDIUM -> 50;
+            case HARD -> 100;
+        };
+        int earnedXp = (int) (maxXp * (score / 100.0));
+        
+        User sessionUser = session.getUser();
+        sessionUser.setXp((sessionUser.getXp() != null ? sessionUser.getXp() : 0) + earnedXp);
+        userRepository.save(sessionUser);
+
         // 4. Return report
         return getReport(userId, sessionId);
     }

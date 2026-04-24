@@ -309,7 +309,13 @@ public class InterviewService {
         session.setStatus(SessionStatus.COMPLETED);
         session.setCompletedAt(LocalDateTime.now());
         sessionRepository.save(session);
-        log.info("Session {} completed. Score: {}", session.getId(), avg);
+        
+        User sessionUser = session.getUser();
+        int earnedXp = (int) avg;
+        sessionUser.setXp((sessionUser.getXp() != null ? sessionUser.getXp() : 0) + earnedXp);
+        userRepository.save(sessionUser);
+        
+        log.info("Session {} completed. Score: {} - Awarded {} XP", session.getId(), avg, earnedXp);
     }
 
     private QuestionResponse toQuestionResponse(Question q) {

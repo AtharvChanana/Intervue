@@ -17,4 +17,5 @@ public class UserProfileResponse {
     private LocalDateTime createdAt;
     private Boolean emailVerified;
     private Integer emailUpdateCount;
+    private Integer xp;
 }

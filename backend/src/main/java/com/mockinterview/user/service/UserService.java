@@ -165,6 +165,7 @@ public class UserService {
                 .age(user.getAge()).currentJobRole(user.getCurrentJobRole())
                 .emailVerified(user.getEmailVerified())
                 .emailUpdateCount(user.getEmailUpdateCount())
+                .xp(user.getXp() != null ? user.getXp() : 0)
                 .createdAt(user.getCreatedAt()).build();
     }
 }

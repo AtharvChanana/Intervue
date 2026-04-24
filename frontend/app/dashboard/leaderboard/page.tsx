@@ -1,215 +1,159 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { fetchApi } from '@/lib/api';
 
-interface LeaderboardEntry {
+import { useEffect, useState } from "react";
+import { fetchApi } from "@/lib/api";
+
+type LeaderboardUser = {
   name: string;
   email: string;
   currentJobRole: string;
-  totalScore: number;
-  profilePictureUrl: string;
-}
+  xp: number;
+  profilePictureUrl: string | null;
+};
 
 export default function LeaderboardPage() {
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  
-  // Pagination State
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [users, setUsers] = useState<LeaderboardUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
+    async function loadData() {
       try {
-        const [res, user] = await Promise.all([
-          fetchApi('/interview/leaderboard'),
-          fetchApi('/user/profile').catch(() => null)
+        const [profile, leaderboard] = await Promise.all([
+          fetchApi("/user/profile").catch(() => null),
+          fetchApi("/interview/leaderboard")
         ]);
-        let sorted = Array.isArray(res) ? res : [];
-        sorted.sort((a,b) => b.totalScore - a.totalScore);
-        setLeaderboard(sorted);
-        if (user) setCurrentUser(user);
-      } catch (e: any) {
-        console.error("Leaderboard fetch failed", e);
+        if (profile) setCurrentUserEmail(profile.email);
+        setUsers(leaderboard);
+      } catch (err: any) {
+        setError(err.message || "Failed to load leaderboard");
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
-    };
-    fetchLeaderboard();
+    }
+    loadData();
   }, []);
 
-  const totalPages = Math.ceil(leaderboard.length / itemsPerPage);
-  const paginatedData = leaderboard.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  
-  const userGlobalIdx = currentUser != null ? leaderboard.findIndex(e => e.email === currentUser.email) : -1;
-
-  const getRankStyle = (globalIdx: number) => {
-    if (globalIdx === 0) {
-      return {
-        bg: 'bg-gradient-to-br from-yellow-300 via-amber-500 to-yellow-600',
-        text: 'text-black',
-        shadow: 'shadow-[0_0_30px_rgba(251,191,36,0.6)]',
-        scale: 'scale-125 z-10',
-        icon: '👑', // Gold crown
-        rowStyle: 'bg-amber-500/5 hover:bg-amber-500/10 border-l-[3px] border-amber-400'
-      };
-    } else if (globalIdx === 1) {
-      return {
-        bg: 'bg-gradient-to-br from-gray-200 via-zinc-400 to-gray-500',
-        text: 'text-black',
-        shadow: 'shadow-[0_0_20px_rgba(212,212,216,0.5)]',
-        scale: 'scale-110 z-10',
-        icon: '🥈', // Silver Medallion
-        rowStyle: 'bg-zinc-400/5 hover:bg-zinc-400/10 border-l-[3px] border-zinc-300'
-      };
-    } else if (globalIdx === 2) {
-      return {
-        bg: 'bg-gradient-to-br from-orange-300 via-[#CD7F32] to-orange-800',
-        text: 'text-black',
-        shadow: 'shadow-[0_0_20px_rgba(205,127,50,0.4)]',
-        scale: 'scale-110 z-10',
-        icon: '🥉', // Bronze Medallion
-        rowStyle: 'bg-[#CD7F32]/5 hover:bg-[#CD7F32]/10 border-l-[3px] border-[#CD7F32]'
-      };
-    }
-    return {
-      bg: 'bg-white/5 border border-white/10',
-      text: 'text-zinc-400 font-bold',
-      shadow: '',
-      scale: '',
-      icon: `${globalIdx + 1}`,
-      rowStyle: 'hover:bg-white/[0.03]'
-    };
-  };
-
-  if (isLoading) {
-    return <div className="p-8 text-white animate-pulse tracking-widest uppercase text-xs font-bold w-full text-center mt-20">Syncing Global Rankings...</div>;
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center min-h-[50vh]">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
-  return (
-    <div className="p-8 pb-32 animate-in fade-in duration-500">
-      <div className="max-w-4xl mx-auto">
-        
-        <div className="flex flex-col items-center justify-center text-center mb-16 mt-8">
-            <div className="mb-6 relative">
-                <div className="absolute inset-0 bg-blue-500 blur-[80px] opacity-20 rounded-full"></div>
-                <span className="material-symbols-outlined text-6xl text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.8)] relative z-10">military_tech</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50 uppercase tracking-[0.2em] mb-4 drop-shadow-2xl">
-              Global Leaderboard
-            </h1>
-            <p className="text-zinc-400 text-sm tracking-wider max-w-lg">Rankings are evaluated against thousands of interactive simulations across the Mock Interview neural network.</p>
-        </div>
+  if (error) {
+    return (
+      <div className="p-8 max-w-4xl mx-auto mt-10 bg-red-500/10 border border-red-500/20 rounded-xl text-center">
+        <h2 className="text-red-500 font-bold mb-2">Error Loading Leaderboard</h2>
+        <p className="text-red-400/80 text-sm">{error}</p>
+      </div>
+    );
+  }
 
-        {currentUser && userGlobalIdx !== -1 && (
-            <div className="mb-8 p-5 md:p-6 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col md:flex-row items-center justify-between backdrop-blur-xl animate-in fade-in duration-700 shadow-2xl relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                <div className="flex items-center gap-5 relative z-10">
-                    <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-lg font-medium text-white shadow-inner">
-                        #{userGlobalIdx + 1}
-                    </div>
-                    <div className="text-left">
-                        <p className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-semibold pb-1">Current Standing</p>
-                        <p className="text-white text-lg font-medium tracking-wide">{currentUser.name}</p>
-                    </div>
-                </div>
-                <div className="text-center md:text-right mt-4 md:mt-0 relative z-10">
-                    <p className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-semibold pb-1">Total Score</p>
-                    <p className="text-white text-2xl font-light tracking-widest">{leaderboard[userGlobalIdx].totalScore.toFixed(0)}</p>
-                </div>
+  const topThree = users.slice(0, 3);
+  const restOfUsers = users.slice(3);
+
+  // Fallback for avatar
+  const getAvatarUrl = (url: string | null, seed: string) => {
+    if (url) return `http://localhost:8080${url}`; // Assuming local dev for now, but should ideally come full via API or config
+    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}`;
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto p-4 md:p-8 mt-24">
+      <div className="mb-12 text-center">
+        <h1 className="text-4xl md:text-5xl font-black text-white tracking-widest uppercase mb-4">
+          Global <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-amber-300">Rankings</span>
+        </h1>
+        <p className="text-zinc-400 text-sm uppercase tracking-widest max-w-2xl mx-auto">
+          Complete Mock Interviews and Code Assessments to earn XP and climb the leaderboard.
+        </p>
+      </div>
+
+      {/* Top 3 Podium (Desktop layout, simplified for mobile) */}
+      <div className="flex flex-col md:flex-row justify-center items-end gap-6 mb-16">
+        {/* Silver (2nd) */}
+        {topThree[1] && (
+          <div className="flex flex-col items-center order-2 md:order-1 animate-in slide-in-from-bottom-8 duration-700 delay-100">
+            <div className="text-zinc-300 mb-2 font-bold text-lg"><span className="material-symbols-outlined text-3xl">workspace_premium</span></div>
+            <img src={getAvatarUrl(topThree[1].profilePictureUrl, topThree[1].name)} alt={topThree[1].name} className="w-20 h-20 rounded-full border-4 border-zinc-300 object-cover bg-zinc-900 shadow-[0_0_30px_rgba(212,212,216,0.2)] mb-4" />
+            <div className="bg-gradient-to-t from-zinc-800 to-zinc-800/20 border border-white/5 rounded-t-2xl w-32 md:h-32 p-4 text-center flex flex-col items-center justify-start">
+              <span className="font-bold text-white text-sm truncate w-full">{topThree[1].name}</span>
+              <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest mt-1">{topThree[1].xp} XP</span>
+              <span className="text-[60px] font-black text-zinc-700/50 -mt-2">2</span>
             </div>
+          </div>
         )}
 
-        <div className="bg-black/80 border border-white/10 rounded-3xl overflow-hidden shadow-[0_0_80px_rgba(0,0,0,0.8)] backdrop-blur-xl transition-all duration-500">
-          <div className="overflow-x-auto min-h-[500px]">
-              <table className="w-full text-left border-collapse whitespace-nowrap">
-                <thead>
-                  <tr className="bg-white/[0.02] border-b border-white/10 text-[10px] text-zinc-500 font-black tracking-[0.2em] uppercase">
-                    <th className="py-6 px-8 w-24 text-center">Rank</th>
-                    <th className="py-6 px-8">Candidate Profile</th>
-                    <th className="py-6 px-8 hidden sm:table-cell">Target Domain</th>
-                    <th className="py-6 px-8 text-right">Top Score</th>
-                  </tr>
-                </thead>
-                <tbody className="relative">
-                  {leaderboard.length === 0 ? (
-                    <tr>
-                      <td colSpan={4} className="py-24 text-center text-zinc-500 text-sm tracking-widest uppercase font-bold animate-pulse">
-                        No rankings established yet. Be the first!
-                      </td>
-                    </tr>
-                  ) : (
-                    paginatedData.map((entry, relativeIdx) => {
-                      const globalIdx = (currentPage - 1) * itemsPerPage + relativeIdx;
-                      const style = getRankStyle(globalIdx);
-                      const isCurrentUser = currentUser && entry.email === currentUser.email;
-                      
-                      return (
-                        <tr key={globalIdx} className={`border-b transition-all duration-300 ${isCurrentUser ? 'bg-white/[0.06] hover:bg-white/[0.08] relative z-10 border-l-[3px] border-white' : style.rowStyle} ${globalIdx < 3 ? 'border-none' : 'border-white/5'}`}>
-                          <td className="py-5 px-8 text-center flex justify-center items-center h-full min-h-[70px]">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm md:text-base transition-all duration-500 ${style.bg} ${style.text} ${style.shadow} ${style.scale}`}>
-                              <span className={globalIdx < 3 ? "animate-bounce mt-1" : ""}>{style.icon}</span>
-                            </div>
-                          </td>
-                          <td className="py-5 px-8">
-                            <div className="flex items-center gap-5">
-                              <div className="relative">
-                                  {globalIdx === 0 && <div className="absolute inset-0 bg-amber-400 blur-md opacity-40 rounded-full animate-pulse"></div>}
-                                  {entry.profilePictureUrl ? (
-                                      <img src={entry.profilePictureUrl} alt={entry.name} className={`w-12 h-12 rounded-full object-cover border-2 relative z-10 ${globalIdx === 0 ? 'border-amber-400' : 'border-white/10'}`} />
-                                  ) : (
-                                      <div className={`w-12 h-12 rounded-full relative z-10 flex items-center justify-center text-white font-black text-lg border-2 ${globalIdx === 0 ? 'bg-amber-900/50 border-amber-400' : 'bg-white/5 border-white/20'}`}>
-                                          {entry.name.charAt(0).toUpperCase()}
-                                      </div>
-                                  )}
-                              </div>
-                              <span className={`font-black text-sm md:text-base tracking-wide ${globalIdx === 0 ? 'text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-yellow-500 drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]' : globalIdx < 3 ? 'text-white' : 'text-zinc-300'}`}>
-                                {entry.name}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-5 px-8 text-zinc-400 text-[10px] sm:text-xs font-bold tracking-[0.1em] uppercase hidden sm:table-cell">
-                            {entry.currentJobRole || 'Software Engineer'}
-                          </td>
-                          <td className="py-5 px-8 text-right">
-                            <span className={`font-black tracking-[0.1em] ${globalIdx === 0 ? 'text-amber-400 text-2xl md:text-3xl drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]' : globalIdx === 1 ? 'text-zinc-300 text-xl md:text-2xl drop-shadow-[0_0_10px_rgba(255,255,255,0.4)]' : globalIdx === 2 ? 'text-[#CD7F32] text-xl md:text-2xl drop-shadow-[0_0_10px_rgba(205,127,50,0.4)]' : 'text-white/80 text-lg md:text-xl'}`}>
-                              {entry.totalScore?.toFixed(0)}
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
+        {/* Gold (1st) */}
+        {topThree[0] && (
+          <div className="flex flex-col items-center order-1 md:order-2 z-10 animate-in slide-in-from-bottom-12 duration-700">
+            <div className="text-yellow-400 mb-2 font-bold text-xl drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]"><span className="material-symbols-outlined text-5xl">military_tech</span></div>
+            <img src={getAvatarUrl(topThree[0].profilePictureUrl, topThree[0].name)} alt={topThree[0].name} className="w-28 h-28 rounded-full border-4 border-yellow-400 object-cover bg-zinc-900 shadow-[0_0_40px_rgba(250,204,21,0.3)] mb-4" />
+            <div className="bg-gradient-to-t from-yellow-500/20 to-yellow-500/5 border border-yellow-500/30 rounded-t-2xl w-40 md:h-44 p-4 text-center flex flex-col items-center justify-start relative overflow-hidden">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(250,204,21,0.1),transparent_50%)]"></div>
+              <span className="font-bold text-white text-base truncate w-full relative">{topThree[0].name}</span>
+              <span className="text-yellow-400/80 text-[11px] uppercase font-bold tracking-widest mt-1 relative">{topThree[0].xp} XP</span>
+              <span className="text-[80px] font-black text-yellow-500/10 -mt-4 relative">1</span>
+            </div>
           </div>
+        )}
 
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-              <div className="bg-black border-t border-white/10 py-4 px-8 flex items-center justify-between">
-                  <p className="text-zinc-500 text-xs font-bold tracking-widest uppercase">
-                      Showing {(currentPage - 1) * itemsPerPage + 1} to {Math.min(currentPage * itemsPerPage, leaderboard.length)} of {leaderboard.length}
-                  </p>
-                  <div className="flex gap-2">
-                      <button 
-                          onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                          disabled={currentPage === 1}
-                          className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white disabled:opacity-20 hover:bg-white/10 transition-colors"
-                      >
-                          <span className="material-symbols-outlined text-sm">chevron_left</span>
-                      </button>
-                      <button 
-                          onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                          disabled={currentPage === totalPages}
-                          className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white disabled:opacity-20 hover:bg-white/10 transition-colors"
-                      >
-                          <span className="material-symbols-outlined text-sm">chevron_right</span>
-                      </button>
-                  </div>
-              </div>
-          )}
+        {/* Bronze (3rd) */}
+        {topThree[2] && (
+          <div className="flex flex-col items-center order-3 md:order-3 animate-in slide-in-from-bottom-4 duration-700 delay-200">
+            <div className="text-amber-600 mb-2 font-bold text-lg"><span className="material-symbols-outlined text-3xl">workspace_premium</span></div>
+            <img src={getAvatarUrl(topThree[2].profilePictureUrl, topThree[2].name)} alt={topThree[2].name} className="w-20 h-20 rounded-full border-4 border-amber-600 object-cover bg-zinc-900 shadow-[0_0_30px_rgba(217,119,6,0.2)] mb-4" />
+            <div className="bg-gradient-to-t from-amber-900/40 to-amber-900/10 border border-amber-500/10 rounded-t-2xl w-32 md:h-24 p-4 text-center flex flex-col items-center justify-start">
+              <span className="font-bold text-white text-sm truncate w-full">{topThree[2].name}</span>
+              <span className="text-amber-500/80 text-[10px] uppercase font-bold tracking-widest mt-1">{topThree[2].xp} XP</span>
+              <span className="text-[50px] font-black text-amber-700/30 -mt-2">3</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Rest of the List */}
+      <div className="max-w-3xl mx-auto space-y-3">
+        <div className="flex items-center px-6 py-3 text-[10px] uppercase tracking-widest font-bold text-zinc-500">
+          <div className="w-12 text-center">Rank</div>
+          <div className="flex-1 px-4">Interviewer</div>
+          <div className="w-24 text-right">XP</div>
         </div>
+
+        {restOfUsers.length === 0 && topThree.length === 0 && (
+          <div className="text-center p-12 text-zinc-500">No ranked users yet. Be the first!</div>
+        )}
+
+        {restOfUsers.map((user, idx) => {
+          const rank = idx + 4;
+          const isMe = user.email === currentUserEmail;
+          return (
+            <div key={user.email} className={`flex items-center bg-[#111] border ${isMe ? 'border-white/30 bg-white/5 relative overflow-hidden' : 'border-white/5'} hover:bg-[#151515] transition-colors rounded-xl p-4`}>
+              {isMe && <div className="absolute left-0 top-0 bottom-0 w-1 bg-white"></div>}
+              
+              <div className="w-12 text-center text-zinc-500 font-bold text-sm">#{rank}</div>
+              
+              <div className="flex-1 flex items-center gap-4 px-4">
+                <img src={getAvatarUrl(user.profilePictureUrl, user.name)} alt={user.name} className="w-10 h-10 rounded-full bg-black object-cover" />
+                <div className="flex flex-col">
+                  <span className={`font-bold text-sm ${isMe ? 'text-white' : 'text-zinc-200'} truncate`}>
+                    {user.name} {isMe && <span className="ml-2 text-[9px] uppercase bg-white text-black px-1.5 py-0.5 rounded tracking-widest">You</span>}
+                  </span>
+                  <span className="text-zinc-500 text-[10px] uppercase tracking-widest truncate">{user.currentJobRole || 'Candidate'}</span>
+                </div>
+              </div>
+
+              <div className="w-24 text-right">
+                <div className="font-black text-white tabular-nums tracking-widest">{user.xp.toLocaleString()}</div>
+                <div className="text-zinc-500 text-[9px] uppercase tracking-widest font-bold">XP</div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

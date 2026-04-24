@@ -13,6 +13,6 @@ public class LeaderboardResponse {
     private String name;
     private String email;
     private String currentJobRole;
-    private Double totalScore;
+    private Integer xp;
     private String profilePictureUrl;
 }

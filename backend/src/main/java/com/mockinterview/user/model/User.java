@@ -64,6 +64,10 @@ public class User implements UserDetails {
     @Column(name = "email_update_count", columnDefinition = "integer default 0")
     private Integer emailUpdateCount = 0;
 
+    @Builder.Default
+    @Column(name = "xp", columnDefinition = "integer default 0")
+    private Integer xp = 0;
+
     @Column(name = "email_verification_code")
     private String emailVerificationCode;
 
