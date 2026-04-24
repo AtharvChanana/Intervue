@@ -118,9 +118,11 @@ public class DsaService {
         dsaSessionRepository.save(session);
 
         int maxXp = switch (session.getDifficulty()) {
+            case INTERN -> 10;
             case EASY -> 20;
             case MEDIUM -> 50;
             case HARD -> 100;
+            default -> 0;
         };
         int earnedXp = (int) (maxXp * (score / 100.0));
         
