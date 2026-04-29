@@ -23,7 +23,6 @@ export default function DsaSessionPage() {
 
   // Layout State
   const [activeTab, setActiveTab] = useState('testcases'); // 'testcases' or 'run_results'
-  const [showEndConfirm, setShowEndConfirm] = useState(false);
 
   // Timer state
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -96,7 +95,7 @@ export default function DsaSessionPage() {
   };
 
   const handleSubmit = async () => {
-    if (isSubmitting || isRunning || session?.status === "COMPLETED") return;
+    if (isSubmitting || session?.status === "COMPLETED") return;
     setIsSubmitting(true);
     try {
       const res = await fetchApi(`/dsa/${id}/submit`, {
@@ -188,10 +187,7 @@ export default function DsaSessionPage() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-3 flex-1 justify-end">
-          <button onClick={() => {
-            if (isCompleted) router.push('/dashboard');
-            else setShowEndConfirm(true);
-          }} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
+          <button onClick={() => router.push('/dashboard')} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
             {isCompleted ? 'Dashboard' : 'End Session'}
           </button>
           {!isCompleted && (
@@ -225,11 +221,11 @@ export default function DsaSessionPage() {
           
           {/* If completed, show Report Banner on top */}
           {isCompleted && report && (
-            <div className="m-4 p-5 rounded-xl border liquid-glass border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)] shrink-0">
+            <div className="m-4 p-5 rounded-xl border bg-[#111] border-green-500/20 shadow-[0_4px_30px_rgba(34,197,94,0.1)] shrink-0">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold uppercase tracking-widest text-[#3b82f6] text-xs font-space-grotesk">AI Terminal Analysis</h3>
+                <h3 className="font-bold uppercase tracking-widest text-[#3b82f6] text-xs">Evaluation Results</h3>
                 <div className="flex items-center gap-2 bg-black px-3 py-1.5 rounded-lg border border-white/5">
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-space-grotesk">Terminal Score</span>
+                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest">Score</span>
                   <span className={`font-mono text-xl font-bold ${report.score >= 80 ? 'text-green-400' : report.score >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
                     {report.score}/100
                   </span>
@@ -238,16 +234,16 @@ export default function DsaSessionPage() {
               
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="bg-black border border-white/5 p-3 rounded-lg flex flex-col gap-1">
-                   <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-space-grotesk">Time Complexity</span>
+                   <span className="text-[10px] text-zinc-500 uppercase tracking-widest">Time Complexity</span>
                    <span className="font-mono text-sm font-bold text-white tracking-widest">{report.timeComplexity || "N/A"}</span>
                 </div>
                 <div className="bg-black border border-white/5 p-3 rounded-lg flex flex-col gap-1">
-                   <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-space-grotesk">Space Complexity</span>
+                   <span className="text-[10px] text-zinc-500 uppercase tracking-widest">Space Complexity</span>
                    <span className="font-mono text-sm font-bold text-white tracking-widest">{report.spaceComplexity || "N/A"}</span>
                 </div>
               </div>
 
-              <div className="text-sm text-zinc-300 leading-relaxed bg-black/50 border border-white/5 p-4 rounded-lg mb-4 font-mono whitespace-pre-wrap">
+              <div className="text-sm text-zinc-300 leading-relaxed bg-black border border-white/5 p-4 rounded-lg mb-4">
                 {report.feedback}
               </div>
 
@@ -487,36 +483,6 @@ export default function DsaSessionPage() {
         </div>
 
       </div>
-      {showEndConfirm && (
-        <div className="fixed inset-0 z-[150] bg-black/90 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-[#050505] border border-red-500/20 rounded-2xl p-10 max-w-md w-full shadow-[0_0_50px_rgba(239,68,68,0.1)] text-center animate-in zoom-in-95 duration-200">
-            <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/20 text-red-500">
-              <span className="material-symbols-outlined text-3xl">warning</span>
-            </div>
-            <h2 className="text-3xl font-black text-white mb-4">Abort Session?</h2>
-            <p className="text-zinc-400 text-sm mb-8 leading-relaxed">
-              Are you sure you want to end this assessment early? Your current progress will be lost and the session will be marked as abandoned.
-            </p>
-            <div className="flex flex-col gap-3">
-              <button 
-                onClick={async () => {
-                   setShowEndConfirm(false);
-                   router.push('/dashboard');
-                }} 
-                className="w-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs transition-colors border border-red-500/20"
-              >
-                Yes, Abort Assessment
-              </button>
-              <button 
-                onClick={() => setShowEndConfirm(false)} 
-                className="w-full bg-white/5 text-white hover:bg-white/10 py-4 rounded-lg font-bold tracking-widest uppercase text-xs transition-colors"
-              >
-                Cancel & Return
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

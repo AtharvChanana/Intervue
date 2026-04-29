@@ -75,14 +75,6 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
     // Initial fetch to get session state
     const initSession = async () => {
       try {
-        // First check if the session is already completed
-        const scoreData = await fetchApi(`/interview/${id}/score`);
-        if (scoreData && scoreData.status !== 'pending') {
-          setReport(scoreData);
-          setIsCompleted(true);
-          return;
-        }
-
         const qData = await fetchApi(`/interview/${id}/questions`);
         if (qData && qData.length > 0) {
           setQuestions(qData);
@@ -226,34 +218,34 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
         ) : (
           <div className="liquid-glass p-10 rounded-xl space-y-10 animate-in slide-in-from-bottom-5">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-6 bg-white/5 border border-white/5 rounded-lg text-center">
-                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2 font-space-grotesk">Total Score</p>
+              <div className="p-6 bg-white/5 border border-white/10 rounded-lg text-center">
+                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2">Total Score</p>
                 <p className="text-5xl font-black text-white">{report.totalScore?.toFixed(0)}</p>
               </div>
-              <div className="p-6 bg-white/5 border border-white/5 rounded-lg text-center">
-                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2 font-space-grotesk">Technical Ability</p>
+              <div className="p-6 bg-white/5 border border-white/10 rounded-lg text-center">
+                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2">Technical Ability</p>
                 <p className="text-5xl font-black text-white">{report.technicalScore?.toFixed(0)}</p>
               </div>
-              <div className="p-6 bg-white/5 border border-white/5 rounded-lg text-center">
-                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2 font-space-grotesk">Communication</p>
+              <div className="p-6 bg-white/5 border border-white/10 rounded-lg text-center">
+                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2">Communication</p>
                 <p className="text-5xl font-black text-white">{report.communicationScore?.toFixed(0)}</p>
               </div>
             </div>
 
-            <div className="bg-black p-8 rounded-lg border border-white/5">
-              <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2 font-space-grotesk"><span className="material-symbols-outlined text-sm">psychology</span> Overall Feedback</h4>
-              <p className="text-white text-sm leading-loose font-inter whitespace-pre-wrap">{report.overallFeedback}</p>
+            <div className="bg-black p-8 rounded-lg border border-white/10">
+              <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-sm">psychology</span> Overall Feedback</h4>
+              <p className="text-white text-sm leading-relaxed">{report.overallFeedback}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-white/5 p-6 rounded-lg border border-white/5">
-                <h4 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3 font-space-grotesk">
+                <h4 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3">
                   <span className="material-symbols-outlined text-green-400 text-sm">trending_up</span> Core Strengths
                 </h4>
                 <p className="text-sm text-zinc-400 leading-relaxed italic">{report.strengthsSummary}</p>
               </div>
               <div className="bg-white/5 p-6 rounded-lg border border-white/5">
-                <h4 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3 font-space-grotesk">
+                <h4 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3">
                   <span className="material-symbols-outlined text-amber-400 text-sm">flag</span> Focus Areas
                 </h4>
                 <p className="text-sm text-zinc-400 leading-relaxed italic">{report.improvementTips}</p>
@@ -288,7 +280,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
               </div>
             )}
 
-            <div className="flex gap-4 justify-center pt-8 border-t border-white/5 flex-col sm:flex-row">
+            <div className="flex gap-4 justify-center pt-8 border-t border-white/10 flex-col sm:flex-row">
               <button onClick={() => router.push('/dashboard')} className="bg-transparent border border-white/20 text-white px-8 py-4 rounded-md font-bold hover:bg-white/5 transition-all text-sm tracking-widest uppercase w-full sm:w-auto">
                 Back to Dashboard
               </button>
@@ -310,7 +302,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
     <div className="max-w-4xl mx-auto pb-20">
       {showEndConfirm && (
         <div className="fixed inset-0 z-[200] bg-black/90 flex items-center justify-center p-4">
-          <div className="bg-black border border-white/5 rounded-xl p-10 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200">
+          <div className="bg-black border border-white/10 rounded-xl p-10 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200">
             <h2 className="text-2xl font-black text-white mb-2">End Session?</h2>
             <p className="text-zinc-400 text-sm mb-8">Are you sure you want to end this interview? Your progress will be halted and this cannot be undone.</p>
             <div className="flex gap-4">
@@ -335,7 +327,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
       {!feedback ? (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="liquid-glass rounded-xl p-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 border-b border-l border-white/5 bg-white/5 rounded-bl-lg">
+            <div className="absolute top-0 right-0 p-4 border-b border-l border-white/10 bg-white/5 rounded-bl-lg">
               <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">
                 {currentQuestion.questionCategory}
               </span>
@@ -373,7 +365,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                 }}
                 rows={6}
                 placeholder="Formulate your comprehensive answer here..."
-                className="w-full bg-black/50 border border-white/5 rounded-xl p-6 text-white text-sm focus:outline-none focus:border-white transition-colors tracking-wide leading-relaxed resize-none shadow-inner"
+                className="w-full bg-black/50 border border-white/10 rounded-xl p-6 text-white text-sm focus:outline-none focus:border-white transition-colors tracking-wide leading-relaxed resize-none shadow-inner"
               />
             </div>
           ) : (
@@ -391,7 +383,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                   className={`group relative liquid-glass border ${selectedOption === opt.key ? 'border-white bg-white/10' : 'border-white/5'} rounded-xl p-6 text-left hover:border-white transition-all duration-300 disabled:opacity-50`}
                 >
                   <div className="flex items-center gap-4">
-                    <span className={`w-8 h-8 rounded-lg border flex items-center justify-center font-bold text-xs transition-all ${selectedOption === opt.key ? 'bg-white text-black border-white/5' : 'bg-white/5 text-zinc-500 border-white/5 group-hover:bg-white group-hover:text-black'}`}>
+                    <span className={`w-8 h-8 rounded-lg border flex items-center justify-center font-bold text-xs transition-all ${selectedOption === opt.key ? 'bg-white text-black border-white/5' : 'bg-white/5 text-zinc-500 border-white/10 group-hover:bg-white group-hover:text-black'}`}>
                       {opt.key}
                     </span>
                     <p className={`text-white transition-transform ${selectedOption === opt.key ? 'translate-x-1 font-semibold' : 'group-hover:translate-x-1'}`}>{opt.text}</p>
@@ -456,12 +448,12 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                 <p className="text-green-400 font-bold tracking-widest uppercase text-sm">Your Response was Accurate</p>
              ) : (
                 <p className="text-red-400 font-bold uppercase tracking-widest text-sm flex items-center gap-3">
-                   Correct Option: <span className="px-5 py-2 bg-white/10 border border-white/5 text-white rounded-md ml-1">{feedback.idealAnswer}</span>
+                   Correct Option: <span className="px-5 py-2 bg-white/10 border border-white/10 text-white rounded-md ml-1">{feedback.idealAnswer}</span>
                 </p>
              )}
           </div>
 
-          <div className="flex justify-end pt-6 border-t border-white/5">
+          <div className="flex justify-end pt-6 border-t border-white/10">
             <button onClick={() => {
               if (feedback.isSessionComplete || !feedback.nextQuestion) {
                   setIsCompleted(true);

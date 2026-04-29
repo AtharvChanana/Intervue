@@ -102,33 +102,20 @@ export default function DashboardPage() {
       router.push('/dashboard/session');
   };
 
-  const MetricSlider = ({ label, score, color }: { label: string, score: number, color: string }) => {
-      const bgColor = color.replace('text-', 'bg-');
-      return (
+  const MetricSlider = ({ label, score, color }: { label: string, score: number, color: string }) => (
       <div className="mb-6 group">
           <div className="flex justify-between items-end mb-2">
               <span className="text-white text-xs font-bold uppercase tracking-widest">{label}</span>
               <span className={`text-xl font-black ${color}`}>{score || 0}</span>
           </div>
-          <div className="h-1.5 w-full relative rounded-full overflow-hidden">
-              <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
-                 <line x1="0" y1="50%" x2="100%" y2="50%" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
-                 <line 
-                    x1="0" y1="50%" x2="100%" y2="50%" 
-                    stroke="currentColor" 
-                    strokeWidth="6" 
-                    pathLength="100"
-                    className={`transition-all duration-[2000ms] ease-out ${color}`}
-                    style={{
-                       strokeDasharray: 100,
-                       strokeDashoffset: 100 - (score || 0),
-                       filter: 'drop-shadow(0 0 6px currentColor)'
-                    }}
-                 />
-              </svg>
+          <div className="h-1.5 w-full bg-white/[0.02] rounded-full overflow-hidden border border-white/5 relative">
+              <div 
+                  className={`absolute top-0 left-0 h-full rounded-full transition-all duration-[2000ms] shadow-[0_0_15px_currentColor]`}
+                  style={{ width: `${score || 0}%`, backgroundColor: 'currentColor', color: color.replace('text-', '') }}
+              ></div>
           </div>
       </div>
-  )};
+  );
 
   // === STREAK & ACTIVITY COMPUTATION (derived from history, no extra API call) ===
   const activityMap: Record<string, number> = {};
@@ -260,18 +247,9 @@ export default function DashboardPage() {
 
   return (
     <div className="animate-in fade-in duration-1000 pb-20">
-      {userProfile && !userProfile.emailVerified && (
-        <div className="mb-12 bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-xl flex items-center justify-between animate-in slide-in-from-top-4">
-          <div className="flex items-center gap-3 text-yellow-500">
-            <span className="material-symbols-outlined">warning</span>
-            <span className="text-sm font-bold uppercase tracking-widest">Verification Required</span>
-            <span className="text-sm text-yellow-500/80">— Please verify your email in the Profile tab to start taking mock interviews.</span>
-          </div>
-        </div>
-      )}
       <div className="flex justify-between items-end mb-16">
         <div className="max-w-2xl">
-          <h2 className="text-4xl lg:text-5xl font-black font-space-grotesk uppercase tracking-widest mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white/20">Overview</h2>
+          <h2 className="text-4xl lg:text-5xl font-black uppercase tracking-widest mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white/20">Overview</h2>
           <p className="text-zinc-500 text-sm tracking-widest font-medium overflow-hidden whitespace-nowrap">YOUR RECENT PERFORMANCE METRICS</p>
           {error && <p className="text-red-400 mt-4 text-xs font-bold">WARNING: Offline Analytics Cache Served. Engine Connection Fault.</p>}
         </div>
@@ -281,13 +259,13 @@ export default function DashboardPage() {
       <div className="grid grid-cols-12 gap-6 mb-8">
         <div className="col-span-12 md:col-span-4 relative group/box rounded-3xl p-[1px] overflow-hidden">
             <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
-            <div className="liquid-glass w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/5 transition-colors">
+            <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Average Score</span>
                     <span className="material-symbols-outlined text-white/50">token</span>
                 </div>
                 <div className="flex items-baseline gap-2 relative z-10">
-                    <h3 className="text-6xl font-black font-space-grotesk text-white px-2 tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
+                    <h3 className="text-6xl font-black text-white px-2 tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
                     <span className="text-zinc-600 text-xs font-bold uppercase tracking-widest">/ 100</span>
                 </div>
                 <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Overall Average Score</p>
@@ -296,24 +274,24 @@ export default function DashboardPage() {
 
         <div className="col-span-12 md:col-span-4 relative group/box rounded-3xl p-[1px] overflow-hidden">
             <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
-            <div className="liquid-glass w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/5 transition-colors">
+            <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Sessions Completed</span>
                     <span className="material-symbols-outlined text-white/50">verified</span>
                 </div>
-                <h3 className="text-6xl font-black font-space-grotesk text-white px-2 tracking-tighter relative z-10">{stats?.completedSessions || 0}</h3>
+                <h3 className="text-6xl font-black text-white px-2 tracking-tighter relative z-10">{stats?.completedSessions || 0}</h3>
                 <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Total Interviews Finished</p>
             </div>
         </div>
 
         <div className="col-span-12 md:col-span-4 relative group/box rounded-3xl p-[1px] overflow-hidden">
             <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
-            <div className="liquid-glass w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/5 transition-colors">
+            <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Roles Practiced</span>
                     <span className="material-symbols-outlined text-white/50">developer_mode</span>
                 </div>
-                <h3 className="text-6xl font-black font-space-grotesk text-white px-2 tracking-tighter relative z-10">{stats?.distinctRolesPracticed || 0}</h3>
+                <h3 className="text-6xl font-black text-white px-2 tracking-tighter relative z-10">{stats?.distinctRolesPracticed || 0}</h3>
                 <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Unique Job Profiles</p>
             </div>
         </div>
@@ -323,12 +301,11 @@ export default function DashboardPage() {
       <div className="grid grid-cols-12 gap-8 mb-8">
           <div className="col-span-12 lg:col-span-6 relative group/box rounded-3xl p-[1px] overflow-hidden">
               <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
-              <div className="liquid-glass w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col hover:border-white/5 transition-colors shadow-2xl">
-                  <h3 className="text-white text-xl font-black font-space-grotesk tracking-widest uppercase mb-2 flex items-center gap-3 relative z-10">
-                    Latest Session Analytics
+              <div className="bg-black w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col hover:border-white/10 transition-colors shadow-2xl">
+                  <h3 className="text-white text-xl font-black tracking-widest uppercase mb-10 flex items-center gap-3 relative z-10">
+                    Skill Analytics
                     {latestReport && <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>}
                   </h3>
-                  <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-10 relative z-10">Metrics from your most recent completed mock interview</p>
                   
                   {latestReport ? (
                       <div className="space-y-4 relative z-10 mt-6 flex-1">
@@ -350,10 +327,10 @@ export default function DashboardPage() {
 
           <div className="col-span-12 lg:col-span-6 relative group/box rounded-3xl p-[1px] overflow-hidden">
               <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
-              <div className="liquid-glass w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col justify-between hover:border-white/5 transition-colors shadow-2xl">
+              <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col justify-between hover:border-white/10 transition-colors shadow-2xl">
                   <div className="flex items-center gap-3 mb-8 relative z-10">
                      <span className="material-symbols-outlined text-white">insights</span>
-                     <h3 className="text-white text-xl font-black font-space-grotesk tracking-widest uppercase">AI Performance Report</h3>
+                     <h3 className="text-white text-xl font-black tracking-widest uppercase">AI Performance Report</h3>
                   </div>
                   <div className="relative z-10 flex-1 flex flex-col justify-center">
                       {latestReport?.improvementTips || latestReport?.overallFeedback ? (
@@ -376,7 +353,7 @@ export default function DashboardPage() {
       {/* STREAK TRACKER */}
       <div className="mb-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
         <div className="absolute inset-[-150%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#1e40af_50%,#000000_100%)] opacity-0 group-hover/box:opacity-20 transition-opacity duration-700"></div>
-        <div className="liquid-glass rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/5 transition-colors shadow-2xl relative">
+        <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl relative">
           <div className="flex flex-col lg:flex-row gap-10">
 
             {/* Left: Streak stats */}
@@ -384,7 +361,7 @@ export default function DashboardPage() {
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <span className="material-symbols-outlined text-white text-2xl">local_fire_department</span>
-                  <h3 className="text-white text-xl font-black font-space-grotesk tracking-widest uppercase">Streak</h3>
+                  <h3 className="text-white text-xl font-black tracking-widest uppercase">Streak</h3>
                 </div>
                 <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest">Practice consistency tracker</p>
               </div>
@@ -481,14 +458,14 @@ export default function DashboardPage() {
         {/* PROGRESS CHART */}
       <div className="mb-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
         <div className="absolute inset-[-150%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-15 transition-opacity duration-700"></div>
-        <div className="liquid-glass rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/5 transition-colors shadow-2xl">
+        <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
             <span className="material-symbols-outlined text-white">trending_up</span>
-            <h3 className="text-white text-xl font-black font-space-grotesk tracking-widest uppercase">Progress Over Time</h3>
+            <h3 className="text-white text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
             <span className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
           </div>
           {history.filter(h => h.status === 'COMPLETED').length === 0 ? (
-            <div className="h-40 flex flex-col items-center justify-center border border-dashed border-white/5 rounded-2xl">
+            <div className="h-40 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl">
               <span className="material-symbols-outlined text-zinc-700 text-3xl mb-3">show_chart</span>
               <p className="text-zinc-700 text-xs font-bold uppercase tracking-widest">Complete sessions to see your trend</p>
             </div>
@@ -543,14 +520,14 @@ export default function DashboardPage() {
       <div className="grid grid-cols-12 gap-8 mb-12 items-start">
         <div className="col-span-12 lg:col-span-4 relative group/box rounded-3xl p-[1px] overflow-hidden">
             <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
-            <div className="liquid-glass w-full h-full rounded-[23px] border border-white/5 flex flex-col relative hover:border-white/5 transition-colors">
+            <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 flex flex-col relative hover:border-white/10 transition-colors">
                 <div className="p-8 relative z-10 pb-2">
                      <h3 className="text-white text-lg font-black tracking-widest uppercase mb-2">Resume Parsing</h3>
                 </div>
           
           {!activeResume ? (
              <div className="flex-1 flex flex-col items-center justify-center px-10 pb-10 pt-4 relative z-10">
-                <div className="w-16 h-16 rounded-full border border-white/5 flex items-center justify-center mb-6 bg-white/[0.02] shadow-inner cursor-pointer" onClick={() => document.getElementById('upload-input')?.click()}>
+                <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 bg-white/[0.02] shadow-inner cursor-pointer" onClick={() => document.getElementById('upload-input')?.click()}>
                     {isUploading ? (
                       <span className="material-symbols-outlined text-2xl text-zinc-400 animate-spin">refresh</span>
                     ) : (
@@ -634,11 +611,11 @@ export default function DashboardPage() {
 
         <div className="col-span-12 lg:col-span-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
             <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
-            <div className="liquid-glass w-full h-full rounded-[23px] border border-white/5 p-10 relative hover:border-white/5 transition-colors shadow-2xl overflow-hidden">
+            <div className="bg-black w-full h-full rounded-[23px] border border-white/5 p-10 relative hover:border-white/10 transition-colors shadow-2xl overflow-hidden">
                 <div className="absolute top-0 right-0 w-[500px] h-1 opacity-20 bg-gradient-to-l from-white to-transparent"></div>
                 <div className="flex justify-between items-end mb-10 border-b border-white/5 pb-6 relative z-10">
                    <div>
-                       <h3 className="text-white text-xl font-black font-space-grotesk tracking-widest uppercase mb-1">Recent Sessions</h3>
+                       <h3 className="text-white text-xl font-black tracking-widest uppercase mb-1">Recent Sessions</h3>
                        <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.1em]">Interview History</p>
                    </div>
                    <span className="text-zinc-600 text-xs font-black uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full">{history.length} Logs</span>
@@ -646,7 +623,7 @@ export default function DashboardPage() {
 
                 <div className="space-y-4 max-h-[350px] overflow-y-auto pr-4 custom-scrollbar">
                   {history.length === 0 ? (
-                    <div className="h-40 flex items-center justify-center border border-dashed border-white/5 rounded-2xl bg-white/[0.01]">
+                    <div className="h-40 flex items-center justify-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
                         <p className="text-xs text-zinc-600 uppercase tracking-[0.3em] font-bold">No history found.</p>
                     </div>
                   ) : (
@@ -655,7 +632,7 @@ export default function DashboardPage() {
                           <div className={`absolute left-0 top-0 w-1 h-full transition-colors ${session.status === 'COMPLETED' ? 'bg-white/30 group-hover:bg-white' : 'bg-zinc-800 group-hover:bg-zinc-600'}`}></div>
                           
                           <div className="flex items-center gap-5">
-                             <div className="w-12 h-12 rounded-xl bg-black border border-white/5 flex items-center justify-center shadow-inner group-hover:border-white/5 transition-colors">
+                             <div className="w-12 h-12 rounded-xl bg-black border border-white/5 flex items-center justify-center shadow-inner group-hover:border-white/10 transition-colors">
                                 <span className={`material-symbols-outlined text-lg ${session.status === 'COMPLETED' ? 'text-white' : 'text-zinc-600'}`}>
                                    {session.interviewType === 'BEHAVIORAL' ? 'psychology' : 'code'}
                                 </span>

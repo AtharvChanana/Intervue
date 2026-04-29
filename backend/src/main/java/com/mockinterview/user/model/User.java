@@ -11,9 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users", indexes = {
-    @Index(name = "idx_user_xp", columnList = "xp DESC")
-})
+@Table(name = "users")
 @Data
 @Builder
 @NoArgsConstructor

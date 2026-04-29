@@ -65,7 +65,7 @@ export default function LeaderboardPage() {
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-8 mt-24">
       <div className="mb-12 text-center">
-        <h1 className="text-4xl md:text-5xl font-black text-white tracking-widest uppercase mb-4 font-space-grotesk">
+        <h1 className="text-4xl md:text-5xl font-black text-white tracking-widest uppercase mb-4">
           Global <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-amber-300">Rankings</span>
         </h1>
         <p className="text-zinc-400 text-sm uppercase tracking-widest max-w-2xl mx-auto">
@@ -132,7 +132,7 @@ export default function LeaderboardPage() {
           const rank = idx + 4;
           const isMe = user.email === currentUserEmail;
           return (
-            <div key={user.email} className={`flex items-center liquid-glass border ${isMe ? 'border-white/30 bg-white/5 relative overflow-hidden' : 'border-white/5'} hover:bg-[#151515] transition-colors rounded-xl p-4`}>
+            <div key={user.email} className={`flex items-center bg-[#111] border ${isMe ? 'border-white/30 bg-white/5 relative overflow-hidden' : 'border-white/5'} hover:bg-[#151515] transition-colors rounded-xl p-4`}>
               {isMe && <div className="absolute left-0 top-0 bottom-0 w-1 bg-white"></div>}
               
               <div className="w-12 text-center text-zinc-500 font-bold text-sm">#{rank}</div>
