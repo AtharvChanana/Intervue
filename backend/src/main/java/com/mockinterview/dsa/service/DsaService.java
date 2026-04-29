@@ -117,16 +117,13 @@ public class DsaService {
         session.setCompletedAt(LocalDateTime.now());
         dsaSessionRepository.save(session);
 
-        int maxXp = 0;
-        if (session.getDifficulty() == com.mockinterview.interview.model.Difficulty.INTERN) {
-            maxXp = 10;
-        } else if (session.getDifficulty() == com.mockinterview.interview.model.Difficulty.EASY) {
-            maxXp = 20;
-        } else if (session.getDifficulty() == com.mockinterview.interview.model.Difficulty.MEDIUM) {
-            maxXp = 50;
-        } else if (session.getDifficulty() == com.mockinterview.interview.model.Difficulty.HARD) {
-            maxXp = 100;
-        }
+        int maxXp = switch (session.getDifficulty()) {
+            case INTERN -> 10;
+            case EASY -> 20;
+            case MEDIUM -> 50;
+            case HARD -> 100;
+            default -> 0;
+        };
         int earnedXp = (int) (maxXp * (score / 100.0));
         
         User sessionUser = session.getUser();

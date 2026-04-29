@@ -88,9 +88,6 @@ export default function DashboardLayout({
            return;
         }
         setUserProfile(user);
-        if (user.email) {
-            localStorage.setItem('currentUserEmail', user.email);
-        }
         if (user.age) setProfileAge(user.age);
         if (user.currentJobRole) setProfileJobRole(user.currentJobRole);
         storageKey = 'notifications_' + user.email;
@@ -110,14 +107,10 @@ export default function DashboardLayout({
 
     const handleNewNotif = (e: any) => {
         const payload = e.detail;
-        setNotifications(prev => {
-            const next = [payload, ...prev];
-            const savedEmail = localStorage.getItem('currentUserEmail');
-            if (savedEmail) {
-                localStorage.setItem('notifications_' + savedEmail, JSON.stringify(next));
-            }
-            return next;
-        });
+        setNotifications(prev => [payload, ...prev]);
+        if (userProfile && userProfile.email) {
+            localStorage.setItem('notifications_' + userProfile.email, JSON.stringify([payload, ...notifications]));
+        }
     };
     window.addEventListener('new_notification', handleNewNotif);
     
@@ -131,45 +124,19 @@ export default function DashboardLayout({
     };
     document.addEventListener('mousedown', clickOutside);
 
-    const handleOpenModal = (e: any) => {
-        const { roleId, difficulty, type, dsa } = e.detail || {};
-        if (dsa) {
-            setShowDsaModal(true);
-            if (difficulty) setDsaDifficulty(difficulty);
-        } else {
-            setShowModal(true);
-            if (roleId) setSelectedRole(roleId);
-            if (difficulty) setDifficulty(difficulty);
-            if (type) setType(type);
-        }
-    };
-    window.addEventListener('open_new_session_modal', handleOpenModal);
-
     return () => {
         window.removeEventListener('new_notification', handleNewNotif);
-        window.removeEventListener('open_new_session_modal', handleOpenModal);
         document.removeEventListener('mousedown', clickOutside);
     };
   }, []);
 
-  useEffect(() => {
-    if (systemToast && !systemToast.isError) {
-      const t = setTimeout(() => setSystemToast(null), 5000);
-      return () => clearTimeout(t);
-    }
-  }, [systemToast]);
-
   const markAsRead = () => {
-      setNotifications(prev => {
-          const next = prev.map(n => ({...n, read: true}));
-          const savedEmail = localStorage.getItem('currentUserEmail');
-          if (savedEmail) {
-              localStorage.setItem('notifications_' + savedEmail, JSON.stringify(next));
-          }
-          return next;
-      });
+      const next = notifications.map(n => ({...n, read: true}));
+      setNotifications(next);
+      if (userProfile && userProfile.email) {
+          localStorage.setItem('notifications_' + userProfile.email, JSON.stringify(next));
+      }
   };
-  const [showEmailWarning, setShowEmailWarning] = useState(false);
   const [settingsEmail, setSettingsEmail] = useState("");
   const [oldPassword, setOldPassword] = useState("");
   const [settingsPassword, setSettingsPassword] = useState("");
@@ -424,17 +391,17 @@ export default function DashboardLayout({
   return (
     <div className="flex bg-transparent min-h-screen w-full relative">
       {systemToast && (
-        <div className="fixed bottom-4 right-4 z-[300] bg-[#050505] border border-white/10 rounded-xl p-4 max-w-sm shadow-2xl animate-in slide-in-from-right-8 duration-300 flex items-start gap-3">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border ${systemToast.isError ? 'border-red-500/20 text-red-500' : 'border-green-500/20 text-green-500'}`}>
-              <span className="material-symbols-outlined text-sm">{systemToast.isError ? 'error' : 'check_circle'}</span>
+        <div className="fixed inset-0 z-[300] bg-black flex items-center justify-center p-4">
+          <div className="bg-black border border-white/10 rounded-xl p-8 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
+            <div className={`w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border ${systemToast.isError ? 'border-red-500/20 text-red-500' : 'border-green-500/20 text-green-500'}`}>
+              <span className="material-symbols-outlined">{systemToast.isError ? 'error' : 'check_circle'}</span>
             </div>
-            <div className="flex-1">
-                <h2 className="text-sm font-bold text-white mb-1">{systemToast.title}</h2>
-                <p className="text-zinc-400 text-xs">{systemToast.message}</p>
-            </div>
-            <button onClick={() => setSystemToast(null)} className="text-zinc-500 hover:text-white shrink-0 ml-2">
-              <span className="material-symbols-outlined text-sm">close</span>
+            <h2 className="text-xl font-bold text-white mb-2">{systemToast.title}</h2>
+            <p className="text-zinc-400 text-sm mb-8">{systemToast.message}</p>
+            <button onClick={() => setSystemToast(null)} className="w-full bg-white text-black py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform">
+              Understood
             </button>
+          </div>
         </div>
       )}
       {navAlertMessage && (
@@ -453,7 +420,7 @@ export default function DashboardLayout({
       )}
       {/* Session Configuration Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
           <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-300">
             <h2 className="text-3xl font-black text-white mb-2">Setup Mock Interview</h2>
             <p className="text-zinc-500 text-sm mb-6 block">Choose your settings to begin the interview.</p>
@@ -559,7 +526,7 @@ export default function DashboardLayout({
 
       {/* DSA Config Modal */}
       {showDsaModal && (
-        <div className="fixed inset-0 z-[100] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
           <div className="bg-black border border-blue-500/20 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
             <h2 className="text-3xl font-black text-white mb-2">Code Assessment</h2>
             <p className="text-zinc-500 text-sm mb-6 block">Configure your algorithmic coding challenge.</p>
@@ -629,7 +596,7 @@ export default function DashboardLayout({
 
       {/* Settings Modal */}
       {showSettingsModal && (
-        <div className="fixed inset-0 z-[100] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
           <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-md w-[95%] md:w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-300">
             <h2 className="text-3xl font-black text-white mb-2">Settings</h2>
             <p className="text-zinc-500 text-sm mb-8 block">Update your profile information and password.</p>
@@ -638,30 +605,13 @@ export default function DashboardLayout({
               <div className="border border-white/5 bg-white/[0.02] p-4 rounded-xl">
                 <div className="flex justify-between items-center mb-3">
                   <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Email Access</label>
-                  <button onClick={() => {
-                      if (showEmailUpdateForm) {
-                          setShowEmailUpdateForm(false);
-                          setShowEmailWarning(false);
-                      } else {
-                          setShowEmailWarning(true);
-                      }
-                  }} className="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors flex items-center gap-1 bg-blue-500/10 px-2 flex py-1 rounded">
-                    <span className="material-symbols-outlined text-[14px]">edit</span> {showEmailUpdateForm || showEmailWarning ? "Cancel" : "Change Email"}
+                  <button onClick={() => setShowEmailUpdateForm(!showEmailUpdateForm)} className="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors flex items-center gap-1 bg-blue-500/10 px-2 flex py-1 rounded">
+                    <span className="material-symbols-outlined text-[14px]">edit</span> {showEmailUpdateForm ? "Cancel" : "Change Email"}
                   </button>
                 </div>
-                {!showEmailUpdateForm && !showEmailWarning && (
+                {!showEmailUpdateForm ? (
                   <input type="email" readOnly className="w-full bg-black border border-white/5 rounded-lg p-3 text-zinc-500 cursor-not-allowed" value={settingsEmail} />
-                )}
-                {showEmailWarning && !showEmailUpdateForm && (
-                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-lg animate-in slide-in-from-top-2">
-                    <h4 className="text-red-500 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2"><span className="material-symbols-outlined text-sm">warning</span> Critical Warning</h4>
-                    <p className="text-xs text-zinc-400 leading-relaxed mb-4">For security reasons, your email address can only be changed <strong className="text-white">exactly one time</strong>. This action is irreversible. Proceed only if absolutely necessary.</p>
-                    <button onClick={() => { setShowEmailWarning(false); setShowEmailUpdateForm(true); }} className="w-full bg-red-500/20 text-red-500 hover:text-white hover:bg-red-500 transition-colors py-3 rounded-lg text-xs font-bold uppercase tracking-widest">
-                      I understand, proceed
-                    </button>
-                  </div>
-                )}
-                {showEmailUpdateForm && (
+                ) : (
                   <div className="space-y-4 mt-2 animate-in fade-in slide-in-from-top-2 duration-200">
                     <div>
                       <input type="email" autoComplete="new-password" id="new_email_no_autofill" name="new_email_no_autofill" className="w-full bg-[#1A1A1A] border border-blue-500/50 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 transition-colors placeholder:text-zinc-600" placeholder="Enter new email address" value={newEmailInput} onChange={e => setNewEmailInput(e.target.value)} />
@@ -672,6 +622,7 @@ export default function DashboardLayout({
                     <button onClick={handleUpdateEmailRequest} disabled={isProcessingOTP || !newEmailInput || !oldPassword} className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.2)] disabled:opacity-50">
                       {isProcessingOTP ? "Processing..." : "Send Secure Code"}
                     </button>
+                    <p className="text-[10px] text-zinc-500 leading-relaxed"><strong className="text-red-400">Warning:</strong> For security reasons, you can only change your registered email address exactly one time per account.</p>
                   </div>
                 )}
               </div>
@@ -718,7 +669,7 @@ export default function DashboardLayout({
 
       {/* Delete Account Modal 1 (Password) */}
       {showDeleteModal1 && (
-        <div className="fixed inset-0 z-[160] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[160] bg-black/95 flex items-center justify-center p-4">
           <div className="bg-black border border-red-500/20 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-[0_0_50px_rgba(239,68,68,0.1)] animate-in zoom-in-95 duration-300">
             <h2 className="text-3xl font-black text-white mb-2">Authentication Subroutine</h2>
             <p className="text-zinc-500 text-sm mb-8 block">Please enter your password to authorize this highly destructive action.</p>
@@ -903,7 +854,7 @@ export default function DashboardLayout({
         <header className="fixed top-0 left-0 right-0 h-20 z-30 bg-black/50 backdrop-blur-lg border-b border-white/5 hidden md:flex justify-between items-center px-12 w-full">
           
           <div className="flex-1 flex justify-start items-center">
-            <h1 className="font-black text-xl text-white font-space-grotesk tracking-widest uppercase">Intervue</h1>
+            <h1 className="font-black text-xl text-white tracking-widest uppercase">Intervue</h1>
           </div>
 
           <nav className="flex-none flex items-center justify-center gap-10 h-full">
@@ -1057,9 +1008,9 @@ export default function DashboardLayout({
 
         {/* Logout Confirm Modal */}
         {showLogoutConfirm && (
-          <div className="fixed inset-0 z-[200] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowLogoutConfirm(false)}>
+          <div className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4" onClick={() => setShowLogoutConfirm(false)}>
             <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
-              <h2 className="text-2xl font-black text-white font-space-grotesk mb-2 text-center">Confirm Logout</h2>
+              <h2 className="text-2xl font-black text-white mb-2 text-center">Confirm Logout</h2>
               <p className="text-zinc-400 text-sm mb-8 text-center">Are you sure you want to end your session and log out securely?</p>
               <div className="flex flex-col gap-3">
                 <button onClick={() => { localStorage.removeItem('token'); router.push('/'); }} className="w-full bg-red-500/20 text-red-500 border border-red-500/20 py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-red-500 hover:text-white transition-all">
@@ -1075,7 +1026,7 @@ export default function DashboardLayout({
 
         {/* Mobile Notifications Modal */}
         {showNotifications && (
-          <div className="md:hidden fixed inset-0 z-[150] bg-background/90 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 pb-12" onClick={() => setShowNotifications(false)}>
+          <div className="md:hidden fixed inset-0 z-[150] bg-black/95 flex items-end sm:items-center justify-center p-4 pb-12" onClick={() => setShowNotifications(false)}>
             <div className="bg-black border border-white/10 rounded-2xl w-full max-h-[70vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom-10 duration-300" onClick={(e) => e.stopPropagation()}>
               <div className="p-6 border-b border-white/5 bg-black flex justify-between items-center rounded-t-2xl">
                  <h3 className="text-white font-bold text-sm uppercase tracking-widest">System Alerts</h3>
@@ -1101,7 +1052,7 @@ export default function DashboardLayout({
 
         {/* Profile Modal */}
         {showProfileModal && userProfile && (
-          <div className="fixed inset-0 z-[150] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[150] bg-black/95 flex items-center justify-center p-4">
             <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-300">
               <div className="flex justify-between items-start mb-8">
                 <div>
@@ -1192,11 +1143,11 @@ export default function DashboardLayout({
 
         {/* Validate OTP Modal */}
         {showVerifyOtpModal && (
-          <div className="fixed inset-0 z-[180] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[180] bg-black/95 flex items-center justify-center p-4">
             <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-sm w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
               <div className="flex flex-col items-center text-center">
                  <span className="material-symbols-outlined text-4xl text-blue-500 mb-4 animate-pulse">mark_email_read</span>
-                 <h2 className="text-2xl font-black text-white font-space-grotesk mb-2">Verify Email</h2>
+                 <h2 className="text-2xl font-black text-white mb-2">Verify Email</h2>
                  <p className="text-zinc-500 text-xs mb-8">Enter the 6-digit OTP code sent to your mock email console.</p>
                  
                  <input type="text" maxLength={6} className="w-full text-center tracking-[0.5em] text-3xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500/50 transition-colors mb-8"
@@ -1226,11 +1177,11 @@ export default function DashboardLayout({
 
         {/* Update Email OTP Modal */}
         {showUpdateEmailOtpModal && (
-          <div className="fixed inset-0 z-[190] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[190] bg-black/95 flex items-center justify-center p-4">
             <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-sm w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
               <div className="flex flex-col items-center text-center">
                  <span className="material-symbols-outlined text-4xl text-blue-500 mb-4 animate-pulse">lock_person</span>
-                 <h2 className="text-2xl font-black text-white font-space-grotesk mb-2">Confirm Identity</h2>
+                 <h2 className="text-2xl font-black text-white mb-2">Confirm Identity</h2>
                  <p className="text-zinc-500 text-xs mb-8">Enter the 6-digit verification code sent to your <strong className="text-white">{newEmailInput}</strong> email mock console to finalize the update.</p>
                  
                  <input type="text" maxLength={6} className="w-full text-center tracking-[0.5em] text-3xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500/50 transition-colors mb-8"
