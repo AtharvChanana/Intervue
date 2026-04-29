@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -20,12 +25,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${manrope.variable} antialiased`}
+      className={`dark ${spaceGrotesk.variable} ${inter.variable} antialiased`}
     >
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
-      <body className="bg-telemetry-grid text-on-background selection:bg-white/10 overflow-x-hidden font-manrope min-h-screen">
+      <body className="bg-telemetry-grid text-on-background selection:bg-white/10 overflow-x-hidden font-inter min-h-screen">
         {children}
       </body>
     </html>
