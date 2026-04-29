@@ -99,7 +99,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 bg-black border-b border-white/5 flex justify-between items-center px-6 md:px-10 h-20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] font-manrope antialiased tracking-tight">
+      <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-white/5 flex justify-between items-center px-6 md:px-10 h-20 font-space-grotesk antialiased tracking-tight">
         <div className="flex items-center gap-3">
           <Logo className="w-8 h-8" />
           <div className="text-xl md:text-2xl font-black tracking-tighter text-white uppercase mt-1">Intervue</div>
@@ -114,7 +114,7 @@ export default function LandingPage() {
         <section className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start w-full">
           {/* Hero Content (Editorial Asymmetry) */}
           <div className="lg:col-span-7 pt-12 text-center lg:text-left shadow-none">
-            <h1 className="text-5xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] text-white mb-6 md:mb-8 mt-6">
+            <h1 className="text-5xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] text-white mb-6 md:mb-8 mt-6 font-space-grotesk">
               MASTER THE <br /> <span className="text-zinc-600">MOCK INTERVIEW.</span>
             </h1>
             <p className="text-xl md:text-2xl text-on-surface-variant font-light leading-relaxed max-w-xl mb-12">
@@ -125,9 +125,9 @@ export default function LandingPage() {
           {/* Auth Form (High-Transparency Glass) */}
           <div className="lg:col-span-5 relative group">
             <div className="absolute -inset-0.5 bg-gradient-to-b from-white/10 to-transparent rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-            <div className="relative bg-[#0a0a0a] rounded-xl p-10 border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.05)]">
+            <div className="relative liquid-glass rounded-xl p-10 border-white/5">
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">Access Portal</h2>
+                <h2 className="text-2xl font-bold text-white mb-2 font-space-grotesk">Access Portal</h2>
                 <p className="text-zinc-500 text-sm">Synchronize your professional profile.</p>
               </div>
 
@@ -143,7 +143,7 @@ export default function LandingPage() {
                     <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Full Name</label>
                     <input
                       required
-                      className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
+                      className="w-full bg-surface-container-low border-b border-white/10 py-3 px-2 text-white placeholder:text-zinc-700 terminal-glow-focus outline-none transition-all duration-300 rounded-t"
                       placeholder="Alien"
                       type="text"
                       value={name}
@@ -156,7 +156,7 @@ export default function LandingPage() {
                   <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Email</label>
                   <input
                     required
-                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
+                    className="w-full bg-surface-container-low border-b border-white/10 py-3 px-2 text-white placeholder:text-zinc-700 terminal-glow-focus outline-none transition-all duration-300 rounded-t"
                     placeholder="name@company.com"
                     type="email"
                     value={email}
@@ -165,10 +165,10 @@ export default function LandingPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Security Key</label>
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Password</label>
                   <input
                     required
-                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
+                    className="w-full bg-surface-container-low border-b border-white/10 py-3 px-2 text-white placeholder:text-zinc-700 terminal-glow-focus outline-none transition-all duration-300 rounded-t"
                     placeholder="••••••••"
                     type="password"
                     value={password}
@@ -184,7 +184,7 @@ export default function LandingPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 bg-white text-on-primary rounded-lg font-bold tracking-tight hover:bg-zinc-200 transition-all active:scale-[0.98] mt-4 disabled:opacity-50"
+                  className="w-full py-4 bg-white text-black rounded font-bold tracking-tight hover:bg-zinc-200 transition-all active:scale-[0.98] mt-4 disabled:opacity-50"
                 >
                   {loading ? 'Processing...' : (isLogin ? 'Enter Workspace' : 'Register Profile')}
                 </button>
@@ -206,9 +206,9 @@ export default function LandingPage() {
       </main>
 
       {showForgotModal && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
-          <div className="bg-[#050505] border border-white/10 rounded-2xl w-full max-w-md p-8 shadow-[0_0_50px_rgba(255,255,255,0.05)] animate-in zoom-in-95 duration-300">
-            <h2 className="text-2xl font-black text-white mb-2">Password Recovery</h2>
+        <div className="fixed inset-0 z-50 bg-background/95 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="liquid-glass border-white/5 rounded-2xl w-full max-w-md p-8 animate-in zoom-in-95 duration-300">
+            <h2 className="text-2xl font-black text-white mb-2 font-space-grotesk">Password Recovery</h2>
             <p className="text-zinc-500 text-xs mb-8">
               {forgotStep === 1 ? "Enter your email to receive a recovery code." : "Enter your code and new password."}
             </p>
@@ -230,7 +230,7 @@ export default function LandingPage() {
                 <div className="space-y-1.5">
                   <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Account Email</label>
                   <input
-                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
+                    className="w-full bg-surface-container-low border-b border-white/10 py-3 px-2 text-white placeholder:text-zinc-700 terminal-glow-focus outline-none transition-all duration-300 rounded-t"
                     placeholder="name@company.com"
                     type="email"
                     value={forgotEmail}
@@ -260,7 +260,7 @@ export default function LandingPage() {
                 <div className="space-y-1.5 pt-2">
                   <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">New Password</label>
                   <input
-                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
+                    className="w-full bg-surface-container-low border-b border-white/10 py-3 px-2 text-white placeholder:text-zinc-700 terminal-glow-focus outline-none transition-all duration-300 rounded-t"
                     placeholder="••••••••"
                     type="password"
                     value={forgotNewPassword}

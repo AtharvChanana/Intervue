@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #000000;
+  --color-background: #141313;
   --color-error: #ffb4ab;
   --color-error-container: #93000a;
   --color-inverse-on-surface: #313030;
@@ -10,62 +10,60 @@
   --color-on-background: #e5e2e1;
   --color-on-error: #690005;
   --color-on-error-container: #ffdad6;
-  --color-on-primary: #1a1c1c;
-  --color-on-primary-container: #000000;
-  --color-on-primary-fixed: #ffffff;
-  --color-on-primary-fixed-variant: #e2e2e2;
-  --color-on-secondary: #1a1c1c;
-  --color-on-secondary-container: #e2e2e2;
-  --color-on-secondary-fixed: #1a1c1c;
-  --color-on-secondary-fixed-variant: #3a3c3c;
+  --color-on-primary: #2f3131;
+  --color-on-primary-container: #636565;
+  --color-on-primary-fixed: #1a1c1c;
+  --color-on-primary-fixed-variant: #454747;
+  --color-on-secondary: #2f3037;
+  --color-on-secondary-container: #b4b4bd;
+  --color-on-secondary-fixed: #1a1b22;
+  --color-on-secondary-fixed-variant: #45464e;
   --color-on-surface: #e5e2e1;
-  --color-on-surface-variant: #c6c6c6;
-  --color-on-tertiary: #1a1c1c;
-  --color-on-tertiary-container: #000000;
-  --color-on-tertiary-fixed: #ffffff;
-  --color-on-tertiary-fixed-variant: #e3e2e2;
-  --color-outline: #919191;
-  --color-outline-variant: #474747;
+  --color-on-surface-variant: #c4c7c8;
+  --color-on-tertiary: #2f3131;
+  --color-on-tertiary-container: #636565;
+  --color-on-tertiary-fixed: #1a1c1c;
+  --color-on-tertiary-fixed-variant: #454747;
+  --color-outline: #8e9192;
+  --color-outline-variant: #444748;
   --color-primary: #ffffff;
-  --color-primary-container: #d4d4d4;
-  --color-primary-fixed: #5d5f5f;
-  --color-primary-fixed-dim: #454747;
-  --color-secondary: #c6c6c6;
-  --color-secondary-container: #454747;
-  --color-secondary-fixed: #c6c6c6;
-  --color-secondary-fixed-dim: #ababab;
-  --color-surface: #000000;
+  --color-primary-container: #e2e2e2;
+  --color-primary-fixed: #e2e2e2;
+  --color-primary-fixed-dim: #c6c6c7;
+  --color-secondary: #c6c6cf;
+  --color-secondary-container: #45464e;
+  --color-secondary-fixed: #e2e1eb;
+  --color-secondary-fixed-dim: #c6c6cf;
+  --color-surface: #141313;
   --color-surface-bright: #3a3939;
-  --color-surface-container: #000000;
+  --color-surface-container: #201f1f;
   --color-surface-container-high: #2a2a2a;
-  --color-surface-container-highest: #353534;
-  --color-surface-container-low: #000000;
-  --color-surface-container-lowest: #000000;
-  --color-surface-dim: #000000;
+  --color-surface-container-highest: #353434;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-surface-dim: #141313;
   --color-surface-tint: #c6c6c7;
-  --color-surface-variant: #353534;
-  --color-tertiary: #e3e2e2;
-  --color-tertiary-container: #909191;
-  --color-tertiary-fixed: #5d5e5f;
-  --color-tertiary-fixed-dim: #464747;
+  --color-surface-variant: #353434;
+  --color-tertiary: #ffffff;
+  --color-tertiary-container: #e2e2e2;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-tertiary-fixed-dim: #c6c6c7;
 
-  --font-headline: 'Manrope', sans-serif;
-  --font-body: 'Manrope', sans-serif;
-  --font-label: 'Manrope', sans-serif;
-  --font-manrope: 'Manrope', sans-serif;
+  --font-space-grotesk: var(--font-space-grotesk);
+  --font-inter: var(--font-inter);
 }
 
 @layer base {
   body {
     background-color: var(--color-background);
-    font-family: var(--font-manrope);
+    font-family: var(--font-inter);
     color: var(--color-on-background);
   }
 }
 
 @layer utilities {
   .bg-telemetry-grid {
-    background-color: #000000;
+    background-color: var(--color-background);
     position: relative;
     z-index: 0;
   }
@@ -73,29 +71,30 @@
   .bg-telemetry-grid::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    inset: 0;
     z-index: -1;
-    background-size: 40px 40px;
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
     pointer-events: none;
   }
 
   .liquid-glass {
-    background: #000000;
+    background: var(--color-surface);
     border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+  }
+
+  .terminal-glow {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  }
+
+  .terminal-glow-focus:focus-within {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
   }
 
   .ghost-border {
-    border: 1px solid rgba(71, 71, 71, 0.15);
-  }
-
-  .ethereal-glow {
-    box-shadow: 0 0 40px -10px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .text-glow {
