@@ -5,6 +5,7 @@ import { fetchApi } from '@/lib/api';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import Logo from '@/components/Logo';
+import { AnimatedStepper, Step } from '@/components/AnimatedStepper';
 
 export default function DashboardLayout({
   children,
@@ -418,178 +419,354 @@ export default function DashboardLayout({
           </div>
         </div>
       )}
-      {/* Session Configuration Modal */}
+      {/* Session Configuration Modal — AnimatedStepper */}
       {showModal && (
-        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
-          <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-300">
-            <h2 className="text-3xl font-black text-white mb-2">Setup Mock Interview</h2>
-            <p className="text-zinc-500 text-sm mb-6 block">Choose your settings to begin the interview.</p>
-
-            {/* Custom Session Toggle */}
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) { setShowModal(false); setIsCustomMode(false); setCustomJobRoleText(''); } }}>
+          <div className="relative w-[95%] md:w-full max-w-lg animate-in zoom-in-95 duration-300">
+            {/* Close button */}
             <button
-              onClick={() => { setIsCustomMode(!isCustomMode); setCustomJobRoleText(''); }}
-              className={`w-full mb-6 flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-xs font-bold uppercase tracking-widest ${
-                isCustomMode
-                  ? 'bg-white text-black border-white'
-                  : 'bg-white/5 text-zinc-400 border-white/10 hover:border-white/20 hover:text-white'
-              }`}
+              onClick={() => { setShowModal(false); setIsCustomMode(false); setCustomJobRoleText(''); }}
+              className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-[#222] border border-[#333] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#333] transition-colors"
             >
-              <span className="material-symbols-outlined text-sm">{isCustomMode ? 'edit_note' : 'tune'}</span>
-              {isCustomMode ? 'Custom Session Active — Click to Use Preset Roles' : 'Custom Session — Type Any Role'}
+              <span className="material-symbols-outlined text-sm">close</span>
             </button>
 
-            <div className="space-y-6 mb-10">
-              {/* Job Role — toggle between dropdown and text input */}
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Job Role</label>
-                {isCustomMode ? (
-                  <textarea
-                    rows={3}
-                    placeholder="e.g. Senior iOS Engineer at a fintech startup, Quant Researcher, Startup CTO..."
-                    className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg p-4 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-white/30 transition-colors resize-none"
-                    value={customJobRoleText}
-                    onChange={e => setCustomJobRoleText(e.target.value)}
-                  />
-                ) : (
-                  <div className="relative">
-                    <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
-                            value={selectedRole} onChange={e => setSelectedRole(Number(e.target.value))}>
-                      {roles.map(r => <option key={r.id} value={r.id} className="bg-[#111]">{r.title}</option>)}
-                    </select>
-                    <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+            <AnimatedStepper
+              initialStep={1}
+              disableStepIndicators={false}
+              onFinalStepCompleted={handleStartSession}
+              nextButtonText="Continue"
+              backButtonText="Back"
+            >
+              {/* Step 1: Role & Type */}
+              <Step title="Role & Type">
+                <div className="space-y-6">
+                  {/* Custom Session Toggle */}
+                  <button
+                    onClick={() => { setIsCustomMode(!isCustomMode); setCustomJobRoleText(''); }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-xs font-bold uppercase tracking-widest ${
+                      isCustomMode
+                        ? 'bg-white text-black border-white'
+                        : 'bg-white/5 text-zinc-400 border-[#222] hover:border-[#444] hover:text-white'
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-sm">{isCustomMode ? 'edit_note' : 'tune'}</span>
+                    {isCustomMode ? 'Custom Active — Use Presets' : 'Custom Session — Type Any Role'}
+                  </button>
+
+                  {/* Job Role */}
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Job Role</label>
+                    {isCustomMode ? (
+                      <textarea
+                        rows={3}
+                        placeholder="e.g. Senior iOS Engineer at a fintech startup, Quant Researcher, Startup CTO..."
+                        className="w-full bg-[#111] border border-[#222] rounded-lg p-4 text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-[#555] transition-colors resize-none"
+                        value={customJobRoleText}
+                        onChange={e => setCustomJobRoleText(e.target.value)}
+                      />
+                    ) : (
+                      <div className="relative">
+                        <select className="w-full bg-[#111] border border-[#222] rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-[#555] transition-colors"
+                                value={selectedRole} onChange={e => setSelectedRole(Number(e.target.value))}>
+                          {roles.map(r => <option key={r.id} value={r.id} className="bg-[#111]">{r.title}</option>)}
+                        </select>
+                        <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Difficulty</label>
-                <div className="relative">
-                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
-                          value={difficulty} onChange={e => setDifficulty(e.target.value)}>
-                    <option value="INTERN" className="bg-[#111]">Intern</option>
-                    <option value="EASY" className="bg-[#111]">Beginner (Easy)</option>
-                    <option value="MEDIUM" className="bg-[#111]">Intermediate (Medium)</option>
-                    <option value="HARD" className="bg-[#111]">Advanced (Hard)</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+                  {/* Interview Type */}
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Interview Type</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { value: 'TECHNICAL', label: 'Technical', icon: 'code' },
+                        { value: 'BEHAVIORAL', label: 'Behavioral', icon: 'psychology' },
+                        { value: 'MIXED', label: 'Mixed', icon: 'shuffle' },
+                      ].map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setType(opt.value)}
+                          className={`flex flex-col items-center gap-2 py-4 px-3 rounded-xl border transition-all text-xs font-bold uppercase tracking-widest ${
+                            type === opt.value
+                              ? 'bg-white text-black border-white'
+                              : 'bg-[#111] text-zinc-400 border-[#222] hover:border-[#444] hover:text-white'
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-lg">{opt.icon}</span>
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Step>
 
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Interview Type</label>
-                <div className="relative">
-                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
-                          value={type} onChange={e => setType(e.target.value)}>
-                    <option value="TECHNICAL" className="bg-[#111]">Technical</option>
-                    <option value="BEHAVIORAL" className="bg-[#111]">Behavioral</option>
-                    <option value="MIXED" className="bg-[#111]">Mixed</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+              {/* Step 2: Difficulty & Scope */}
+              <Step title="Difficulty & Scope">
+                <div className="space-y-6">
+                  {/* Difficulty */}
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Difficulty</label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {[
+                        { value: 'INTERN', label: 'Intern', color: 'text-blue-400 border-blue-500/30 bg-blue-500/10' },
+                        { value: 'EASY', label: 'Easy', color: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' },
+                        { value: 'MEDIUM', label: 'Medium', color: 'text-amber-400 border-amber-500/30 bg-amber-500/10' },
+                        { value: 'HARD', label: 'Hard', color: 'text-red-400 border-red-500/30 bg-red-500/10' },
+                      ].map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setDifficulty(opt.value)}
+                          className={`py-3 px-2 rounded-xl border transition-all text-xs font-bold uppercase tracking-widest ${
+                            difficulty === opt.value
+                              ? opt.color
+                              : 'bg-[#111] text-zinc-500 border-[#222] hover:border-[#444] hover:text-zinc-300'
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Number of Questions */}
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Number of Questions</label>
+                    <div className="flex items-center gap-4">
+                      <button
+                        onClick={() => setNumQuestions(Math.max(1, numQuestions - 1))}
+                        className="w-12 h-12 rounded-xl bg-[#111] border border-[#222] text-white flex items-center justify-center hover:bg-[#1a1a1a] transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">remove</span>
+                      </button>
+                      <div className="flex-1 text-center">
+                        <span className="text-4xl font-black text-white tabular-nums">{numQuestions}</span>
+                        <span className="text-zinc-500 text-[10px] uppercase tracking-widest block mt-1">Questions</span>
+                      </div>
+                      <button
+                        onClick={() => setNumQuestions(Math.min(20, numQuestions + 1))}
+                        className="w-12 h-12 rounded-xl bg-[#111] border border-[#222] text-white flex items-center justify-center hover:bg-[#1a1a1a] transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">add</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Time Per Question */}
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Time per Question</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { value: 0, label: '∞ Unlimited' },
+                        { value: 60, label: '1 min' },
+                        { value: 120, label: '2 min' },
+                        { value: 180, label: '3 min' },
+                        { value: 300, label: '5 min' },
+                      ].map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setTimePerQuestion(opt.value)}
+                          className={`py-3 px-2 rounded-xl border transition-all text-xs font-bold tracking-widest ${
+                            timePerQuestion === opt.value
+                              ? 'bg-white text-black border-white'
+                              : 'bg-[#111] text-zinc-400 border-[#222] hover:border-[#444] hover:text-white'
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Step>
 
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Number of Questions</label>
-                <div className="relative">
-                  <input
-                    type="number" min="1" max="20"
-                    className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
-                    value={numQuestions} onChange={e => setNumQuestions(parseInt(e.target.value))} />
+              {/* Step 3: Review & Launch */}
+              <Step title="Review & Launch">
+                <div className="space-y-4">
+                  <p className="text-zinc-500 text-sm mb-2">Confirm your session configuration before starting.</p>
+
+                  <div className="rounded-2xl bg-[#111] border border-[#222] p-5 space-y-4">
+                    <div className="flex justify-between items-center py-2 border-b border-[#222]">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Role</span>
+                      <span className="text-sm font-bold text-white text-right max-w-[60%] truncate">
+                        {isCustomMode ? (customJobRoleText.trim() || 'Not specified') : roles.find(r => r.id === selectedRole)?.title || 'Unknown'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-[#222]">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Type</span>
+                      <span className="text-sm font-bold text-white">{type}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-[#222]">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Difficulty</span>
+                      <span className={`text-sm font-bold ${
+                        difficulty === 'HARD' ? 'text-red-400' : difficulty === 'MEDIUM' ? 'text-amber-400' : difficulty === 'EASY' ? 'text-emerald-400' : 'text-blue-400'
+                      }`}>{difficulty}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-[#222]">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Questions</span>
+                      <span className="text-sm font-bold text-white">{numQuestions}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Timer</span>
+                      <span className="text-sm font-bold text-white">{timePerQuestion === 0 ? 'Unlimited' : `${timePerQuestion / 60} min / question`}</span>
+                    </div>
+                  </div>
+
+                  {isStarting && (
+                    <div className="flex items-center justify-center gap-3 py-4">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-zinc-400 text-xs uppercase tracking-widest font-bold">Initializing Session...</span>
+                    </div>
+                  )}
                 </div>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Time per Question</label>
-                <div className="relative">
-                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
-                          value={timePerQuestion} onChange={e => setTimePerQuestion(Number(e.target.value))}>
-                    <option value={0} className="bg-[#111]">Unlimited</option>
-                    <option value={60} className="bg-[#111]">1 minute</option>
-                    <option value={120} className="bg-[#111]">2 minutes</option>
-                    <option value={180} className="bg-[#111]">3 minutes</option>
-                    <option value={300} className="bg-[#111]">5 minutes</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-               <button onClick={() => { setShowModal(false); setIsCustomMode(false); setCustomJobRoleText(''); }} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
-               <button onClick={handleStartSession} disabled={isStarting || (isCustomMode && !customJobRoleText.trim())} className="flex-1 bg-white text-black py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform disabled:opacity-50">
-                {isStarting ? 'Initializing...' : 'Start Session'}
-              </button>
-            </div>
+              </Step>
+            </AnimatedStepper>
           </div>
         </div>
       )}
 
-      {/* DSA Config Modal */}
+      {/* DSA Config Modal — AnimatedStepper */}
       {showDsaModal && (
-        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
-          <div className="bg-black border border-blue-500/20 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
-            <h2 className="text-3xl font-black text-white mb-2">Code Assessment</h2>
-            <p className="text-zinc-500 text-sm mb-6 block">Configure your algorithmic coding challenge.</p>
+        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setShowDsaModal(false); }}>
+          <div className="relative w-[95%] md:w-full max-w-lg animate-in zoom-in-95 duration-300">
+            {/* Close button */}
+            <button
+              onClick={() => setShowDsaModal(false)}
+              className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-[#222] border border-[#333] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#333] transition-colors"
+            >
+              <span className="material-symbols-outlined text-sm">close</span>
+            </button>
 
-            <div className="space-y-6 mb-10">
-              {/* Topic Selector */}
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Topic</label>
-                <div className="relative">
-                  <select className="w-full bg-[#1A1A1A] border border-blue-500/10 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-blue-500/50 transition-colors"
-                          value={dsaTopic} onChange={e => setDsaTopic(e.target.value)}>
-                    <option value="RANDOM" className="bg-[#111]">Random Topic</option>
-                    <option value="ARRAYS" className="bg-[#111]">Arrays & Hashing</option>
-                    <option value="STRINGS" className="bg-[#111]">Strings</option>
-                    <option value="LINKED_LIST" className="bg-[#111]">Linked Lists</option>
-                    <option value="TREES" className="bg-[#111]">Trees & BST</option>
-                    <option value="GRAPHS" className="bg-[#111]">Graphs</option>
-                    <option value="DYNAMIC_PROGRAMMING" className="bg-[#111]">Dynamic Programming</option>
-                    <option value="BINARY_SEARCH" className="bg-[#111]">Binary Search</option>
-                    <option value="STACK_QUEUE" className="bg-[#111]">Stacks & Queues</option>
-                    <option value="BIT_MANIPULATION" className="bg-[#111]">Bit Manipulation</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+            <AnimatedStepper
+              initialStep={1}
+              disableStepIndicators={false}
+              onFinalStepCompleted={handleStartDsa}
+              nextButtonText="Continue"
+              backButtonText="Back"
+            >
+              {/* Step 1: Topic */}
+              <Step title="Choose Topic">
+                <div className="space-y-4">
+                  <p className="text-zinc-500 text-sm mb-2">Select an algorithm topic to practice.</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { value: 'RANDOM', label: 'Random', icon: 'casino' },
+                      { value: 'ARRAYS', label: 'Arrays & Hash', icon: 'data_array' },
+                      { value: 'STRINGS', label: 'Strings', icon: 'text_fields' },
+                      { value: 'LINKED_LIST', label: 'Linked Lists', icon: 'link' },
+                      { value: 'TREES', label: 'Trees & BST', icon: 'account_tree' },
+                      { value: 'GRAPHS', label: 'Graphs', icon: 'hub' },
+                      { value: 'DYNAMIC_PROGRAMMING', label: 'DP', icon: 'grid_on' },
+                      { value: 'BINARY_SEARCH', label: 'Binary Search', icon: 'search' },
+                      { value: 'STACK_QUEUE', label: 'Stacks & Queues', icon: 'stacks' },
+                      { value: 'BIT_MANIPULATION', label: 'Bit Ops', icon: 'memory' },
+                    ].map(opt => (
+                      <button
+                        key={opt.value}
+                        onClick={() => setDsaTopic(opt.value)}
+                        className={`flex items-center gap-3 py-3.5 px-4 rounded-xl border transition-all text-xs font-bold uppercase tracking-widest text-left ${
+                          dsaTopic === opt.value
+                            ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+                            : 'bg-[#111] text-zinc-400 border-[#222] hover:border-[#444] hover:text-white'
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-base">{opt.icon}</span>
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              </Step>
 
-              {/* Difficulty */}
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Difficulty</label>
-                <div className="relative">
-                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
-                          value={dsaDifficulty} onChange={e => setDsaDifficulty(e.target.value)}>
-                    <option value="EASY" className="bg-[#111]">Easy (Warm up)</option>
-                    <option value="MEDIUM" className="bg-[#111]">Medium (Standard)</option>
-                    <option value="HARD" className="bg-[#111]">Hard (Advanced)</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+              {/* Step 2: Difficulty & Timer */}
+              <Step title="Difficulty & Timer">
+                <div className="space-y-6">
+                  {/* Difficulty */}
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Difficulty</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { value: 'EASY', label: 'Easy', desc: 'Warm up', color: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' },
+                        { value: 'MEDIUM', label: 'Medium', desc: 'Standard', color: 'text-amber-400 border-amber-500/30 bg-amber-500/10' },
+                        { value: 'HARD', label: 'Hard', desc: 'Advanced', color: 'text-red-400 border-red-500/30 bg-red-500/10' },
+                      ].map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setDsaDifficulty(opt.value)}
+                          className={`flex flex-col items-center gap-1 py-4 px-3 rounded-xl border transition-all ${
+                            dsaDifficulty === opt.value
+                              ? opt.color
+                              : 'bg-[#111] text-zinc-500 border-[#222] hover:border-[#444] hover:text-zinc-300'
+                          }`}
+                        >
+                          <span className="text-xs font-bold uppercase tracking-widest">{opt.label}</span>
+                          <span className="text-[10px] opacity-60">{opt.desc}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Timer */}
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Time Limit</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { value: 0, label: '∞ Unlimited' },
+                        { value: 15, label: '15 min' },
+                        { value: 30, label: '30 min' },
+                        { value: 45, label: '45 min' },
+                        { value: 60, label: '60 min' },
+                      ].map(opt => (
+                        <button
+                          key={opt.value}
+                          onClick={() => setDsaTimer(opt.value)}
+                          className={`py-3 px-2 rounded-xl border transition-all text-xs font-bold tracking-widest ${
+                            dsaTimer === opt.value
+                              ? 'bg-blue-500/10 text-blue-400 border-blue-500/30'
+                              : 'bg-[#111] text-zinc-400 border-[#222] hover:border-[#444] hover:text-white'
+                          }`}
+                        >
+                          {opt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
+              </Step>
 
-              {/* Timer */}
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Time Limit (Minutes)</label>
-                <div className="relative">
-                  <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-4 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
-                          value={dsaTimer} onChange={e => setDsaTimer(Number(e.target.value))}>
-                    <option value={0} className="bg-[#111]">Unlimited</option>
-                    <option value={15} className="bg-[#111]">15 mins</option>
-                    <option value={30} className="bg-[#111]">30 mins</option>
-                    <option value={45} className="bg-[#111]">45 mins</option>
-                    <option value={60} className="bg-[#111]">60 mins</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+              {/* Step 3: Review & Launch */}
+              <Step title="Review & Launch">
+                <div className="space-y-4">
+                  <p className="text-zinc-500 text-sm mb-2">Confirm your assessment configuration.</p>
+
+                  <div className="rounded-2xl bg-[#111] border border-[#222] p-5 space-y-4">
+                    <div className="flex justify-between items-center py-2 border-b border-[#222]">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Topic</span>
+                      <span className="text-sm font-bold text-blue-400">{dsaTopic === 'RANDOM' ? 'Random' : dsaTopic.replace(/_/g, ' ')}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-[#222]">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Difficulty</span>
+                      <span className={`text-sm font-bold ${
+                        dsaDifficulty === 'HARD' ? 'text-red-400' : dsaDifficulty === 'MEDIUM' ? 'text-amber-400' : 'text-emerald-400'
+                      }`}>{dsaDifficulty}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Timer</span>
+                      <span className="text-sm font-bold text-white">{dsaTimer === 0 ? 'Unlimited' : `${dsaTimer} minutes`}</span>
+                    </div>
+                  </div>
+
+                  {isStartingDsa && (
+                    <div className="flex items-center justify-center gap-3 py-4">
+                      <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-zinc-400 text-xs uppercase tracking-widest font-bold">Generating Problem...</span>
+                    </div>
+                  )}
                 </div>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-               <button onClick={() => setShowDsaModal(false)} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
-               <button onClick={handleStartDsa} disabled={isStartingDsa} className="flex-1 bg-blue-600 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors disabled:opacity-50">
-                {isStartingDsa ? 'Generating...' : 'Start Assessment'}
-              </button>
-            </div>
+              </Step>
+            </AnimatedStepper>
           </div>
         </div>
       )}
