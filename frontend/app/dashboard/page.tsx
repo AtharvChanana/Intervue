@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
+import MagicCard from '@/components/MagicCard';
 
 interface DashboardStats {
   totalSessions: number;
@@ -257,8 +258,7 @@ export default function DashboardPage() {
 
       {/* TOP MATRIX */}
       <div className="grid grid-cols-12 gap-6 mb-8">
-        <div className="col-span-12 md:col-span-4 relative group/box rounded-3xl p-[1px] overflow-hidden">
-            <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
+        <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
             <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Average Score</span>
@@ -270,10 +270,9 @@ export default function DashboardPage() {
                 </div>
                 <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Overall Average Score</p>
             </div>
-        </div>
+        </MagicCard>
 
-        <div className="col-span-12 md:col-span-4 relative group/box rounded-3xl p-[1px] overflow-hidden">
-            <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
+        <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
             <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Sessions Completed</span>
@@ -282,10 +281,9 @@ export default function DashboardPage() {
                 <h3 className="text-6xl font-black text-white px-2 tracking-tighter relative z-10">{stats?.completedSessions || 0}</h3>
                 <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Total Interviews Finished</p>
             </div>
-        </div>
+        </MagicCard>
 
-        <div className="col-span-12 md:col-span-4 relative group/box rounded-3xl p-[1px] overflow-hidden">
-            <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
+        <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
             <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Roles Practiced</span>
@@ -294,13 +292,12 @@ export default function DashboardPage() {
                 <h3 className="text-6xl font-black text-white px-2 tracking-tighter relative z-10">{stats?.distinctRolesPracticed || 0}</h3>
                 <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Unique Job Profiles</p>
             </div>
-        </div>
+        </MagicCard>
       </div>
 
       {/* ANALYTICS ENGINE */}
       <div className="grid grid-cols-12 gap-8 mb-8">
-          <div className="col-span-12 lg:col-span-6 relative group/box rounded-3xl p-[1px] overflow-hidden">
-              <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
+          <MagicCard className="col-span-12 lg:col-span-6 rounded-3xl">
               <div className="bg-black w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col hover:border-white/10 transition-colors shadow-2xl">
                   <h3 className="text-white text-xl font-black tracking-widest uppercase mb-10 flex items-center gap-3 relative z-10">
                     Skill Analytics
@@ -323,10 +320,9 @@ export default function DashboardPage() {
                       </div>
                   )}
               </div>
-          </div>
+          </MagicCard>
 
-          <div className="col-span-12 lg:col-span-6 relative group/box rounded-3xl p-[1px] overflow-hidden">
-              <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
+          <MagicCard className="col-span-12 lg:col-span-6 rounded-3xl">
               <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col justify-between hover:border-white/10 transition-colors shadow-2xl">
                   <div className="flex items-center gap-3 mb-8 relative z-10">
                      <span className="material-symbols-outlined text-white">insights</span>
@@ -347,12 +343,11 @@ export default function DashboardPage() {
                       )}
                   </div>
               </div>
-          </div>
+          </MagicCard>
       </div>
 
       {/* STREAK TRACKER */}
-      <div className="mb-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
-        <div className="absolute inset-[-150%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#1e40af_50%,#000000_100%)] opacity-0 group-hover/box:opacity-20 transition-opacity duration-700"></div>
+      <MagicCard className="mb-8 rounded-3xl">
         <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl relative">
           <div className="flex flex-col lg:flex-row gap-10">
 
@@ -453,11 +448,10 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-      </div>
+      </MagicCard>
 
         {/* PROGRESS CHART */}
-      <div className="mb-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
-        <div className="absolute inset-[-150%] animate-[spin_6s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-15 transition-opacity duration-700"></div>
+      <MagicCard className="mb-8 rounded-3xl">
         <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
             <span className="material-symbols-outlined text-white">trending_up</span>
@@ -515,11 +509,10 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-      </div>
+      </MagicCard>
 
       <div className="grid grid-cols-12 gap-8 mb-12 items-start">
-        <div className="col-span-12 lg:col-span-4 relative group/box rounded-3xl p-[1px] overflow-hidden">
-            <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
+        <MagicCard className="col-span-12 lg:col-span-4 rounded-3xl">
             <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 flex flex-col relative hover:border-white/10 transition-colors">
                 <div className="p-8 relative z-10 pb-2">
                      <h3 className="text-white text-lg font-black tracking-widest uppercase mb-2">Resume Parsing</h3>
@@ -607,10 +600,9 @@ export default function DashboardPage() {
              </div>
           )}
             </div>
-        </div>
+        </MagicCard>
 
-        <div className="col-span-12 lg:col-span-8 relative group/box rounded-3xl p-[1px] overflow-hidden">
-            <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-0 group-hover/box:opacity-30 transition-opacity duration-500"></div>
+        <MagicCard className="col-span-12 lg:col-span-8 rounded-3xl">
             <div className="bg-black w-full h-full rounded-[23px] border border-white/5 p-10 relative hover:border-white/10 transition-colors shadow-2xl overflow-hidden">
                 <div className="absolute top-0 right-0 w-[500px] h-1 opacity-20 bg-gradient-to-l from-white to-transparent"></div>
                 <div className="flex justify-between items-end mb-10 border-b border-white/5 pb-6 relative z-10">
@@ -663,7 +655,7 @@ export default function DashboardPage() {
                   )}
                 </div>
             </div>
-        </div>
+        </MagicCard>
       </div>
 
       {toast && (
