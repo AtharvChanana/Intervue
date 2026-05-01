@@ -118,7 +118,7 @@ export default function LandingPage() {
               MASTER THE <br /> <span className="text-zinc-600">MOCK INTERVIEW.</span>
             </h1>
             <p className="text-xl md:text-2xl text-on-surface-variant font-light leading-relaxed max-w-xl mb-12">
-              An ethereal training ecosystem designed for elite career progression. Leverage precision AI to simulate high-stakes engineering rounds.
+              Ace your next interview with realistic AI-powered practice. Get instant feedback, track your progress, and build the confidence you need to land your dream job.
             </p>
           </div>
 
@@ -127,8 +127,8 @@ export default function LandingPage() {
             <div className="absolute -inset-0.5 bg-gradient-to-b from-white/10 to-transparent rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
             <div className="relative bg-[#0a0a0a] rounded-xl p-10 border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.05)]">
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">Access Portal</h2>
-                <p className="text-zinc-500 text-sm">Synchronize your professional profile.</p>
+                <h2 className="text-2xl font-bold text-white mb-2">Login</h2>
+                <p className="text-zinc-500 text-sm">Create your professional profile.</p>
               </div>
 
               {error && (
