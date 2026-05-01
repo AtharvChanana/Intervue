@@ -165,7 +165,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Security Key</label>
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Password</label>
                   <input
                     required
                     className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
