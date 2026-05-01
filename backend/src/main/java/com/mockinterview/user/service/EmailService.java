@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +15,6 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String senderEmail;
 
-    @Async
     public void sendEmail(String to, String subject, String body) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -25,10 +23,14 @@ public class EmailService {
             message.setSubject(subject);
             message.setText(body);
             javaMailSender.send(message);
-            System.out.println("[EMAIL] Successfully sent email to " + to);
         } catch (Exception e) {
             System.err.println("Failed to send email to " + to + ": " + e.getMessage());
-            e.printStackTrace();
+            // Fallback to console during missing config
+            System.out.println("==================================================");
+            System.out.println("[MOCK EMAIL FALLBACK] To: " + to);
+            System.out.println("[MOCK EMAIL FALLBACK] Subject: " + subject);
+            System.out.println("[MOCK EMAIL FALLBACK] Body: " + body);
+            System.out.println("==================================================");
         }
     }
 }
