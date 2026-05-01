@@ -4,6 +4,17 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 import Logo from '@/components/Logo';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -205,14 +216,16 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {showForgotModal && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
-          <div className="bg-[#050505] border border-white/10 rounded-2xl w-full max-w-md p-8 shadow-[0_0_50px_rgba(255,255,255,0.05)] animate-in zoom-in-95 duration-300">
-            <h2 className="text-2xl font-black text-white mb-2">Password Recovery</h2>
-            <p className="text-zinc-500 text-xs mb-8">
+      <AlertDialog open={showForgotModal} onOpenChange={setShowForgotModal}>
+        <AlertDialogContent className="bg-[#050505] border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.05)] sm:max-w-md gap-6">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl font-black text-white">Password Recovery</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-500 text-sm">
               {forgotStep === 1 ? "Enter your email to receive a recovery code." : "Enter your code and new password."}
-            </p>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
 
+          <div className="py-2">
             {forgotError && (
               <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-xs mb-6 font-medium">
                 {forgotError}
@@ -236,12 +249,6 @@ export default function LandingPage() {
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
                   />
-                </div>
-                <div className="flex gap-4 pt-4">
-                  <button onClick={() => setShowForgotModal(false)} className="flex-1 py-3 text-xs bg-white/5 text-white rounded-lg font-bold hover:bg-white/10 transition-colors uppercase tracking-widest">Cancel</button>
-                  <button onClick={handleSendForgotOtp} disabled={isProcessingForgot || !forgotEmail} className="flex-1 py-3 text-xs bg-white text-black rounded-lg font-bold hover:bg-zinc-200 transition-colors uppercase tracking-widest disabled:opacity-50">
-                    {isProcessingForgot ? 'Sending...' : 'Send OTP'}
-                  </button>
                 </div>
               </div>
             ) : (
@@ -267,17 +274,26 @@ export default function LandingPage() {
                     onChange={(e) => setForgotNewPassword(e.target.value)}
                   />
                 </div>
-                <div className="flex gap-4 pt-4">
-                  <button onClick={() => setShowForgotModal(false)} className="flex-1 py-3 text-xs bg-white/5 text-white rounded-lg font-bold hover:bg-white/10 transition-colors uppercase tracking-widest">Cancel</button>
-                  <button onClick={handleResetPassword} disabled={isProcessingForgot || forgotOtp.length !== 6 || !forgotNewPassword} className="flex-1 py-3 text-xs bg-white text-black rounded-lg font-bold hover:bg-zinc-200 transition-colors uppercase tracking-widest disabled:opacity-50">
-                    {isProcessingForgot ? 'Resetting...' : 'Reset Password'}
-                  </button>
-                </div>
               </div>
             )}
           </div>
-        </div>
-      )}
+          
+          <AlertDialogFooter className="mt-4">
+            <AlertDialogCancel onClick={() => setShowForgotModal(false)} className="bg-white/5 text-white border-white/10 hover:bg-white/10 hover:text-white uppercase tracking-widest text-xs font-bold rounded-lg border">
+              Cancel
+            </AlertDialogCancel>
+            {forgotStep === 1 ? (
+              <Button onClick={(e) => { e.preventDefault(); handleSendForgotOtp(); }} disabled={isProcessingForgot || !forgotEmail} className="bg-white text-black hover:bg-zinc-200 uppercase tracking-widest text-xs font-bold rounded-lg px-4 py-2">
+                {isProcessingForgot ? 'Sending...' : 'Send OTP'}
+              </Button>
+            ) : (
+              <Button onClick={(e) => { e.preventDefault(); handleResetPassword(); }} disabled={isProcessingForgot || forgotOtp.length !== 6 || !forgotNewPassword} className="bg-white text-black hover:bg-zinc-200 uppercase tracking-widest text-xs font-bold rounded-lg px-4 py-2">
+                {isProcessingForgot ? 'Resetting...' : 'Reset Password'}
+              </Button>
+            )}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
     </>
   );

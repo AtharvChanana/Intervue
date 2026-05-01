@@ -4,6 +4,17 @@ import { useEffect, useState, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 import AnimatedIcon from '@/components/AnimatedIcon';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 interface QuestionResponse {
   questionId: number;
@@ -301,20 +312,24 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
 
   return (
     <div className="max-w-4xl mx-auto pb-20">
-      {showEndConfirm && (
-        <div className="fixed inset-0 z-[200] bg-black/90 flex items-center justify-center p-4">
-          <div className="bg-black border border-white/10 rounded-xl p-10 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200">
-            <h2 className="text-2xl font-black text-white mb-2">End Session?</h2>
-            <p className="text-zinc-400 text-sm mb-8">Are you sure you want to end this interview? Your progress will be halted and this cannot be undone.</p>
-            <div className="flex gap-4">
-               <button onClick={() => setShowEndConfirm(false)} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-white/10 transition-colors border border-white/5">Stay</button>
-               <button onClick={confirmEndSession} className="flex-1 bg-red-500/20 text-red-500 border border-red-500/20 py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-red-500 hover:text-white transition-all">
-                End It
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AlertDialog open={showEndConfirm} onOpenChange={setShowEndConfirm}>
+        <AlertDialogContent className="bg-[#050505] border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.05)] sm:max-w-md gap-6">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl font-black text-white text-center">End Session?</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-500 text-sm text-center">
+              Are you sure you want to end this interview? Your progress will be halted and this cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-4 flex-col sm:flex-col gap-3">
+            <Button onClick={confirmEndSession} className="w-full bg-red-500/20 text-red-500 border border-red-500/20 py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-red-500 hover:text-white transition-all">
+              End It
+            </Button>
+            <AlertDialogCancel onClick={() => setShowEndConfirm(false)} className="w-full mt-0 sm:mt-0 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-white/10 transition-colors border-white/5">
+              Stay
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="flex justify-between items-center mb-10">
         <h2 className="text-xl font-bold text-white tracking-widest uppercase">

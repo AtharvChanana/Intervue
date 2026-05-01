@@ -8,6 +8,17 @@ import Logo from '@/components/Logo';
 import { AnimatedStepper, Step } from '@/components/AnimatedStepper';
 import AnimatedIcon from '@/components/AnimatedIcon';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardLayout({
   children,
@@ -1207,22 +1218,24 @@ export default function DashboardLayout({
         </header>
 
         {/* Logout Confirm Modal */}
-        {showLogoutConfirm && (
-          <div className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4" onClick={() => setShowLogoutConfirm(false)}>
-            <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
-              <h2 className="text-2xl font-black text-white mb-2 text-center">Confirm Logout</h2>
-              <p className="text-zinc-400 text-sm mb-8 text-center">Are you sure you want to end your session and log out securely?</p>
-              <div className="flex flex-col gap-3">
-                <button onClick={() => { localStorage.removeItem('token'); router.push('/'); }} className="w-full bg-red-500/20 text-red-500 border border-red-500/20 py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-red-500 hover:text-white transition-all">
-                  Logout
-                </button>
-                <button onClick={() => setShowLogoutConfirm(false)} className="w-full bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">
-                  Stay Signed In
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
+          <AlertDialogContent className="bg-[#050505] border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.05)] sm:max-w-md gap-6">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-2xl font-black text-white text-center">Confirm Logout</AlertDialogTitle>
+              <AlertDialogDescription className="text-zinc-500 text-sm text-center">
+                Are you sure you want to end your session and log out securely?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="mt-4 flex-col sm:flex-col gap-3">
+              <Button onClick={() => { localStorage.removeItem('token'); router.push('/'); }} className="w-full bg-red-500/20 text-red-500 border border-red-500/20 py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-red-500 hover:text-white transition-all">
+                Logout
+              </Button>
+              <AlertDialogCancel onClick={() => setShowLogoutConfirm(false)} className="w-full mt-0 sm:mt-0 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border-white/5">
+                Stay Signed In
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Mobile Notifications Modal */}
         {showNotifications && (
@@ -1348,72 +1361,74 @@ export default function DashboardLayout({
         )}
 
         {/* Validate OTP Modal */}
-        {showVerifyOtpModal && (
-          <div className="fixed inset-0 z-[180] bg-black/95 flex items-center justify-center p-4">
-            <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-sm w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
-              <div className="flex flex-col items-center text-center">
-                 <AnimatedIcon name="mark_email_read" className="text-4xl text-blue-500 mb-4 animate-pulse" />
-                 <h2 className="text-2xl font-black text-white mb-2">Verify Email</h2>
-                 <p className="text-zinc-500 text-xs mb-8">Enter the 6-digit OTP code sent to your mock email console.</p>
-                 
-                 <input type="text" maxLength={6} className="w-full text-center tracking-[0.5em] text-3xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500/50 transition-colors mb-8"
-                        placeholder="000000"
-                        value={verifyOtpCode} onChange={e => setVerifyOtpCode(e.target.value.replace(/\D/g, ''))} />
-                 
-                 <div className="text-zinc-400 text-xs text-center mt-[-1rem] mb-6">
-                   {resendCountdown > 0 ? (
-                     <span>Resend code in <strong className="text-white">{resendCountdown}s</strong></span>
-                   ) : (
-                     <button onClick={handleSendVerification} className="text-blue-500 hover:text-blue-400 underline font-bold" disabled={isProcessingOTP}>
-                       Resend Secure Code
-                     </button>
-                   )}
-                 </div>
-
-                 <div className="flex gap-4 w-full">
-                   <button onClick={() => { setShowVerifyOtpModal(false); setShowProfileModal(true); setVerifyOtpCode(""); }} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
-                   <button onClick={handleVerifyOTP} disabled={verifyOtpCode.length !== 6 || isProcessingOTP} className="flex-1 bg-blue-600 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.3)] disabled:opacity-50">
-                    Verify
+        <AlertDialog open={showVerifyOtpModal} onOpenChange={setShowVerifyOtpModal}>
+          <AlertDialogContent className="bg-[#050505] border-white/10 shadow-[0_0_50px_rgba(59,130,246,0.1)] sm:max-w-sm gap-6">
+            <AlertDialogHeader className="items-center">
+              <AnimatedIcon name="mark_email_read" className="text-4xl text-blue-500 mb-2 animate-pulse" />
+              <AlertDialogTitle className="text-2xl font-black text-white">Verify Email</AlertDialogTitle>
+              <AlertDialogDescription className="text-zinc-500 text-xs text-center">
+                Enter the 6-digit OTP code sent to your mock email console.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="py-2">
+              <input type="text" maxLength={6} className="w-full text-center tracking-[0.5em] text-3xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500/50 transition-colors mb-6"
+                     placeholder="000000"
+                     value={verifyOtpCode} onChange={e => setVerifyOtpCode(e.target.value.replace(/\D/g, ''))} />
+              <div className="text-zinc-400 text-xs text-center">
+                {resendCountdown > 0 ? (
+                  <span>Resend code in <strong className="text-white">{resendCountdown}s</strong></span>
+                ) : (
+                  <button onClick={handleSendVerification} className="text-blue-500 hover:text-blue-400 underline font-bold" disabled={isProcessingOTP}>
+                    Resend Secure Code
                   </button>
-                 </div>
+                )}
               </div>
             </div>
-          </div>
-        )}
+            <AlertDialogFooter className="flex-col sm:flex-col gap-3">
+              <Button onClick={(e) => { e.preventDefault(); handleVerifyOTP(); }} disabled={verifyOtpCode.length !== 6 || isProcessingOTP} className="w-full bg-blue-600 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.3)] disabled:opacity-50">
+                Verify
+              </Button>
+              <AlertDialogCancel onClick={() => { setShowVerifyOtpModal(false); setShowProfileModal(true); setVerifyOtpCode(""); }} className="w-full mt-0 sm:mt-0 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border-white/5">
+                Cancel
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Update Email OTP Modal */}
-        {showUpdateEmailOtpModal && (
-          <div className="fixed inset-0 z-[190] bg-black/95 flex items-center justify-center p-4">
-            <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-sm w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
-              <div className="flex flex-col items-center text-center">
-                 <AnimatedIcon name="lock_person" className="text-4xl text-blue-500 mb-4 animate-pulse" />
-                 <h2 className="text-2xl font-black text-white mb-2">Confirm Identity</h2>
-                 <p className="text-zinc-500 text-xs mb-8">Enter the 6-digit verification code sent to your <strong className="text-white">{newEmailInput}</strong> email mock console to finalize the update.</p>
-                 
-                 <input type="text" maxLength={6} className="w-full text-center tracking-[0.5em] text-3xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500/50 transition-colors mb-8"
-                        placeholder="000000"
-                        value={updateEmailOtpCode} onChange={e => setUpdateEmailOtpCode(e.target.value.replace(/\D/g, ''))} />
-                 
-                 <div className="text-zinc-400 text-xs text-center mt-[-1rem] mb-6">
-                   {resendCountdown > 0 ? (
-                     <span>Resend code in <strong className="text-white">{resendCountdown}s</strong></span>
-                   ) : (
-                     <button onClick={handleUpdateEmailRequest} className="text-blue-500 hover:text-blue-400 underline font-bold" disabled={isProcessingOTP}>
-                       Resend Secure Code
-                     </button>
-                   )}
-                 </div>
-
-                 <div className="flex gap-4 w-full">
-                   <button onClick={() => { setShowUpdateEmailOtpModal(false); setShowSettingsModal(true); setUpdateEmailOtpCode(""); }} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
-                   <button onClick={handleVerifyEmailUpdate} disabled={updateEmailOtpCode.length !== 6 || isProcessingOTP} className="flex-1 bg-blue-600 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.3)] disabled:opacity-50">
-                    Verify & Update
+        <AlertDialog open={showUpdateEmailOtpModal} onOpenChange={setShowUpdateEmailOtpModal}>
+          <AlertDialogContent className="bg-[#050505] border-white/10 shadow-[0_0_50px_rgba(59,130,246,0.1)] sm:max-w-sm gap-6">
+            <AlertDialogHeader className="items-center">
+              <AnimatedIcon name="lock_person" className="text-4xl text-blue-500 mb-2 animate-pulse" />
+              <AlertDialogTitle className="text-2xl font-black text-white">Confirm Identity</AlertDialogTitle>
+              <AlertDialogDescription className="text-zinc-500 text-xs text-center">
+                Enter the 6-digit verification code sent to your <strong className="text-white">{newEmailInput}</strong> email mock console to finalize the update.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="py-2">
+              <input type="text" maxLength={6} className="w-full text-center tracking-[0.5em] text-3xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500/50 transition-colors mb-6"
+                     placeholder="000000"
+                     value={updateEmailOtpCode} onChange={e => setUpdateEmailOtpCode(e.target.value.replace(/\D/g, ''))} />
+              <div className="text-zinc-400 text-xs text-center">
+                {resendCountdown > 0 ? (
+                  <span>Resend code in <strong className="text-white">{resendCountdown}s</strong></span>
+                ) : (
+                  <button onClick={handleUpdateEmailRequest} className="text-blue-500 hover:text-blue-400 underline font-bold" disabled={isProcessingOTP}>
+                    Resend Secure Code
                   </button>
-                 </div>
+                )}
               </div>
             </div>
-          </div>
-        )}
+            <AlertDialogFooter className="flex-col sm:flex-col gap-3">
+              <Button onClick={(e) => { e.preventDefault(); handleVerifyEmailUpdate(); }} disabled={updateEmailOtpCode.length !== 6 || isProcessingOTP} className="w-full bg-blue-600 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.3)] disabled:opacity-50">
+                Verify & Update
+              </Button>
+              <AlertDialogCancel onClick={() => { setShowUpdateEmailOtpModal(false); setShowSettingsModal(true); setUpdateEmailOtpCode(""); }} className="w-full mt-0 sm:mt-0 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border-white/5">
+                Cancel
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Main Content Canvas */}
         <main className="mt-20 md:mt-20 p-6 md:p-12 flex-1">
