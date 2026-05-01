@@ -251,7 +251,7 @@ export default function DashboardPage() {
     <div className="animate-in fade-in duration-1000 pb-20">
       <div className="flex justify-between items-end mb-16">
         <div className="max-w-2xl">
-          <h2 className="text-4xl lg:text-5xl font-black uppercase tracking-widest mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white/20">Overview</h2>
+          <h2 className="text-4xl lg:text-5xl font-black uppercase tracking-widest mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white/20">Dashboard</h2>
           <p className="text-zinc-500 text-sm tracking-widest font-medium overflow-hidden whitespace-nowrap">YOUR RECENT PERFORMANCE METRICS</p>
           {error && <p className="text-red-400 mt-4 text-xs font-bold">WARNING: Offline Analytics Cache Served. Engine Connection Fault.</p>}
         </div>

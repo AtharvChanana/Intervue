@@ -143,6 +143,7 @@ export default function DashboardLayout({
   const [oldPassword, setOldPassword] = useState("");
   const [settingsPassword, setSettingsPassword] = useState("");
   const [isUpdatingSettings, setIsUpdatingSettings] = useState(false);
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
   const handleOpenModal = async () => {
     try {
       const fetchedRoles = await fetchApi('/roles');
@@ -812,19 +813,37 @@ export default function DashboardLayout({
                        value={settingsName} onChange={e => setSettingsName(e.target.value)} />
               </div>
 
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Current Password</label>
-                <input type="password" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
-                       placeholder="Required if changing password"
-                       value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
-              </div>
-              
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">New Password</label>
-                <input type="password" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
-                       placeholder="Leave blank to keep unchanged"
-                       value={settingsPassword} onChange={e => setSettingsPassword(e.target.value)} />
-              </div>
+              {!showPasswordChange ? (
+                <button
+                  onClick={() => setShowPasswordChange(true)}
+                  className="w-full flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-lg p-4 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <AnimatedIcon name="lock" className="text-lg text-zinc-400 group-hover:text-white" />
+                    <span className="text-sm font-bold text-zinc-400 group-hover:text-white uppercase tracking-widest">Change Password</span>
+                  </div>
+                  <AnimatedIcon name="arrow_forward" className="text-sm text-zinc-600 group-hover:text-white" />
+                </button>
+              ) : (
+                <div className="space-y-4 p-4 rounded-lg border border-white/10 bg-white/[0.02]">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Change Password</span>
+                    <button onClick={() => { setShowPasswordChange(false); setOldPassword(''); setSettingsPassword(''); }} className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-widest font-bold transition-colors">Cancel</button>
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Current Password</label>
+                    <input type="password" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
+                           placeholder="Enter current password"
+                           value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
+                  </div>
+                  <div>
+                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">New Password</label>
+                    <input type="password" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
+                           placeholder="Enter new password"
+                           value={settingsPassword} onChange={e => setSettingsPassword(e.target.value)} />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-4">
@@ -1045,7 +1064,7 @@ export default function DashboardLayout({
               }}
               className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname === '/dashboard' ? 'text-white' : 'text-zinc-500 hover:text-white'}`} 
               href="/dashboard">
-              Overview
+              Dashboard
             </Link>
 
             <Link 
