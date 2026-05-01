@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import Logo from '@/components/Logo';
 import { AnimatedStepper, Step } from '@/components/AnimatedStepper';
+import AnimatedIcon from '@/components/AnimatedIcon';
 
 export default function DashboardLayout({
   children,
@@ -395,7 +396,7 @@ export default function DashboardLayout({
         <div className="fixed inset-0 z-[300] bg-black flex items-center justify-center p-4">
           <div className="bg-black border border-white/10 rounded-xl p-8 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
             <div className={`w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border ${systemToast.isError ? 'border-red-500/20 text-red-500' : 'border-green-500/20 text-green-500'}`}>
-              <span className="material-symbols-outlined">{systemToast.isError ? 'error' : 'check_circle'}</span>
+              <AnimatedIcon name={systemToast.isError ? 'error' : 'check_circle'} />
             </div>
             <h2 className="text-xl font-bold text-white mb-2">{systemToast.title}</h2>
             <p className="text-zinc-400 text-sm mb-8">{systemToast.message}</p>
@@ -409,7 +410,7 @@ export default function DashboardLayout({
         <div className="fixed inset-0 z-[200] bg-black flex items-center justify-center p-4">
           <div className="bg-black border border-white/10 rounded-xl p-8 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
             <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20 text-red-500">
-              <span className="material-symbols-outlined text-red-500">block</span>
+              <AnimatedIcon name="block" className="text-red-500" />
             </div>
             <h2 className="text-xl font-bold text-white mb-2">Action Blocked</h2>
             <p className="text-zinc-400 text-sm mb-8">{navAlertMessage}</p>
@@ -428,7 +429,7 @@ export default function DashboardLayout({
               onClick={() => { setShowModal(false); setIsCustomMode(false); setCustomJobRoleText(''); }}
               className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-[#222] border border-[#333] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#333] transition-colors"
             >
-              <span className="material-symbols-outlined text-sm">close</span>
+              <AnimatedIcon name="close" className="text-sm" />
             </button>
 
             <AnimatedStepper
@@ -450,7 +451,7 @@ export default function DashboardLayout({
                         : 'bg-white/5 text-zinc-400 border-[#222] hover:border-[#444] hover:text-white'
                     }`}
                   >
-                    <span className="material-symbols-outlined text-sm">{isCustomMode ? 'edit_note' : 'tune'}</span>
+                    <AnimatedIcon name={isCustomMode ? 'edit_note' : 'tune'} className="text-sm" />
                     {isCustomMode ? 'Custom Active — Use Presets' : 'Custom Session — Type Any Role'}
                   </button>
 
@@ -471,7 +472,7 @@ export default function DashboardLayout({
                                 value={selectedRole} onChange={e => setSelectedRole(Number(e.target.value))}>
                           {roles.map(r => <option key={r.id} value={r.id} className="bg-[#111]">{r.title}</option>)}
                         </select>
-                        <span className="material-symbols-outlined absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm">unfold_more</span>
+                        <AnimatedIcon name="unfold_more" className="absolute right-4 top-4 text-zinc-500 pointer-events-none text-sm" />
                       </div>
                     )}
                   </div>
@@ -494,7 +495,7 @@ export default function DashboardLayout({
                               : 'bg-[#111] text-zinc-400 border-[#222] hover:border-[#444] hover:text-white'
                           }`}
                         >
-                          <span className="material-symbols-outlined text-lg">{opt.icon}</span>
+                          <AnimatedIcon name={opt.icon} className="text-lg" />
                           {opt.label}
                         </button>
                       ))}
@@ -539,7 +540,7 @@ export default function DashboardLayout({
                         onClick={() => setNumQuestions(Math.max(1, numQuestions - 1))}
                         className="w-12 h-12 rounded-xl bg-[#111] border border-[#222] text-white flex items-center justify-center hover:bg-[#1a1a1a] transition-colors"
                       >
-                        <span className="material-symbols-outlined text-sm">remove</span>
+                        <AnimatedIcon name="remove" className="text-sm" />
                       </button>
                       <div className="flex-1 text-center">
                         <span className="text-4xl font-black text-white tabular-nums">{numQuestions}</span>
@@ -549,7 +550,7 @@ export default function DashboardLayout({
                         onClick={() => setNumQuestions(Math.min(20, numQuestions + 1))}
                         className="w-12 h-12 rounded-xl bg-[#111] border border-[#222] text-white flex items-center justify-center hover:bg-[#1a1a1a] transition-colors"
                       >
-                        <span className="material-symbols-outlined text-sm">add</span>
+                        <AnimatedIcon name="add" className="text-sm" />
                       </button>
                     </div>
                   </div>
@@ -636,7 +637,7 @@ export default function DashboardLayout({
               onClick={() => setShowDsaModal(false)}
               className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-[#222] border border-[#333] flex items-center justify-center text-zinc-400 hover:text-white hover:bg-[#333] transition-colors"
             >
-              <span className="material-symbols-outlined text-sm">close</span>
+              <AnimatedIcon name="close" className="text-sm" />
             </button>
 
             <AnimatedStepper
@@ -672,7 +673,7 @@ export default function DashboardLayout({
                             : 'bg-[#111] text-zinc-400 border-[#222] hover:border-[#444] hover:text-white'
                         }`}
                       >
-                        <span className="material-symbols-outlined text-base">{opt.icon}</span>
+                        <AnimatedIcon name={opt.icon} className="text-base" />
                         {opt.label}
                       </button>
                     ))}
@@ -783,7 +784,7 @@ export default function DashboardLayout({
                 <div className="flex justify-between items-center mb-3">
                   <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Email Access</label>
                   <button onClick={() => setShowEmailUpdateForm(!showEmailUpdateForm)} className="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors flex items-center gap-1 bg-blue-500/10 px-2 flex py-1 rounded">
-                    <span className="material-symbols-outlined text-[14px]">edit</span> {showEmailUpdateForm ? "Cancel" : "Change Email"}
+                    <AnimatedIcon name="edit" className="text-[14px]" /> {showEmailUpdateForm ? "Cancel" : "Change Email"}
                   </button>
                 </div>
                 {!showEmailUpdateForm ? (
@@ -875,7 +876,7 @@ export default function DashboardLayout({
         <div className="fixed inset-0 z-[170] bg-black/90 backdrop-blur-[30px] flex items-center justify-center p-4">
           <div className="bg-red-950/20 border border-red-500/40 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-[0_0_100px_rgba(239,68,68,0.2)] animate-in zoom-in-95 duration-300">
             <div className="w-16 h-16 bg-red-500/10 rounded-full flex flex-col items-center justify-center mb-6 border border-red-500/30 text-red-500 mx-auto">
-               <span className="material-symbols-outlined text-3xl">warning</span>
+               <AnimatedIcon name="warning" className="text-3xl" />
             </div>
             <h2 className="text-3xl font-black text-center text-white mb-4">Are you absolute sure?</h2>
             <p className="text-zinc-400 text-sm mb-10 text-center leading-relaxed">
@@ -902,7 +903,7 @@ export default function DashboardLayout({
           <h1 className="font-bold text-md text-white mt-1">Intervue</h1>
         </div>
         <button onClick={() => setIsMobileSidebarOpen(true)} className="text-white bg-white/5 hover:bg-white/10 transition-colors p-2 rounded-md border border-white/5 flex items-center justify-center">
-          <span className="material-symbols-outlined text-2xl">menu</span>
+          <AnimatedIcon name="menu" className="text-2xl" />
         </button>
       </div>
 
@@ -924,7 +925,7 @@ export default function DashboardLayout({
               <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] leading-tight">Precision Training</p>
             </div>
             <button onClick={() => setIsMobileSidebarOpen(false)} className="md:hidden absolute right-0 top-5 text-white bg-white/5 p-1.5 rounded-md border border-white/5">
-               <span className="material-symbols-outlined text-sm">close</span>
+               <AnimatedIcon name="close" className="text-sm" />
             </button>
           </div>
         </div>
@@ -943,7 +944,7 @@ export default function DashboardLayout({
                 }}
                 className={`flex items-center gap-3 py-3 px-8 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname === '/dashboard' ? 'bg-white/5 text-white border-l-2 border-white' : 'text-zinc-500 hover:text-white hover:bg-white/[0.02]'}`} 
                 href="/dashboard">
-                <span className="material-symbols-outlined text-xl">grid_view</span>
+                <AnimatedIcon name="grid_view" className="text-xl" />
                 <span>Dashboard</span>
               </Link>
             </li>
@@ -959,7 +960,7 @@ export default function DashboardLayout({
                 }}
                 className={`flex items-center gap-3 py-3 px-8 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname?.includes('/sessions') ? 'bg-white/5 text-white border-l-2 border-white' : 'text-zinc-500 hover:text-white hover:bg-white/[0.02]'}`} 
                 href="/dashboard/sessions">
-                <span className="material-symbols-outlined text-xl">video_call</span>
+                <AnimatedIcon name="video_call" className="text-xl" />
                 <span>Mock Sessions</span>
               </Link>
             </li>
@@ -975,7 +976,7 @@ export default function DashboardLayout({
                 }}
                 className={`flex items-center gap-3 py-3 px-8 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname?.includes('/leaderboard') ? 'bg-white/5 text-white border-l-2 border-white' : 'text-zinc-500 hover:text-white hover:bg-white/[0.02]'}`} 
                 href="/dashboard/leaderboard">
-                <span className="material-symbols-outlined text-xl">leaderboard</span>
+                <AnimatedIcon name="leaderboard" className="text-xl" />
                 <span>Leaderboard</span>
               </Link>
             </li>
@@ -995,7 +996,7 @@ export default function DashboardLayout({
              onClick={() => { setIsMobileSidebarOpen(false); setShowNotifications(!showNotifications); }}
              className={`md:hidden w-full flex items-center justify-between py-3 px-4 rounded-md text-left transition-colors bg-white/5 text-zinc-300 hover:text-white`}>
             <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-xl">notifications</span>
+                <AnimatedIcon name="notifications" className="text-xl" />
                 <span>Alerts</span>
             </div>
             {notifications.some(n => !n.read) && (
@@ -1005,13 +1006,13 @@ export default function DashboardLayout({
            <button 
              onClick={() => { setIsMobileSidebarOpen(false); handleOpenSettings(); }}
              className={`md:hidden w-full flex items-center gap-3 py-3 px-4 rounded-md text-left transition-colors bg-white/5 text-zinc-300 hover:text-white`}>
-            <span className="material-symbols-outlined text-xl">settings</span>
+            <AnimatedIcon name="settings" className="text-xl" />
             <span>Settings</span>
           </button>
            <button 
              onClick={() => { setIsMobileSidebarOpen(false); setShowProfileModal(true); }}
              className={`md:hidden w-full flex items-center gap-3 py-3 px-4 rounded-md text-left transition-colors bg-white/5 text-zinc-300 hover:text-white`}>
-            <span className="material-symbols-outlined text-xl">account_circle</span>
+            <AnimatedIcon name="account_circle" className="text-xl" />
             <span>Profile</span>
           </button>
 
@@ -1019,7 +1020,7 @@ export default function DashboardLayout({
              disabled={isSessionActive}
              onClick={() => { if(isSessionActive) { setNavAlertMessage("Please complete or end your current session before logging out."); return; } setShowLogoutConfirm(true); }} 
              className={`w-full flex items-center gap-3 py-3 px-4 rounded-md text-left transition-colors mt-4 ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
-            <span className="material-symbols-outlined text-xl">logout</span>
+            <AnimatedIcon name="logout" className="text-xl" />
             <span>Logout</span>
           </button>
         </div>
@@ -1083,7 +1084,7 @@ export default function DashboardLayout({
               }} 
               className={`flex items-center gap-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 py-2.5 px-6 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-[0_0_20px_rgba(59,130,246,0.1)] transition-transform ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'hover:scale-105 hover:bg-blue-600/30'}`}
             >
-              <span className="material-symbols-outlined text-[14px]">code</span>
+              <AnimatedIcon name="code" className="text-[14px]" />
               Code Assessment
             </button>
 
@@ -1099,7 +1100,7 @@ export default function DashboardLayout({
               }} 
               className={`flex items-center gap-2 bg-white text-black py-2.5 px-6 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-transform ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]'}`}
             >
-              <span className="material-symbols-outlined text-[14px]">add</span>
+              <AnimatedIcon name="add" className="text-[14px]" />
               Start Session
             </button>
           </nav>
@@ -1112,7 +1113,7 @@ export default function DashboardLayout({
                 disabled={isSessionActive}
                 className={`transition-colors relative flex items-center justify-center p-1 ${isSessionActive ? 'opacity-30 cursor-not-allowed text-zinc-600' : 'text-zinc-400 hover:text-white'}`}
               >
-                <span className="material-symbols-outlined text-xl">notifications</span>
+                <AnimatedIcon name="notifications" className="text-xl" />
                 {notifications.some(n => !n.read) && (
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_rgba(255,255,255,1)]"></span>
                 )}
@@ -1145,7 +1146,7 @@ export default function DashboardLayout({
                 {userProfile?.profilePictureUrl ? (
                   <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${userProfile.profilePictureUrl}`} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="material-symbols-outlined text-white text-sm">person</span>
+                  <AnimatedIcon name="person" className="text-white text-sm" />
                 )}
               </button>
 
@@ -1157,10 +1158,10 @@ export default function DashboardLayout({
                   </div>
                   <div className="py-2">
                     <button onClick={() => { setShowProfileDropdown(false); setShowProfileModal(true); }} className="w-full text-left px-4 py-3 text-sm text-zinc-300 hover:text-white hover:bg-white/[0.02] transition-colors flex items-center gap-3">
-                      <span className="material-symbols-outlined text-lg">person</span> Profile
+                      <AnimatedIcon name="person" className="text-lg" /> Profile
                     </button>
                     <button onClick={() => { setShowProfileDropdown(false); handleOpenSettings(); }} className="w-full text-left px-4 py-3 text-sm text-zinc-300 hover:text-white hover:bg-white/[0.02] transition-colors flex items-center gap-3">
-                      <span className="material-symbols-outlined text-lg">settings</span> Settings
+                      <AnimatedIcon name="settings" className="text-lg" /> Settings
                     </button>
                   </div>
                   <div className="py-2 border-t border-white/5">
@@ -1173,7 +1174,7 @@ export default function DashboardLayout({
                       }} 
                       className={`w-full text-left px-4 py-3 text-sm flex items-center gap-3 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed text-zinc-500' : 'text-red-500/80 hover:text-red-500 hover:bg-red-500/[0.02]'}`}
                     >
-                      <span className="material-symbols-outlined text-lg">logout</span> Logout
+                      <AnimatedIcon name="logout" className="text-lg" /> Logout
                     </button>
                   </div>
                 </div>
@@ -1208,7 +1209,7 @@ export default function DashboardLayout({
               <div className="p-6 border-b border-white/5 bg-black flex justify-between items-center rounded-t-2xl">
                  <h3 className="text-white font-bold text-sm uppercase tracking-widest">System Alerts</h3>
                  <button onClick={() => setShowNotifications(false)} className="text-zinc-500 hover:text-white">
-                    <span className="material-symbols-outlined">close</span>
+                    <AnimatedIcon name="close" />
                  </button>
               </div>
               <div className="overflow-y-auto flex-1 p-2">
@@ -1236,13 +1237,13 @@ export default function DashboardLayout({
                   <h2 className="text-3xl font-black text-white mb-1 flex items-center gap-2">
                     Your Profile
                     {userProfile.emailVerified && (
-                      <span className="material-symbols-outlined text-blue-500 fill-current text-[28px]" title="Verified Account">verified</span>
+                      <AnimatedIcon name="verified" className="text-blue-500 text-[28px]" title="Verified Account" />
                     )}
                   </h2>
                   <p className="text-zinc-500 text-sm">Manage your demographic and avatar details.</p>
                 </div>
                 <button onClick={() => setShowProfileModal(false)} className="text-zinc-500 hover:text-white transition-colors">
-                  <span className="material-symbols-outlined">close</span>
+                  <AnimatedIcon name="close" />
                 </button>
               </div>
 
@@ -1252,11 +1253,11 @@ export default function DashboardLayout({
                     <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${userProfile.profilePictureUrl}`} alt="Profile Avatar" className="w-24 h-24 rounded-full object-cover border-2 border-white/20 group-hover:opacity-50 transition-opacity" />
                   ) : (
                     <div className="w-24 h-24 rounded-full bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                      <span className="material-symbols-outlined text-3xl text-zinc-400">add_a_photo</span>
+                      <AnimatedIcon name="add_a_photo" className="text-3xl text-zinc-400" />
                     </div>
                   )}
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                    <span className="material-symbols-outlined text-white font-bold text-2xl">upload</span>
+                    <AnimatedIcon name="upload" className="text-white font-bold text-2xl" />
                   </div>
                 </div>
                 {isUpdatingProfileImage && <p className="text-xs text-blue-400 mt-3 animate-pulse">Uploading...</p>}
@@ -1278,7 +1279,7 @@ export default function DashboardLayout({
                     <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Email Address</label>
                     {!userProfile.emailVerified && (
                       <button onClick={handleSendVerification} disabled={isProcessingOTP} className="text-[10px] font-bold text-red-500 px-2 py-1 bg-red-500/10 hover:bg-red-500/20 rounded border border-red-500/20 uppercase tracking-widest transition-colors flex items-center gap-1 disabled:opacity-50">
-                        <span className="material-symbols-outlined text-[12px]">warning</span> Verify Now
+                        <AnimatedIcon name="warning" className="text-[12px]" /> Verify Now
                       </button>
                     )}
                   </div>
@@ -1302,7 +1303,7 @@ export default function DashboardLayout({
                         <option value="Employed" className="bg-[#111]">Employed</option>
                         <option value="Job Seeker" className="bg-[#111]">Job Seeker</option>
                       </select>
-                      <span className="material-symbols-outlined absolute right-3 top-3.5 text-zinc-500 pointer-events-none text-sm pointer-events-none">unfold_more</span>
+                      <AnimatedIcon name="unfold_more" className="absolute right-3 top-3.5 text-zinc-500 pointer-events-none text-sm pointer-events-none" />
                     </div>
                   </div>
                 </div>
@@ -1323,7 +1324,7 @@ export default function DashboardLayout({
           <div className="fixed inset-0 z-[180] bg-black/95 flex items-center justify-center p-4">
             <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-sm w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
               <div className="flex flex-col items-center text-center">
-                 <span className="material-symbols-outlined text-4xl text-blue-500 mb-4 animate-pulse">mark_email_read</span>
+                 <AnimatedIcon name="mark_email_read" className="text-4xl text-blue-500 mb-4 animate-pulse" />
                  <h2 className="text-2xl font-black text-white mb-2">Verify Email</h2>
                  <p className="text-zinc-500 text-xs mb-8">Enter the 6-digit OTP code sent to your mock email console.</p>
                  
@@ -1357,7 +1358,7 @@ export default function DashboardLayout({
           <div className="fixed inset-0 z-[190] bg-black/95 flex items-center justify-center p-4">
             <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-sm w-[95%] md:w-full shadow-[0_0_50px_rgba(59,130,246,0.1)] animate-in zoom-in-95 duration-300">
               <div className="flex flex-col items-center text-center">
-                 <span className="material-symbols-outlined text-4xl text-blue-500 mb-4 animate-pulse">lock_person</span>
+                 <AnimatedIcon name="lock_person" className="text-4xl text-blue-500 mb-4 animate-pulse" />
                  <h2 className="text-2xl font-black text-white mb-2">Confirm Identity</h2>
                  <p className="text-zinc-500 text-xs mb-8">Enter the 6-digit verification code sent to your <strong className="text-white">{newEmailInput}</strong> email mock console to finalize the update.</p>
                  

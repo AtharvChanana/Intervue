@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
+import AnimatedIcon from '@/components/AnimatedIcon';
 
 interface SessionSummary {
   sessionId: number;
@@ -66,7 +67,7 @@ export default function SessionsArchivePage() {
       ) : sessions.length === 0 ? (
         <div className="bg-black border border-white/10 rounded-2xl p-16 text-center">
           <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="material-symbols-outlined text-4xl text-zinc-600">history</span>
+            <AnimatedIcon name="history" className="text-4xl text-zinc-600" />
           </div>
           <h3 className="text-xl font-bold text-white mb-2">No History Found</h3>
           <p className="text-zinc-500 text-sm mb-8">You haven't completed any mock sessions yet. Start a new session to begin your journey.</p>

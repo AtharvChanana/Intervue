@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 import Editor, { useMonaco } from "@monaco-editor/react";
+import AnimatedIcon from '@/components/AnimatedIcon';
 
 export default function DsaSessionPage() {
   const { id } = useParams();
@@ -174,7 +175,7 @@ export default function DsaSessionPage() {
         {timeLeft !== null && !isCompleted && (
           <div className="flex-1 flex justify-center items-center">
             <div className={`px-5 py-2 flex items-center justify-center gap-3 rounded-xl transition-colors shadow-lg ${timeLeft < 300 ? 'text-red-400 bg-red-500/10 border border-red-500/20' : 'text-zinc-300 bg-white/5 border border-white/10'}`}>
-               <span className="material-symbols-outlined text-[18px]">timer</span>
+               <AnimatedIcon name="timer" className="text-[18px]" />
                <span className="font-mono text-lg font-black tracking-widest leading-none">{formatTime(timeLeft)}</span>
             </div>
           </div>
@@ -197,7 +198,7 @@ export default function DsaSessionPage() {
                 onClick={handleRunCode} 
                 className="flex items-center gap-2 px-5 py-2 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-colors leading-none bg-white/10 text-white hover:bg-white/20 border border-white/10 disabled:opacity-50"
               >
-                <span className="material-symbols-outlined text-[14px] leading-none">play_arrow</span>
+                <AnimatedIcon name="play_arrow" className="text-[14px] leading-none" />
                 {isRunning ? "Running..." : "Run"}
               </button>
               <button 
@@ -205,7 +206,7 @@ export default function DsaSessionPage() {
                 onClick={handleSubmit} 
                 className="flex items-center gap-2 px-6 py-2.5 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-transform leading-none bg-green-600/20 text-green-400 border border-green-500/30 hover:bg-green-600/30 hover:scale-105 disabled:opacity-50 disabled:scale-100"
               >
-                <span className="material-symbols-outlined text-[14px] leading-none">cloud_upload</span>
+                <AnimatedIcon name="cloud_upload" className="text-[14px] leading-none" />
                 {isSubmitting ? "Submitting..." : "Submit"}
               </button>
             </>
@@ -253,9 +254,7 @@ export default function DsaSessionPage() {
                   {report.testResults.map((tc: any, i: number) => (
                     <div key={i} className={`p-3 rounded-lg border flex flex-col gap-2 ${tc.passed ? 'border-green-500/20 bg-green-500/5' : 'border-red-500/20 bg-red-500/5'}`}>
                       <div className="flex items-center gap-2">
-                         <span className={`material-symbols-outlined text-[14px] ${tc.passed ? 'text-green-400' : 'text-red-400'}`}>
-                            {tc.passed ? 'check_circle' : 'cancel'}
-                         </span>
+                         <AnimatedIcon name={tc.passed ? 'check_circle' : 'cancel'} className={`text-[14px] ${tc.passed ? 'text-green-400' : 'text-red-400'}`} />
                          <span className="font-bold text-xs uppercase tracking-widest text-zinc-200">{tc.name}</span>
                       </div>
                       <p className="text-[11px] text-zinc-500 font-mono tracking-tight leading-relaxed">{tc.details}</p>
@@ -328,7 +327,7 @@ export default function DsaSessionPage() {
                           }`}
                         >
                           <span>Reveal Hint {i+1}</span>
-                          <span className="material-symbols-outlined text-[14px]">{i === hintsRevealed ? 'visibility' : 'lock'}</span>
+                          <AnimatedIcon name={i === hintsRevealed ? 'visibility' : 'lock'} className="text-[14px]" />
                         </button>
                       )}
                     </div>
@@ -344,7 +343,7 @@ export default function DsaSessionPage() {
           {/* Editor Header Tools */}
           <div className="h-10 bg-[#1e1e1e] border-b border-black/50 flex items-center px-4 justify-between shrink-0 z-10 shadow-sm">
              <div className="flex items-center gap-3">
-                 <span className="material-symbols-outlined text-[14px] text-zinc-500">code</span>
+                 <AnimatedIcon name="code" className="text-[14px] text-zinc-500" />
                  <select 
                     disabled={isCompleted}
                     className="bg-transparent text-xs text-zinc-300 focus:outline-none cursor-pointer tracking-widest uppercase appearance-none hover:text-white transition-colors"
@@ -356,7 +355,7 @@ export default function DsaSessionPage() {
                    <option value="java">Java</option>
                    <option value="cpp">C++</option>
                  </select>
-                 <span className="material-symbols-outlined text-[12px] text-zinc-600 pointer-events-none -ml-2">expand_more</span>
+                 <AnimatedIcon name="expand_more" className="text-[12px] text-zinc-600 pointer-events-none -ml-2" />
              </div>
           </div>
           
@@ -397,7 +396,7 @@ export default function DsaSessionPage() {
                 {activeTab === 'testcases' && (
                   <>
                     <h4 className="text-[10px] text-zinc-500 uppercase tracking-widest mb-4 font-bold flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[14px]">science</span> Public Test Cases
+                      <AnimatedIcon name="science" className="text-[14px]" /> Public Test Cases
                     </h4>
                     {problem.publicTestCases ? problem.publicTestCases.map((tc: any, i: number) => (
                       <div key={i} className="mb-4 last:mb-0 bg-[#1A1A1A] border border-white/5 rounded-lg p-4">
@@ -426,7 +425,7 @@ export default function DsaSessionPage() {
                          <span className={`text-sm font-black uppercase tracking-widest ${runResult.status === 'Accepted' ? 'text-green-500' : 'text-red-500'}`}>
                            {runResult.status}
                          </span>
-                         {runResult.status === 'Accepted' && <span className="material-symbols-outlined text-green-500 text-[18px]">verified</span>}
+                         {runResult.status === 'Accepted' && <AnimatedIcon name="verified" className="text-green-500 text-[18px]" />}
                       </div>
                       
                       {runResult.results?.map((res: any, i: number) => (
@@ -467,7 +466,7 @@ export default function DsaSessionPage() {
                 )}
                 {activeTab === 'run_results' && !runResult && !isRunning && (
                    <div className="h-full flex flex-col items-center justify-center text-center text-zinc-600 opacity-50">
-                      <span className="material-symbols-outlined text-4xl mb-2">terminal</span>
+                      <AnimatedIcon name="terminal" className="text-4xl mb-2" />
                       <div className="text-xs font-bold uppercase tracking-widest">Awaiting Execution</div>
                       <p className="text-[10px] mt-1 max-w-xs leading-relaxed">Click "Run" against the public testcases to preview results and view terminal print logs.</p>
                    </div>

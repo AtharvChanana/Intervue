@@ -3,6 +3,7 @@
 import { useEffect, useState, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
+import AnimatedIcon from '@/components/AnimatedIcon';
 
 interface QuestionResponse {
   questionId: number;
@@ -206,7 +207,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
     return (
       <div className="max-w-4xl mx-auto mt-20 animate-in fade-in duration-500 pb-20">
         <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(255,255,255,0.1)]">
-          <span className="material-symbols-outlined text-5xl text-white">task_alt</span>
+          <AnimatedIcon name="task_alt" className="text-5xl text-white" />
         </div>
         <div className="text-center mb-12">
           <h2 className="text-4xl font-black text-white mb-4">Session Evaluated</h2>
@@ -233,20 +234,20 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
             </div>
 
             <div className="bg-black p-8 rounded-lg border border-white/10">
-              <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-sm">psychology</span> Overall Feedback</h4>
+              <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2"><AnimatedIcon name="psychology" className="text-sm" /> Overall Feedback</h4>
               <p className="text-white text-sm leading-relaxed">{report.overallFeedback}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-white/5 p-6 rounded-lg border border-white/5">
                 <h4 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3">
-                  <span className="material-symbols-outlined text-green-400 text-sm">trending_up</span> Core Strengths
+                  <AnimatedIcon name="trending_up" className="text-green-400 text-sm" /> Core Strengths
                 </h4>
                 <p className="text-sm text-zinc-400 leading-relaxed italic">{report.strengthsSummary}</p>
               </div>
               <div className="bg-white/5 p-6 rounded-lg border border-white/5">
                 <h4 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3">
-                  <span className="material-symbols-outlined text-amber-400 text-sm">flag</span> Focus Areas
+                  <AnimatedIcon name="flag" className="text-amber-400 text-sm" /> Focus Areas
                 </h4>
                 <p className="text-sm text-zinc-400 leading-relaxed italic">{report.improvementTips}</p>
               </div>
@@ -254,7 +255,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
 
             {report.qaBreakdown && report.qaBreakdown.length > 0 && (
               <div className="space-y-4">
-                <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-sm">assignment_turned_in</span> Question Breakdown</h4>
+                <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2"><AnimatedIcon name="assignment_turned_in" className="text-sm" /> Question Breakdown</h4>
                 {report.qaBreakdown.map((q: any, idx: number) => {
                   const isCorrect = q.userAnswer === q.correctOption;
                   return (
@@ -285,7 +286,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                 Back to Dashboard
               </button>
               <button onClick={() => router.push('/dashboard')} className="bg-white text-black px-12 py-4 rounded-md font-bold hover:scale-105 transition-all text-sm tracking-widest uppercase shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 w-full sm:w-auto">
-                Attempt New Session <span className="material-symbols-outlined text-sm">replay</span>
+                Attempt New Session <AnimatedIcon name="replay" className="text-sm" />
               </button>
             </div>
           </div>
@@ -341,7 +342,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                 timeLeft / timeLimit > 0.5 ? 'text-emerald-400' :
                 timeLeft / timeLimit > 0.25 ? 'text-amber-400' : 'text-red-400'
               } ${timeLeft / timeLimit <= 0.25 && timerActive ? 'animate-pulse' : ''}`}>
-                <span className="material-symbols-outlined text-base">timer</span>
+                <AnimatedIcon name="timer" className="text-base" />
                 <span className="text-xl font-black font-mono">
                   {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
                 </span>
@@ -401,12 +402,12 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                   onClick={revealHint}
                   className="flex items-center gap-2 text-zinc-600 text-xs font-bold uppercase tracking-wider hover:text-amber-400 transition-colors py-2"
                 >
-                  <span className="material-symbols-outlined text-sm">lightbulb</span>
+                  <AnimatedIcon name="lightbulb" className="text-sm" />
                   Need a hint?
                 </button>
               ) : (
                 <div className="flex items-start gap-2 p-3 bg-amber-500/5 border border-amber-400/20 rounded-xl max-w-sm">
-                  <span className="material-symbols-outlined text-amber-400 text-sm flex-shrink-0 mt-0.5">lightbulb</span>
+                  <AnimatedIcon name="lightbulb" className="text-amber-400 text-sm flex-shrink-0 mt-0.5" />
                   {isLoadingHint
                     ? <p className="text-amber-400/50 text-[10px] animate-pulse uppercase tracking-widest">Generating hint...</p>
                     : <p className="text-amber-200 text-xs leading-relaxed">{hintText}</p>}
@@ -419,7 +420,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
               className="bg-white text-black px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Evaluating...' : (currentQuestion.questionFormat === 'OPEN_ENDED' ? 'Submit Answer' : 'Submit Option')}
-              {!isSubmitting && <span className="material-symbols-outlined text-sm">send</span>}
+              {!isSubmitting && <AnimatedIcon name="send" className="text-sm" />}
             </button>
           </div>
         </div>
@@ -432,7 +433,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
           <div className="flex justify-between items-start mb-10 mt-4">
             <div>
               <h3 className={`text-3xl font-black mb-2 flex items-center gap-3 ${currentQuestion.questionFormat === 'OPEN_ENDED' ? (feedback.score >= 70 ? 'text-green-400' : 'text-amber-400') : (feedback.score === 100 ? 'text-green-400' : 'text-red-400')}`}>
-                <span className="material-symbols-outlined text-4xl">{currentQuestion.questionFormat === 'OPEN_ENDED' ? (feedback.score >= 70 ? 'check_circle' : 'change_history') : (feedback.score === 100 ? 'check_circle' : 'cancel')}</span>
+                <AnimatedIcon name={currentQuestion.questionFormat === 'OPEN_ENDED' ? (feedback.score >= 70 ? 'check_circle' : 'change_history') : (feedback.score === 100 ? 'check_circle' : 'cancel')} className="text-4xl" />
                 {currentQuestion.questionFormat === 'OPEN_ENDED' ? `Evaluation Score: ${feedback.score}/100` : (feedback.score === 100 ? 'Correct Answer' : 'Incorrect')}
               </h3>
               <p className="text-zinc-500 text-sm">Response calibrated against ideal parameters.</p>
@@ -462,7 +463,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
               }
             }} className="bg-white text-black px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2">
               {(feedback.isSessionComplete || !feedback.nextQuestion) ? 'FINISH SESSION PORTION' : 'PROCEED TO NEXT QUESTION'}
-              <span className="material-symbols-outlined text-sm">arrow_forward</span>
+              <AnimatedIcon name="arrow_forward" className="text-sm" />
             </button>
           </div>
         </div>

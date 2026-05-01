@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 import MagicCard from '@/components/MagicCard';
+import AnimatedIcon from '@/components/AnimatedIcon';
 
 interface DashboardStats {
   totalSessions: number;
@@ -262,7 +263,7 @@ export default function DashboardPage() {
             <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Average Score</span>
-                    <span className="material-symbols-outlined text-white/50">token</span>
+                    <AnimatedIcon name="token" className="text-white/50" />
                 </div>
                 <div className="flex items-baseline gap-2 relative z-10">
                     <h3 className="text-6xl font-black text-white px-2 tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
@@ -276,7 +277,7 @@ export default function DashboardPage() {
             <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Sessions Completed</span>
-                    <span className="material-symbols-outlined text-white/50">verified</span>
+                    <AnimatedIcon name="verified" className="text-white/50" />
                 </div>
                 <h3 className="text-6xl font-black text-white px-2 tracking-tighter relative z-10">{stats?.completedSessions || 0}</h3>
                 <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Total Interviews Finished</p>
@@ -287,7 +288,7 @@ export default function DashboardPage() {
             <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Roles Practiced</span>
-                    <span className="material-symbols-outlined text-white/50">developer_mode</span>
+                    <AnimatedIcon name="developer_mode" className="text-white/50" />
                 </div>
                 <h3 className="text-6xl font-black text-white px-2 tracking-tighter relative z-10">{stats?.distinctRolesPracticed || 0}</h3>
                 <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Unique Job Profiles</p>
@@ -314,7 +315,7 @@ export default function DashboardPage() {
                       </div>
                   ) : (
                       <div className="flex-1 flex flex-col items-center justify-center border border-white/5 bg-white/[0.01] rounded-2xl relative z-10 min-h-[250px]">
-                          <span className="material-symbols-outlined text-zinc-600 text-4xl mb-4">radar</span>
+                          <AnimatedIcon name="radar" className="text-zinc-600 text-4xl mb-4" />
                           <p className="text-zinc-500 text-xs font-bold tracking-widest uppercase mb-2">No Data Available</p>
                           <p className="text-zinc-600 text-[10px] uppercase">Complete an interview session.</p>
                       </div>
@@ -325,7 +326,7 @@ export default function DashboardPage() {
           <MagicCard className="col-span-12 lg:col-span-6 rounded-3xl">
               <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col justify-between hover:border-white/10 transition-colors shadow-2xl">
                   <div className="flex items-center gap-3 mb-8 relative z-10">
-                     <span className="material-symbols-outlined text-white">insights</span>
+                     <AnimatedIcon name="insights" className="text-white" />
                      <h3 className="text-white text-xl font-black tracking-widest uppercase">AI Performance Report</h3>
                   </div>
                   <div className="relative z-10 flex-1 flex flex-col justify-center">
@@ -355,7 +356,7 @@ export default function DashboardPage() {
             <div className="flex-shrink-0 flex flex-col justify-between gap-6 lg:w-52">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="material-symbols-outlined text-white text-2xl">local_fire_department</span>
+                  <AnimatedIcon name="local_fire_department" className="text-white text-2xl" />
                   <h3 className="text-white text-xl font-black tracking-widest uppercase">Streak</h3>
                 </div>
                 <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest">Practice consistency tracker</p>
@@ -454,13 +455,13 @@ export default function DashboardPage() {
       <MagicCard className="mb-8 rounded-3xl">
         <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
-            <span className="material-symbols-outlined text-white">trending_up</span>
+            <AnimatedIcon name="trending_up" className="text-white" />
             <h3 className="text-white text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
             <span className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
           </div>
           {history.filter(h => h.status === 'COMPLETED').length === 0 ? (
             <div className="h-40 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl">
-              <span className="material-symbols-outlined text-zinc-700 text-3xl mb-3">show_chart</span>
+              <AnimatedIcon name="show_chart" className="text-zinc-700 text-3xl mb-3" />
               <p className="text-zinc-700 text-xs font-bold uppercase tracking-widest">Complete sessions to see your trend</p>
             </div>
           ) : (
@@ -522,9 +523,9 @@ export default function DashboardPage() {
              <div className="flex-1 flex flex-col items-center justify-center px-10 pb-10 pt-4 relative z-10">
                 <div className="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center mb-6 bg-white/[0.02] shadow-inner cursor-pointer" onClick={() => document.getElementById('upload-input')?.click()}>
                     {isUploading ? (
-                      <span className="material-symbols-outlined text-2xl text-zinc-400 animate-spin">refresh</span>
+                      <AnimatedIcon name="refresh" className="text-2xl text-zinc-400 animate-spin" />
                     ) : (
-                      <span className="material-symbols-outlined text-2xl text-zinc-400 group-hover:text-white transition-colors">upload_file</span>
+                      <AnimatedIcon name="upload_file" className="text-2xl text-zinc-400 group-hover:text-white transition-colors" />
                     )}
                 </div>
               
@@ -572,7 +573,7 @@ export default function DashboardPage() {
                 <div className="w-full relative overflow-hidden rounded-2xl group/resume p-[1px]">
                     <div className="absolute inset-[-150%] animate-[spin_5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#000000_0%,#ffffff_50%,#000000_100%)] opacity-30"></div>
                     <div className="w-full h-full bg-[#050505] relative rounded-[15px] px-6 py-8 shadow-2xl flex flex-col justify-center items-center">
-                        <span className="material-symbols-outlined text-white text-3xl mb-3">description</span>
+                        <AnimatedIcon name="description" className="text-white text-3xl mb-3" />
                         <p className="text-white text-sm font-bold truncate tracking-wide max-w-full mb-1">{activeResume.fileName}</p>
                         <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-4">Active System Context</p>
 
@@ -625,9 +626,7 @@ export default function DashboardPage() {
                           
                           <div className="flex items-center gap-5">
                              <div className="w-12 h-12 rounded-xl bg-black border border-white/5 flex items-center justify-center shadow-inner group-hover:border-white/10 transition-colors">
-                                <span className={`material-symbols-outlined text-lg ${session.status === 'COMPLETED' ? 'text-white' : 'text-zinc-600'}`}>
-                                   {session.interviewType === 'BEHAVIORAL' ? 'psychology' : 'code'}
-                                </span>
+                                <AnimatedIcon name={session.interviewType === 'BEHAVIORAL' ? 'psychology' : 'code'} className={`text-lg ${session.status === 'COMPLETED' ? 'text-white' : 'text-zinc-600'}`} />
                              </div>
                              <div>
                                 <h4 className="font-bold text-white text-sm tracking-wide mb-1 group-hover:translate-x-1 transition-transform">{session.jobRole || 'Practice Interview'}</h4>
@@ -660,9 +659,7 @@ export default function DashboardPage() {
 
       {toast && (
         <div className={`fixed bottom-8 right-8 z-[200] max-w-sm w-full p-4 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] border backdrop-blur-2xl animate-in slide-in-from-bottom-5 fade-in duration-300 flex items-start gap-4 ${toast.type === 'error' ? 'bg-red-950/80 border-red-500/50' : 'bg-black/90 border-white/20'}`}>
-           <span className={`material-symbols-outlined mt-0.5 ${toast.type === 'error' ? 'text-red-500' : 'text-white'}`}>
-             {toast.type === 'error' ? 'error' : 'memory'}
-           </span>
+           <AnimatedIcon name={toast.type === 'error' ? 'error' : 'memory'} className={`mt-0.5 ${toast.type === 'error' ? 'text-red-500' : 'text-white'}`} />
            <div>
              <h4 className={`text-xs font-black uppercase tracking-widest ${toast.type === 'error' ? 'text-red-500' : 'text-white'}`}>
                {toast.type === 'error' ? 'System Fault' : 'Network Update'}

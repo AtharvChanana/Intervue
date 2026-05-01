@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
+import AnimatedIcon from '@/components/AnimatedIcon';
 
 type LeaderboardUser = {
   name: string;
@@ -78,7 +79,7 @@ export default function LeaderboardPage() {
         {/* Silver (2nd) */}
         {topThree[1] && (
           <div className="flex flex-col items-center order-2 md:order-1 animate-in slide-in-from-bottom-8 duration-700 delay-100">
-            <div className="text-zinc-300 mb-2 font-bold text-lg"><span className="material-symbols-outlined text-3xl">workspace_premium</span></div>
+            <div className="text-zinc-300 mb-2 font-bold text-lg"><AnimatedIcon name="workspace_premium" className="text-3xl" /></div>
             <img src={getAvatarUrl(topThree[1].profilePictureUrl, topThree[1].name)} alt={topThree[1].name} className="w-20 h-20 rounded-full border-4 border-zinc-300 object-cover bg-zinc-900 shadow-[0_0_30px_rgba(212,212,216,0.2)] mb-4" />
             <div className="bg-gradient-to-t from-zinc-800 to-zinc-800/20 border border-white/5 rounded-t-2xl w-32 md:h-32 p-4 text-center flex flex-col items-center justify-start">
               <span className="font-bold text-white text-sm truncate w-full">{topThree[1].name}</span>
@@ -91,7 +92,7 @@ export default function LeaderboardPage() {
         {/* Gold (1st) */}
         {topThree[0] && (
           <div className="flex flex-col items-center order-1 md:order-2 z-10 animate-in slide-in-from-bottom-12 duration-700">
-            <div className="text-yellow-400 mb-2 font-bold text-xl drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]"><span className="material-symbols-outlined text-5xl">military_tech</span></div>
+            <div className="text-yellow-400 mb-2 font-bold text-xl drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]"><AnimatedIcon name="military_tech" className="text-5xl" /></div>
             <img src={getAvatarUrl(topThree[0].profilePictureUrl, topThree[0].name)} alt={topThree[0].name} className="w-28 h-28 rounded-full border-4 border-yellow-400 object-cover bg-zinc-900 shadow-[0_0_40px_rgba(250,204,21,0.3)] mb-4" />
             <div className="bg-gradient-to-t from-yellow-500/20 to-yellow-500/5 border border-yellow-500/30 rounded-t-2xl w-40 md:h-44 p-4 text-center flex flex-col items-center justify-start relative overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(250,204,21,0.1),transparent_50%)]"></div>
@@ -105,7 +106,7 @@ export default function LeaderboardPage() {
         {/* Bronze (3rd) */}
         {topThree[2] && (
           <div className="flex flex-col items-center order-3 md:order-3 animate-in slide-in-from-bottom-4 duration-700 delay-200">
-            <div className="text-amber-600 mb-2 font-bold text-lg"><span className="material-symbols-outlined text-3xl">workspace_premium</span></div>
+            <div className="text-amber-600 mb-2 font-bold text-lg"><AnimatedIcon name="workspace_premium" className="text-3xl" /></div>
             <img src={getAvatarUrl(topThree[2].profilePictureUrl, topThree[2].name)} alt={topThree[2].name} className="w-20 h-20 rounded-full border-4 border-amber-600 object-cover bg-zinc-900 shadow-[0_0_30px_rgba(217,119,6,0.2)] mb-4" />
             <div className="bg-gradient-to-t from-amber-900/40 to-amber-900/10 border border-amber-500/10 rounded-t-2xl w-32 md:h-24 p-4 text-center flex flex-col items-center justify-start">
               <span className="font-bold text-white text-sm truncate w-full">{topThree[2].name}</span>

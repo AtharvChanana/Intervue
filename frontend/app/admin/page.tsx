@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 import Logo from '@/components/Logo';
+import AnimatedIcon from '@/components/AnimatedIcon';
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function AdminDashboard() {
         </div>
 
         <button onClick={handleLogout} className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-white/5 px-4 py-2 rounded-lg border border-white/5 hover:bg-white/10">
-          Sign out <span className="material-symbols-outlined text-sm">logout</span>
+          Sign out <AnimatedIcon name="logout" className="text-sm" />
         </button>
       </nav>
 
@@ -68,31 +69,31 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
             
             <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-blue-500/[0.05] transition-colors pointer-events-none">group</span>
+              <AnimatedIcon name="group" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-blue-500/[0.05] transition-colors pointer-events-none" />
               <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Total Users</p>
               <p className="text-4xl font-black">{stats?.totalUsers || 0}</p>
             </div>
 
             <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-purple-500/[0.05] transition-colors pointer-events-none">work</span>
+              <AnimatedIcon name="work" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-purple-500/[0.05] transition-colors pointer-events-none" />
               <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Job Roles</p>
               <p className="text-4xl font-black">{stats?.totalJobRoles || 0}</p>
             </div>
 
             <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-green-500/[0.05] transition-colors pointer-events-none">play_arrow</span>
+              <AnimatedIcon name="play_arrow" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-green-500/[0.05] transition-colors pointer-events-none" />
               <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Sessions Active</p>
               <p className="text-4xl font-black">{stats?.totalSessions || 0}</p>
             </div>
 
             <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-amber-500/[0.05] transition-colors pointer-events-none">task_alt</span>
+              <AnimatedIcon name="task_alt" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-amber-500/[0.05] transition-colors pointer-events-none" />
               <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Completed</p>
               <p className="text-4xl font-black">{stats?.completedSessions || 0}</p>
             </div>
 
             <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-red-500/[0.05] transition-colors pointer-events-none">sports_score</span>
+              <AnimatedIcon name="sports_score" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-red-500/[0.05] transition-colors pointer-events-none" />
               <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Avg Score</p>
               <p className="text-4xl font-black text-white">{stats?.platformAverageScore || 0}</p>
             </div>
@@ -130,7 +131,7 @@ export default function AdminDashboard() {
                               <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${u.profilePictureUrl}`} alt={u.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
                             ) : (
                               <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
-                                <span className="material-symbols-outlined text-sm text-zinc-500">person</span>
+                                <AnimatedIcon name="person" className="text-sm text-zinc-500" />
                               </div>
                             )}
                             <span className="font-bold text-sm tracking-wide">{u.name}</span>
