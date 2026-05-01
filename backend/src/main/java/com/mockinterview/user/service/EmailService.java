@@ -23,14 +23,11 @@ public class EmailService {
             message.setSubject(subject);
             message.setText(body);
             javaMailSender.send(message);
+            System.out.println("[EMAIL] Successfully sent to " + to);
         } catch (Exception e) {
-            System.err.println("Failed to send email to " + to + ": " + e.getMessage());
-            // Fallback to console during missing config
-            System.out.println("==================================================");
-            System.out.println("[MOCK EMAIL FALLBACK] To: " + to);
-            System.out.println("[MOCK EMAIL FALLBACK] Subject: " + subject);
-            System.out.println("[MOCK EMAIL FALLBACK] Body: " + body);
-            System.out.println("==================================================");
+            System.err.println("[EMAIL ERROR] Failed to send email to " + to + ": " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
         }
     }
 }
