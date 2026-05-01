@@ -1149,11 +1149,10 @@ export default function DashboardLayout({
                     ) : (
                       <div className="space-y-3">
                         {notifications.map(n => (
-                          <Alert key={n.id} className="bg-[#0a0a0a] border border-white/10 shadow-2xl backdrop-blur-md text-white rounded-xl">
-                            <AnimatedIcon name="info" className="w-5 h-5 mt-0.5 text-white" />
-                            <AlertTitle className="text-sm font-bold tracking-tight text-white mb-1">{n.time}</AlertTitle>
-                            <AlertDescription className="text-sm leading-relaxed text-zinc-400">
-                              {n.message}
+                          <Alert key={n.id} className="bg-[#0a0a0a] border border-white/10 shadow-2xl backdrop-blur-md rounded-xl p-4">
+                            <AlertTitle className="text-sm font-medium text-white mb-1.5">{n.message}</AlertTitle>
+                            <AlertDescription className="text-sm text-zinc-400">
+                              {n.time}
                             </AlertDescription>
                           </Alert>
                         ))}
@@ -1243,11 +1242,10 @@ export default function DashboardLayout({
                 ) : (
                   <div className="space-y-3">
                     {notifications.map(n => (
-                      <Alert key={n.id} className="bg-[#0a0a0a] border border-white/10 shadow-2xl backdrop-blur-md text-white rounded-xl">
-                        <AnimatedIcon name="info" className="w-5 h-5 mt-0.5 text-white" />
-                        <AlertTitle className="text-sm font-bold tracking-tight text-white mb-1">{n.time}</AlertTitle>
-                        <AlertDescription className="text-sm leading-relaxed text-zinc-400">
-                          {n.message}
+                      <Alert key={n.id} className="bg-[#0a0a0a] border border-white/10 shadow-2xl backdrop-blur-md rounded-xl p-4">
+                        <AlertTitle className="text-sm font-medium text-white mb-1.5">{n.message}</AlertTitle>
+                        <AlertDescription className="text-sm text-zinc-400">
+                          {n.time}
                         </AlertDescription>
                       </Alert>
                     ))}
