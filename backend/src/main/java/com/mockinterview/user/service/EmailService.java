@@ -11,18 +11,18 @@ import java.net.http.HttpResponse;
 @Service
 public class EmailService {
 
-    @Value("${resend.api.key:}")
-    private String resendApiKey;
+    @Value("${brevo.api.key:}")
+    private String brevoApiKey;
 
-    @Value("${spring.mail.username:noreply@example.com}")
+    @Value("${spring.mail.username:intervue.admin@gmail.com}")
     private String senderEmail;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public void sendEmail(String to, String subject, String body) {
-        if (resendApiKey == null || resendApiKey.isBlank()) {
+        if (brevoApiKey == null || brevoApiKey.isBlank()) {
             System.out.println("==================================================");
-            System.out.println("[MOCK EMAIL - No Resend API Key] To: " + to);
+            System.out.println("[MOCK EMAIL - No Brevo API Key] To: " + to);
             System.out.println("[MOCK EMAIL] Subject: " + subject);
             System.out.println("[MOCK EMAIL] Body: " + body);
             System.out.println("==================================================");
@@ -31,17 +31,17 @@ public class EmailService {
 
         try {
             String json = String.format(
-                "{\"from\":\"%s\",\"to\":[\"%s\"],\"subject\":\"%s\",\"text\":\"%s\"}",
-                "Intervue <onboarding@resend.dev>",
+                "{\"sender\":{\"email\":\"%s\",\"name\":\"Intervue\"},\"to\":[{\"email\":\"%s\"}],\"subject\":\"%s\",\"textContent\":\"%s\"}",
+                senderEmail.replace("\"", "\\\""),
                 to.replace("\"", "\\\""),
                 subject.replace("\"", "\\\""),
                 body.replace("\"", "\\\"").replace("\n", "\\n")
             );
 
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.resend.com/emails"))
+                .uri(URI.create("https://api.brevo.com/v3/smtp/email"))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + resendApiKey)
+                .header("api-key", brevoApiKey)
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
@@ -50,7 +50,7 @@ public class EmailService {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 System.out.println("[EMAIL] Successfully sent to " + to);
             } else {
-                System.err.println("[EMAIL ERROR] Resend API returned " + response.statusCode() + ": " + response.body());
+                System.err.println("[EMAIL ERROR] Brevo API returned " + response.statusCode() + ": " + response.body());
                 throw new RuntimeException("Email delivery failed: " + response.body());
             }
         } catch (RuntimeException e) {
