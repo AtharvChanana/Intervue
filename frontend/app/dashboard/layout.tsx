@@ -1140,21 +1140,19 @@ export default function DashboardLayout({
               </button>
               
               {showNotifications && (
-                <div className="hidden md:block absolute right-0 top-12 mt-2 w-80 bg-black border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="p-4 border-b border-white/5 bg-black/50 flex justify-between items-center">
-                     <h3 className="text-white font-bold text-xs uppercase tracking-widest">System Alerts</h3>
-                     {notifications.length > 0 && <span className="text-[10px] text-zinc-500">{notifications.length} Total</span>}
-                  </div>
-                  <div className="max-h-[300px] overflow-y-auto">
+                <div className="hidden md:block absolute right-0 top-12 mt-2 w-96 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="max-h-[400px] overflow-y-auto pb-12 [mask-image:linear-gradient(to_bottom,black_80%,transparent)] scrollbar-hide pr-1">
                     {notifications.length === 0 ? (
-                      <div className="p-6 text-center text-zinc-500 text-xs">No active alerts.</div>
+                      <Alert className="bg-[#0a0a0a] border border-white/10 shadow-2xl backdrop-blur-md rounded-xl text-center text-zinc-500 text-xs">
+                        No active alerts at this time.
+                      </Alert>
                     ) : (
-                      <div className="p-2 space-y-2">
+                      <div className="space-y-3">
                         {notifications.map(n => (
-                          <Alert key={n.id} className="bg-white/[0.02] border-white/5 text-white">
-                            <AnimatedIcon name="info" className="w-4 h-4 mt-0.5 text-zinc-400" />
-                            <AlertTitle className="text-xs font-bold tracking-widest uppercase text-zinc-300">{n.time}</AlertTitle>
-                            <AlertDescription className="text-sm leading-relaxed text-zinc-400 mt-1">
+                          <Alert key={n.id} className="bg-[#0a0a0a] border border-white/10 shadow-2xl backdrop-blur-md text-white rounded-xl">
+                            <AnimatedIcon name="info" className="w-5 h-5 mt-0.5 text-white" />
+                            <AlertTitle className="text-sm font-bold tracking-tight text-white mb-1">{n.time}</AlertTitle>
+                            <AlertDescription className="text-sm leading-relaxed text-zinc-400">
                               {n.message}
                             </AlertDescription>
                           </Alert>
@@ -1229,24 +1227,26 @@ export default function DashboardLayout({
 
         {/* Mobile Notifications Modal */}
         {showNotifications && (
-          <div className="md:hidden fixed inset-0 z-[150] bg-black/95 flex items-end sm:items-center justify-center p-4 pb-12" onClick={() => setShowNotifications(false)}>
-            <div className="bg-black border border-white/10 rounded-2xl w-full max-h-[70vh] flex flex-col shadow-2xl animate-in slide-in-from-bottom-10 duration-300" onClick={(e) => e.stopPropagation()}>
-              <div className="p-6 border-b border-white/5 bg-black flex justify-between items-center rounded-t-2xl">
-                 <h3 className="text-white font-bold text-sm uppercase tracking-widest">System Alerts</h3>
-                 <button onClick={() => setShowNotifications(false)} className="text-zinc-500 hover:text-white">
-                    <AnimatedIcon name="close" />
+          <div className="md:hidden fixed inset-0 z-[150] bg-black/80 backdrop-blur-sm flex flex-col items-center justify-start pt-20 p-4" onClick={() => setShowNotifications(false)}>
+            <div className="w-full max-h-[70vh] animate-in slide-in-from-top-10 duration-300" onClick={(e) => e.stopPropagation()}>
+              <div className="flex justify-between items-center mb-6 px-2">
+                 <h3 className="text-white font-black text-xl tracking-tight">System Alerts</h3>
+                 <button onClick={() => setShowNotifications(false)} className="bg-white/10 p-2 rounded-full text-white hover:bg-white/20 transition-colors">
+                    <AnimatedIcon name="close" className="w-5 h-5" />
                  </button>
               </div>
-              <div className="overflow-y-auto flex-1 p-2">
+              <div className="overflow-y-auto max-h-[calc(70vh-60px)] pb-12 [mask-image:linear-gradient(to_bottom,black_85%,transparent)] scrollbar-hide px-2">
                 {notifications.length === 0 ? (
-                  <div className="p-10 text-center text-zinc-500 text-sm">No active alerts at this time.</div>
+                  <Alert className="bg-[#0a0a0a] border border-white/10 shadow-2xl backdrop-blur-md rounded-xl text-center text-zinc-500 text-sm py-8">
+                    No active alerts at this time.
+                  </Alert>
                 ) : (
-                  <div className="p-2 space-y-2">
+                  <div className="space-y-3">
                     {notifications.map(n => (
-                      <Alert key={n.id} className="bg-white/[0.02] border-white/5 text-white">
-                        <AnimatedIcon name="info" className="w-4 h-4 mt-0.5 text-zinc-400" />
-                        <AlertTitle className="text-xs font-bold tracking-widest uppercase text-zinc-300">{n.time}</AlertTitle>
-                        <AlertDescription className="text-sm leading-relaxed text-zinc-400 mt-1">
+                      <Alert key={n.id} className="bg-[#0a0a0a] border border-white/10 shadow-2xl backdrop-blur-md text-white rounded-xl">
+                        <AnimatedIcon name="info" className="w-5 h-5 mt-0.5 text-white" />
+                        <AlertTitle className="text-sm font-bold tracking-tight text-white mb-1">{n.time}</AlertTitle>
+                        <AlertDescription className="text-sm leading-relaxed text-zinc-400">
                           {n.message}
                         </AlertDescription>
                       </Alert>
