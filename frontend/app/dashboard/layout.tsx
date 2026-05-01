@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from 'react';
 import Logo from '@/components/Logo';
 import { AnimatedStepper, Step } from '@/components/AnimatedStepper';
 import AnimatedIcon from '@/components/AnimatedIcon';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export default function DashboardLayout({
   children,
@@ -1148,12 +1149,17 @@ export default function DashboardLayout({
                     {notifications.length === 0 ? (
                       <div className="p-6 text-center text-zinc-500 text-xs">No active alerts.</div>
                     ) : (
-                      notifications.map(n => (
-                        <div key={n.id} className="p-4 border-b border-white/5 hover:bg-white/[0.02] transition-colors cursor-pointer group">
-                           <p className="text-zinc-300 text-sm group-hover:text-white transition-colors leading-relaxed">{n.message}</p>
-                           <p className="text-zinc-600 text-[10px] mt-2 font-bold tracking-widest uppercase">{n.time}</p>
-                        </div>
-                      ))
+                      <div className="p-2 space-y-2">
+                        {notifications.map(n => (
+                          <Alert key={n.id} className="bg-white/[0.02] border-white/5 text-white">
+                            <AnimatedIcon name="info" className="w-4 h-4 mt-0.5 text-zinc-400" />
+                            <AlertTitle className="text-xs font-bold tracking-widest uppercase text-zinc-300">{n.time}</AlertTitle>
+                            <AlertDescription className="text-sm leading-relaxed text-zinc-400 mt-1">
+                              {n.message}
+                            </AlertDescription>
+                          </Alert>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1235,12 +1241,17 @@ export default function DashboardLayout({
                 {notifications.length === 0 ? (
                   <div className="p-10 text-center text-zinc-500 text-sm">No active alerts at this time.</div>
                 ) : (
-                  notifications.map(n => (
-                    <div key={n.id} className="p-5 border-b border-white/5 hover:bg-white/[0.02] transition-colors">
-                       <p className="text-zinc-300 text-sm leading-relaxed">{n.message}</p>
-                       <p className="text-zinc-600 text-[10px] mt-2 font-bold tracking-widest uppercase">{n.time}</p>
-                    </div>
-                  ))
+                  <div className="p-2 space-y-2">
+                    {notifications.map(n => (
+                      <Alert key={n.id} className="bg-white/[0.02] border-white/5 text-white">
+                        <AnimatedIcon name="info" className="w-4 h-4 mt-0.5 text-zinc-400" />
+                        <AlertTitle className="text-xs font-bold tracking-widest uppercase text-zinc-300">{n.time}</AlertTitle>
+                        <AlertDescription className="text-sm leading-relaxed text-zinc-400 mt-1">
+                          {n.message}
+                        </AlertDescription>
+                      </Alert>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
