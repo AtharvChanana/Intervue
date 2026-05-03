@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 import Logo from '@/components/Logo';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -248,14 +249,18 @@ export default function LandingPage() {
               <div className="space-y-6">
                 <div className="space-y-1.5">
                   <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">6-Digit Code</label>
-                  <input
-                    className="w-full text-center tracking-[0.5em] text-2xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl py-4 px-1 text-white focus:outline-none focus:border-blue-500/50 transition-colors"
-                    placeholder="000000"
-                    maxLength={6}
-                    type="text"
-                    value={forgotOtp}
-                    onChange={(e) => setForgotOtp(e.target.value.replace(/\D/g, ''))}
-                  />
+                  <div className="flex justify-center pt-1">
+                    <InputOTP maxLength={6} value={forgotOtp} onChange={(val) => setForgotOtp(val)}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
                 </div>
                 <div className="space-y-1.5 pt-2">
                   <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">New Password</label>

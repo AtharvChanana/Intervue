@@ -4,6 +4,7 @@ import { useEffect, useState, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 import AnimatedIcon from '@/components/AnimatedIcon';
+import { toast } from 'sonner';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -156,6 +157,10 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
         window.dispatchEvent(new CustomEvent('new_notification', {
           detail: { id: Date.now().toString(), message: `Session ${id} successfully completed. Score computed.`, time: timeStr, read: false }
         }));
+        toast.success('Interview Complete!', {
+          description: 'Your session has been scored. View your report below.',
+          duration: 5000,
+        });
       }
     } catch (e: any) {
       alert(e.message || "Failed to evaluate answer. A system interrupt occurred.");

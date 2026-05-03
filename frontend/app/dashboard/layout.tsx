@@ -27,6 +27,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export default function DashboardLayout({
   children,
@@ -413,6 +420,7 @@ export default function DashboardLayout({
 
   return (
     <div className="flex bg-transparent min-h-screen w-full relative">
+      <Toaster position="top-center" theme="dark" richColors />
       {systemToast && (
         <div className="fixed inset-0 z-[300] bg-black flex items-center justify-center p-4">
           <div className="bg-black border border-white/10 rounded-xl p-8 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
@@ -1371,10 +1379,17 @@ export default function DashboardLayout({
                 Enter the 6-digit OTP code sent to your mock email console.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <div className="py-2">
-              <input type="text" maxLength={6} className="w-full text-center tracking-[0.5em] text-3xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500/50 transition-colors mb-6"
-                     placeholder="000000"
-                     value={verifyOtpCode} onChange={e => setVerifyOtpCode(e.target.value.replace(/\D/g, ''))} />
+            <div className="py-2 flex flex-col items-center gap-4">
+              <InputOTP maxLength={6} value={verifyOtpCode} onChange={(val) => setVerifyOtpCode(val)}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
               <div className="text-zinc-400 text-xs text-center">
                 {resendCountdown > 0 ? (
                   <span>Resend code in <strong className="text-white">{resendCountdown}s</strong></span>
@@ -1406,10 +1421,17 @@ export default function DashboardLayout({
                 Enter the 6-digit verification code sent to your <strong className="text-white">{newEmailInput}</strong> email mock console to finalize the update.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <div className="py-2">
-              <input type="text" maxLength={6} className="w-full text-center tracking-[0.5em] text-3xl font-black bg-[#1A1A1A] border border-white/5 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500/50 transition-colors mb-6"
-                     placeholder="000000"
-                     value={updateEmailOtpCode} onChange={e => setUpdateEmailOtpCode(e.target.value.replace(/\D/g, ''))} />
+            <div className="py-2 flex flex-col items-center gap-4">
+              <InputOTP maxLength={6} value={updateEmailOtpCode} onChange={(val) => setUpdateEmailOtpCode(val)}>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
               <div className="text-zinc-400 text-xs text-center">
                 {resendCountdown > 0 ? (
                   <span>Resend code in <strong className="text-white">{resendCountdown}s</strong></span>

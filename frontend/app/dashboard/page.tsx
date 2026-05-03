@@ -40,6 +40,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [history, setHistory] = useState<SessionHistory[]>([]);
+  const [dsaHistory, setDsaHistory] = useState<any[]>([]);
   const [latestReport, setLatestReport] = useState<SessionReport | null>(null);
   const [activeResume, setActiveResume] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -63,11 +64,12 @@ export default function DashboardPage() {
 
     const loadDashboard = async () => {
       try {
-        const [statsData, historyData, resumeData, profileData] = await Promise.all([
+        const [statsData, historyData, resumeData, profileData, dsaData] = await Promise.all([
           fetchApi('/dashboard/stats').catch(() => null),
           fetchApi('/dashboard/history').catch(() => []),
           fetchApi('/resume/latest').catch(() => null),
-          fetchApi('/user/profile').catch(() => null)
+          fetchApi('/user/profile').catch(() => null),
+          fetchApi('/dsa/all').catch(() => []),
         ]);
         
         if (statsData) setStats(statsData);
@@ -80,6 +82,7 @@ export default function DashboardPage() {
                 if (reportData) setLatestReport(reportData);
             }
         }
+        if (Array.isArray(dsaData)) setDsaHistory(dsaData);
         if (resumeData) setActiveResume(resumeData);
       } catch (e) {
         setError(true);
@@ -611,25 +614,34 @@ export default function DashboardPage() {
                        <h3 className="text-white text-xl font-black tracking-widest uppercase mb-1">Recent Sessions</h3>
                        <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.1em]">Interview History</p>
                    </div>
-                   <span className="text-zinc-600 text-xs font-black uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full">{history.length} Logs</span>
+                   <span className="text-zinc-600 text-xs font-black uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full">{history.length + dsaHistory.length} Logs</span>
                 </div>
 
                 <div className="space-y-4 max-h-[350px] overflow-y-auto pr-4 custom-scrollbar">
-                  {history.length === 0 ? (
+                  {history.length === 0 && dsaHistory.length === 0 ? (
                     <div className="h-40 flex items-center justify-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
                         <p className="text-xs text-zinc-600 uppercase tracking-[0.3em] font-bold">No history found.</p>
                     </div>
                   ) : (
-                    history.map((session, idx) => (
+                    [
+                      ...history.map(s => ({ ...s, _type: 'interview' as const })),
+                      ...dsaHistory.map(s => ({ ...s, _type: 'dsa' as const })),
+                    ]
+                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    .slice(0, 8)
+                    .map((session, idx) => (
                       <div key={idx} className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-5 rounded-2xl bg-white/[0.01] hover:bg-white/[0.03] border border-transparent hover:border-white/5 transition-all group relative overflow-hidden cursor-default shadow-lg hover:shadow-xl">
                           <div className={`absolute left-0 top-0 w-1 h-full transition-colors ${session.status === 'COMPLETED' ? 'bg-white/30 group-hover:bg-white' : 'bg-zinc-800 group-hover:bg-zinc-600'}`}></div>
                           
                           <div className="flex items-center gap-5">
                              <div className="w-12 h-12 rounded-xl bg-black border border-white/5 flex items-center justify-center shadow-inner group-hover:border-white/10 transition-colors">
-                                <AnimatedIcon name={session.interviewType === 'BEHAVIORAL' ? 'psychology' : 'code'} className={`text-lg ${session.status === 'COMPLETED' ? 'text-white' : 'text-zinc-600'}`} />
+                                <AnimatedIcon name={session._type === 'dsa' ? 'terminal' : (session.interviewType === 'BEHAVIORAL' ? 'psychology' : 'code')} className={`text-lg ${session.status === 'COMPLETED' ? (session._type === 'dsa' ? 'text-purple-400' : 'text-white') : 'text-zinc-600'}`} />
                              </div>
                              <div>
-                                <h4 className="font-bold text-white text-sm tracking-wide mb-1 group-hover:translate-x-1 transition-transform">{session.jobRole || 'Practice Interview'}</h4>
+                                <div className="flex items-center gap-2 mb-1">
+                                  <h4 className="font-bold text-white text-sm tracking-wide group-hover:translate-x-1 transition-transform">{session._type === 'dsa' ? (session.topic?.replace(/_/g, ' ') || 'Algorithm Challenge') : (session.jobRole || 'Practice Interview')}</h4>
+                                  {session._type === 'dsa' && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 uppercase tracking-widest">DSA</span>}
+                                </div>
                                 <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-bold flex items-center gap-2">
                                   {new Date(session.createdAt).toLocaleDateString()} 
                                   <span className="w-1 h-1 rounded-full bg-zinc-700"></span> 
@@ -644,10 +656,9 @@ export default function DashboardPage() {
                               {session.status === 'COMPLETED' && (
                                 <div className="text-right">
                                   <p className="text-zinc-600 text-[10px] uppercase font-bold tracking-widest pl-1 mb-1">Score</p>
-                                  <p className="text-2xl font-black text-white px-2">{session.totalScore?.toFixed(0) || "0"}</p>
+                                  <p className="text-2xl font-black text-white px-2">{(session._type === 'dsa' ? session.score : session.totalScore)?.toFixed(0) || "0"}</p>
                                 </div>
                               )}
-
                           </div>
                       </div>
                     ))

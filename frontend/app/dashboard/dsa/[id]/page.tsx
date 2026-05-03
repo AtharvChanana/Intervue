@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { fetchApi } from "@/lib/api";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import AnimatedIcon from '@/components/AnimatedIcon';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 
 export default function DsaSessionPage() {
   const { id } = useParams();
@@ -105,6 +107,10 @@ export default function DsaSessionPage() {
       });
       setSession(res);
       setReport(res.evaluation);
+      toast.success('Assessment Complete!', {
+        description: 'Your code has been evaluated. Review your report below.',
+        duration: 5000,
+      });
     } catch (err) {
       console.error(err);
       alert("Failed to submit code. " + err);
@@ -151,6 +157,7 @@ export default function DsaSessionPage() {
 
   return (
     <div className="fixed inset-0 z-[100] flex flex-col bg-[#0A0A0A] text-white overflow-hidden font-sans">
+      <Toaster position="top-center" theme="dark" richColors />
       
       {/* Top Navbar */}
       <header className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-[#0F0F0F] shrink-0 z-50">
