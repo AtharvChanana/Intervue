@@ -7,6 +7,8 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import AnimatedIcon from '@/components/AnimatedIcon';
 import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 export default function DsaSessionPage() {
   const { id } = useParams();
@@ -137,13 +139,37 @@ export default function DsaSessionPage() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black flex flex-col items-center justify-center p-4 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.15),transparent_50%)]"></div>
-        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin z-10 mb-6"></div>
-        <p className="text-blue-500 font-bold uppercase tracking-[0.3em] animate-pulse z-10 relative text-sm">
-          Generating Problem Environment
-          <span className="absolute -top-1 -right-4 w-2 h-2 bg-white rounded-full animate-ping"></span>
-        </p>
+      <div className="fixed inset-0 bg-[#0A0A0A] flex flex-col overflow-hidden">
+        {/* Fake top navbar */}
+        <div className="h-16 border-b border-white/5 flex items-center px-6 gap-4 shrink-0">
+          <Skeleton className="h-4 w-48 bg-white/5" />
+          <div className="flex-1" />
+          <Skeleton className="h-8 w-20 bg-white/5 rounded-lg" />
+          <Skeleton className="h-8 w-16 bg-white/5 rounded-lg" />
+          <Skeleton className="h-8 w-20 bg-white/5 rounded-lg" />
+        </div>
+        {/* Fake two-panel layout */}
+        <div className="flex flex-1 overflow-hidden">
+          <div className="w-[45%] border-r border-white/5 p-8 space-y-5">
+            <Skeleton className="h-8 w-3/4 bg-white/5" />
+            <Skeleton className="h-3 w-full bg-white/5" />
+            <Skeleton className="h-3 w-5/6 bg-white/5" />
+            <Skeleton className="h-3 w-4/6 bg-white/5" />
+            <div className="pt-4 space-y-3">
+              <Skeleton className="h-24 w-full bg-white/5 rounded-xl" />
+              <Skeleton className="h-24 w-full bg-white/5 rounded-xl" />
+            </div>
+          </div>
+          <div className="flex-1 flex flex-col">
+            <div className="flex-1 p-4">
+              <Skeleton className="h-full w-full bg-white/5 rounded" />
+            </div>
+            <div className="h-[220px] border-t border-white/5 p-4 space-y-3">
+              <Skeleton className="h-4 w-32 bg-white/5" />
+              <Skeleton className="h-16 w-full bg-white/5 rounded-lg" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -221,11 +247,12 @@ export default function DsaSessionPage() {
         </div>
       </header>
 
-      {/* Main Content Workspace */}
-      <div className="flex flex-1 overflow-hidden">
-        
-        {/* Left Side: Problem Description */}
-        <div className="w-[45%] border-r border-white/10 flex flex-col bg-[#050505] overflow-y-auto h-full scroll-smooth">
+      {/* Main Content Workspace — Resizable */}
+      <ResizablePanelGroup orientation="horizontal" className="flex-1 overflow-hidden">
+
+        {/* Left Panel: Problem Description */}
+        <ResizablePanel defaultSize={45} minSize={25}>
+        <div className="h-full border-r border-white/10 flex flex-col bg-[#050505] overflow-y-auto scroll-smooth">
           
           {/* If completed, show Report Banner on top */}
           {isCompleted && report && (
@@ -344,9 +371,16 @@ export default function DsaSessionPage() {
             )}
           </div>
         </div>
+        </ResizablePanel>
 
-        {/* Right Side: Monaco Editor + Panel */}
-        <div className="flex-1 flex flex-col bg-[#1E1E1E] h-full overflow-hidden">
+        <ResizableHandle withHandle className="bg-white/5 hover:bg-white/10 transition-colors" />
+
+        {/* Right Panel: Monaco Editor + Test Cases — vertically resizable */}
+        <ResizablePanel defaultSize={55} minSize={30}>
+        <ResizablePanelGroup orientation="vertical" className="h-full overflow-hidden">
+
+          <ResizablePanel defaultSize={65} minSize={30}>
+          <div className="flex flex-col bg-[#1E1E1E] h-full overflow-hidden">
           {/* Editor Header Tools */}
           <div className="h-10 bg-[#1e1e1e] border-b border-black/50 flex items-center px-4 justify-between shrink-0 z-10 shadow-sm">
              <div className="flex items-center gap-3">
@@ -388,9 +422,14 @@ export default function DsaSessionPage() {
               }}
             />
           </div>
+          </div>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle className="bg-white/5 hover:bg-white/10 transition-colors" />
 
           {/* Bottom Panel */}
-          <div className="h-[280px] flex flex-col bg-[#111] border-t border-black shadow-[0_-5px_20px_rgba(0,0,0,0.5)] shrink-0 z-20">
+          <ResizablePanel defaultSize={35} minSize={15}>
+          <div className="flex flex-col bg-[#111] h-full overflow-hidden shadow-[0_-5px_20px_rgba(0,0,0,0.5)] z-20">
              <div className="flex items-center px-2 h-10 border-b border-white/5 bg-[#0a0a0a]">
                  <button onClick={() => setActiveTab('testcases')} className={`text-[10px] font-bold uppercase tracking-widest h-full px-4 border-b-2 transition-colors ${activeTab === 'testcases' ? 'border-zinc-400 text-zinc-200' : 'border-transparent text-zinc-600 hover:text-zinc-400'}`}>Test Cases</button>
                  <button onClick={() => setActiveTab('run_results')} className={`text-[10px] flex items-center gap-2 font-bold uppercase tracking-widest h-full px-4 border-b-2 transition-colors ${activeTab === 'run_results' ? 'border-blue-500 text-blue-400' : 'border-transparent text-zinc-600 hover:text-zinc-400'}`}>
@@ -479,16 +518,20 @@ export default function DsaSessionPage() {
                    </div>
                 )}
                 {activeTab === 'run_results' && isRunning && (
-                   <div className="h-full flex flex-col items-center justify-center text-center">
-                      <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                      <div className="text-xs font-bold uppercase tracking-widest text-blue-500 animate-pulse">Simulating Execution Engine...</div>
+                   <div className="h-full flex flex-col gap-2 p-4">
+                      <Skeleton className="h-8 w-full bg-white/5" />
+                      <Skeleton className="h-20 w-full bg-white/5" />
+                      <Skeleton className="h-20 w-full bg-white/5" />
                    </div>
                 )}
              </div>
           </div>
-        </div>
+          </ResizablePanel>
 
-      </div>
+        </ResizablePanelGroup>
+        </ResizablePanel>
+
+      </ResizablePanelGroup>
     </div>
   );
 }
