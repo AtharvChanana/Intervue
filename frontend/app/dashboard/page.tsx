@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 import MagicCard from '@/components/MagicCard';
 import AnimatedIcon from '@/components/AnimatedIcon';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DashboardStats {
   totalSessions: number;
@@ -96,10 +97,73 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-        <div className="flex flex-col items-center justify-center p-20 animate-in fade-in duration-1000">
-            <div className="w-16 h-16 border-t-2 border-r-2 border-blue-500 rounded-full animate-spin mb-8"></div>
-            <div className="text-blue-500 text-xs font-black uppercase tracking-[0.3em] overflow-hidden whitespace-nowrap border-r-4 border-blue-500 animate-[typing_1.5s_steps(40,end),blink-caret_.75s_step-end_infinite]">INITIALIZING NEURAL OVERVIEW...</div>
+      <div className="animate-in fade-in duration-500 pb-20">
+        {/* Header skeleton */}
+        <div className="flex justify-between items-end mb-16">
+          <div className="space-y-3">
+            <Skeleton className="h-12 w-64 bg-white/5" />
+            <Skeleton className="h-3 w-48 bg-white/5" />
+          </div>
         </div>
+
+        {/* Top 3 stat cards */}
+        <div className="grid grid-cols-12 gap-6 mb-8">
+          {[1,2,3].map(i => (
+            <div key={i} className="col-span-12 md:col-span-4 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-6">
+              <div className="flex justify-between items-start">
+                <Skeleton className="h-3 w-28 bg-white/5" />
+                <Skeleton className="h-5 w-5 rounded bg-white/5" />
+              </div>
+              <Skeleton className="h-14 w-20 bg-white/5" />
+              <Skeleton className="h-3 w-36 bg-white/5" />
+            </div>
+          ))}
+        </div>
+
+        {/* Middle row */}
+        <div className="grid grid-cols-12 gap-8 mb-8">
+          <div className="col-span-12 md:col-span-8 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-6">
+            <Skeleton className="h-5 w-40 bg-white/5" />
+            <Skeleton className="h-48 w-full bg-white/5 rounded-2xl" />
+          </div>
+          <div className="col-span-12 md:col-span-4 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-4">
+            <Skeleton className="h-5 w-32 bg-white/5" />
+            {[1,2,3].map(i => (
+              <div key={i} className="flex items-center gap-3">
+                <Skeleton className="h-10 w-10 rounded-xl bg-white/5" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-3 w-full bg-white/5" />
+                  <Skeleton className="h-2 w-3/4 bg-white/5" />
+                </div>
+                <Skeleton className="h-6 w-10 bg-white/5" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom row */}
+        <div className="grid grid-cols-12 gap-8">
+          <div className="col-span-12 md:col-span-4 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-4">
+            <Skeleton className="h-5 w-28 bg-white/5" />
+            <Skeleton className="h-32 w-32 rounded-full mx-auto bg-white/5" />
+            <Skeleton className="h-3 w-full bg-white/5" />
+            <Skeleton className="h-3 w-2/3 bg-white/5" />
+          </div>
+          <div className="col-span-12 md:col-span-8 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-4">
+            <Skeleton className="h-5 w-36 bg-white/5" />
+            {[1,2,3].map(i => (
+              <div key={i} className="flex items-center gap-4 p-4 rounded-2xl border border-white/5">
+                <Skeleton className="h-12 w-12 rounded-xl bg-white/5" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-48 bg-white/5" />
+                  <Skeleton className="h-2 w-32 bg-white/5" />
+                </div>
+                <Skeleton className="h-8 w-12 bg-white/5" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     );
   }
 
