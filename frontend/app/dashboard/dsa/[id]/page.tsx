@@ -9,6 +9,16 @@ import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function DsaSessionPage() {
   const { id } = useParams();
@@ -35,6 +45,7 @@ export default function DsaSessionPage() {
 
   // Hints
   const [hintsRevealed, setHintsRevealed] = useState(0);
+  const [showEndConfirm, setShowEndConfirm] = useState(false);
 
   useEffect(() => {
     loadSession();
@@ -70,8 +81,10 @@ export default function DsaSessionPage() {
         if (res.problem?.timerMinutes) {
            setTimeLeft(res.problem.timerMinutes * 60);
         }
-        if (res.problem?.starterCode && res.problem.starterCode["python"]) {
-            setCode(res.problem.starterCode["python"]);
+        // Set starter code for the default language (java), fall back to python or first available
+        const sc = res.problem?.starterCode;
+        if (sc) {
+          setCode(sc['java'] || sc['python'] || Object.values(sc)[0] || '');
         }
       }
     } catch (err) {
@@ -185,7 +198,30 @@ export default function DsaSessionPage() {
   return (
     <div className="fixed inset-0 z-[100] flex flex-col bg-[#0A0A0A] text-white overflow-hidden font-sans">
       <Toaster position="top-center" theme="dark" richColors />
-      
+
+      {/* End Session Confirmation */}
+      <AlertDialog open={showEndConfirm} onOpenChange={setShowEndConfirm}>
+        <AlertDialogContent className="bg-[#0D0D0D] border border-white/10 rounded-2xl shadow-2xl max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white font-black tracking-wide">End Session?</AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400 text-sm leading-relaxed">
+              Your code will <strong className="text-white">not</strong> be submitted. Any unsaved progress will be lost. Are you sure you want to leave?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel className="bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white rounded-xl font-bold uppercase tracking-widest text-[10px]">
+              Stay
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => router.push('/dashboard')}
+              className="bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 rounded-xl font-bold uppercase tracking-widest text-[10px]"
+            >
+              End Session
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Top Navbar */}
       <header className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-[#0F0F0F] shrink-0 z-50">
         <div className="flex items-center gap-4 flex-1">
@@ -205,13 +241,20 @@ export default function DsaSessionPage() {
           </div>
         </div>
 
-        {/* Center Timer */}
-        {timeLeft !== null && !isCompleted && (
+        {/* Always show timer while session active */}
+        {!isCompleted && (
           <div className="flex-1 flex justify-center items-center">
-            <div className={`px-5 py-2 flex items-center justify-center gap-3 rounded-xl transition-colors shadow-lg ${timeLeft < 300 ? 'text-red-400 bg-red-500/10 border border-red-500/20' : 'text-zinc-300 bg-white/5 border border-white/10'}`}>
-               <AnimatedIcon name="timer" className="text-[18px]" />
-               <span className="font-mono text-lg font-black tracking-widest leading-none">{formatTime(timeLeft)}</span>
-            </div>
+            {timeLeft !== null ? (
+              <div className={`px-5 py-2 flex items-center justify-center gap-3 rounded-xl transition-colors shadow-lg ${timeLeft < 300 ? 'text-red-400 bg-red-500/10 border border-red-500/20' : 'text-zinc-300 bg-white/5 border border-white/10'}`}>
+                <AnimatedIcon name="timer" className="text-[18px]" />
+                <span className="font-mono text-lg font-black tracking-widest leading-none">{formatTime(timeLeft)}</span>
+              </div>
+            ) : (
+              <div className="px-5 py-2 flex items-center gap-3 rounded-xl bg-white/5 border border-white/10">
+                <AnimatedIcon name="timer" className="text-[18px] text-zinc-500" />
+                <span className="font-mono text-sm font-bold tracking-widest text-zinc-500">No Timer</span>
+              </div>
+             )}
           </div>
         )}
         {isCompleted && (
@@ -222,9 +265,15 @@ export default function DsaSessionPage() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-3 flex-1 justify-end">
-          <button onClick={() => router.push('/dashboard')} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
-            {isCompleted ? 'Dashboard' : 'End Session'}
-          </button>
+          {isCompleted ? (
+            <button onClick={() => router.push('/dashboard')} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
+              Dashboard
+            </button>
+          ) : (
+            <button onClick={() => setShowEndConfirm(true)} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
+              End Session
+            </button>
+          )}
           {!isCompleted && (
             <>
               <button 
