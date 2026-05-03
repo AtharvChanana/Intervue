@@ -17,7 +17,8 @@ export default function DsaSessionPage() {
   const [loading, setLoading] = useState(true);
   
   // Editor State
-  const [language, setLanguage] = useState("python");
+  const [language, setLanguage] = useState("java");
+  const [langOpen, setLangOpen] = useState(false);
   const [code, setCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -385,18 +386,32 @@ export default function DsaSessionPage() {
           <div className="h-10 bg-[#1e1e1e] border-b border-black/50 flex items-center px-4 justify-between shrink-0 z-10 shadow-sm">
              <div className="flex items-center gap-3">
                  <AnimatedIcon name="code" className="text-[14px] text-zinc-500" />
-                 <select 
-                    disabled={isCompleted}
-                    className="bg-transparent text-xs text-zinc-300 focus:outline-none cursor-pointer tracking-widest uppercase appearance-none hover:text-white transition-colors"
-                    value={language} 
-                    onChange={e => setLanguage(e.target.value)}
-                 >
-                   <option value="python">Python 3</option>
-                   <option value="javascript">JavaScript</option>
-                   <option value="java">Java</option>
-                   <option value="cpp">C++</option>
-                 </select>
-                 <AnimatedIcon name="expand_more" className="text-[12px] text-zinc-600 pointer-events-none -ml-2" />
+                 {/* Custom language dropdown */}
+                 <div className="relative">
+                   <button
+                     disabled={isCompleted}
+                     onClick={() => setLangOpen(o => !o)}
+                     className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white transition-colors uppercase tracking-widest font-bold disabled:opacity-50"
+                   >
+                     {language === 'python' ? 'Python 3' : language === 'javascript' ? 'JavaScript' : language === 'java' ? 'Java' : 'C++'}
+                     <AnimatedIcon name="expand_more" className={`text-[14px] text-zinc-400 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
+                   </button>
+                   {langOpen && !isCompleted && (
+                     <div className="absolute top-full left-0 mt-1 bg-[#1A1A1A] border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden min-w-[130px]">
+                       {[{val:'java',label:'Java'},{val:'python',label:'Python 3'},{val:'javascript',label:'JavaScript'},{val:'cpp',label:'C++'}].map(opt => (
+                         <button
+                           key={opt.val}
+                           onClick={() => { setLanguage(opt.val); setLangOpen(false); }}
+                           className={`w-full text-left px-4 py-2.5 text-xs font-bold uppercase tracking-widest transition-colors ${
+                             language === opt.val ? 'bg-white/10 text-white' : 'text-zinc-400 hover:bg-white/5 hover:text-white'
+                           }`}
+                         >
+                           {opt.label}
+                         </button>
+                       ))}
+                     </div>
+                   )}
+                 </div>
              </div>
           </div>
           
