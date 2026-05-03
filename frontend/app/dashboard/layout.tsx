@@ -790,7 +790,9 @@ export default function DashboardLayout({
               </Step>
             </AnimatedStepper>
           </div>
-        </di
+        </div>
+      )}
+
       {/* Settings Modal */}
       <Dialog open={showSettingsModal} onOpenChange={setShowSettingsModal}>
         <DialogContent showCloseButton className="max-h-[90vh] overflow-y-auto">
