@@ -19,6 +19,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function DashboardLayout({
   children,
@@ -782,99 +790,97 @@ export default function DashboardLayout({
               </Step>
             </AnimatedStepper>
           </div>
-        </div>
-      )}
-
+        </di
       {/* Settings Modal */}
-      {showSettingsModal && (
-        <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
-          <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-md w-[95%] md:w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-300">
-            <h2 className="text-3xl font-black text-white mb-2">Settings</h2>
-            <p className="text-zinc-500 text-sm mb-8 block">Update your profile information and password.</p>
-            
-            <div className="space-y-6 mb-10">
-              <div className="border border-white/5 bg-white/[0.02] p-4 rounded-xl">
-                <div className="flex justify-between items-center mb-3">
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Email Access</label>
-                  <button onClick={() => setShowEmailUpdateForm(!showEmailUpdateForm)} className="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors flex items-center gap-1 bg-blue-500/10 px-2 flex py-1 rounded">
-                    <AnimatedIcon name="edit" className="text-[14px]" /> {showEmailUpdateForm ? "Cancel" : "Change Email"}
-                  </button>
-                </div>
-                {!showEmailUpdateForm ? (
-                  <input type="email" readOnly className="w-full bg-black border border-white/5 rounded-lg p-3 text-zinc-500 cursor-not-allowed" value={settingsEmail} />
-                ) : (
-                  <div className="space-y-4 mt-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div>
-                      <input type="email" autoComplete="new-password" id="new_email_no_autofill" name="new_email_no_autofill" className="w-full bg-[#1A1A1A] border border-blue-500/50 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 transition-colors placeholder:text-zinc-600" placeholder="Enter new email address" value={newEmailInput} onChange={e => setNewEmailInput(e.target.value)} />
-                    </div>
-                    <div>
-                      <input type="password" autoComplete="new-password" id="current_password_no_autofill" name="current_password_no_autofill" className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-white/30 transition-colors placeholder:text-zinc-600" placeholder="Confirm your cur password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
-                    </div>
-                    <button onClick={handleUpdateEmailRequest} disabled={isProcessingOTP || !newEmailInput || !oldPassword} className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.2)] disabled:opacity-50">
-                      {isProcessingOTP ? "Processing..." : "Send Secure Code"}
-                    </button>
-                    <p className="text-[10px] text-zinc-500 leading-relaxed"><strong className="text-red-400">Warning:</strong> For security reasons, you can only change your registered email address exactly one time per account.</p>
-                  </div>
-                )}
-              </div>
+      <Dialog open={showSettingsModal} onOpenChange={setShowSettingsModal}>
+        <DialogContent showCloseButton className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Settings</DialogTitle>
+            <DialogDescription>Update your profile information and password.</DialogDescription>
+          </DialogHeader>
 
-              <div>
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Name</label>
-                <input type="text" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
-                       placeholder="Applicant Name"
-                       value={settingsName} onChange={e => setSettingsName(e.target.value)} />
-              </div>
-
-              {!showPasswordChange ? (
-                <button
-                  onClick={() => setShowPasswordChange(true)}
-                  className="w-full flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-lg p-4 transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <AnimatedIcon name="lock" className="text-lg text-zinc-400 group-hover:text-white" />
-                    <span className="text-sm font-bold text-zinc-400 group-hover:text-white uppercase tracking-widest">Change Password</span>
-                  </div>
-                  <AnimatedIcon name="arrow_forward" className="text-sm text-zinc-600 group-hover:text-white" />
+          <div className="space-y-6">
+            <div className="border border-white/5 bg-white/[0.02] p-4 rounded-xl">
+              <div className="flex justify-between items-center mb-3">
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Email Access</label>
+                <button onClick={() => setShowEmailUpdateForm(!showEmailUpdateForm)} className="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors flex items-center gap-1 bg-blue-500/10 px-2 flex py-1 rounded">
+                  <AnimatedIcon name="edit" className="text-[14px]" /> {showEmailUpdateForm ? "Cancel" : "Change Email"}
                 </button>
+              </div>
+              {!showEmailUpdateForm ? (
+                <input type="email" readOnly className="w-full bg-black border border-white/5 rounded-lg p-3 text-zinc-500 cursor-not-allowed" value={settingsEmail} />
               ) : (
-                <div className="space-y-4 p-4 rounded-lg border border-white/10 bg-white/[0.02]">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Change Password</span>
-                    <button onClick={() => { setShowPasswordChange(false); setOldPassword(''); setSettingsPassword(''); }} className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-widest font-bold transition-colors">Cancel</button>
+                <div className="space-y-4 mt-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div>
+                    <input type="email" autoComplete="new-password" id="new_email_no_autofill" name="new_email_no_autofill" className="w-full bg-[#1A1A1A] border border-blue-500/50 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500 transition-colors placeholder:text-zinc-600" placeholder="Enter new email address" value={newEmailInput} onChange={e => setNewEmailInput(e.target.value)} />
                   </div>
                   <div>
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Current Password</label>
-                    <input type="password" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
-                           placeholder="Enter current password"
-                           value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
+                    <input type="password" autoComplete="new-password" id="current_password_no_autofill" name="current_password_no_autofill" className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-white/30 transition-colors placeholder:text-zinc-600" placeholder="Confirm your current password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
                   </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">New Password</label>
-                    <input type="password" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
-                           placeholder="Enter new password"
-                           value={settingsPassword} onChange={e => setSettingsPassword(e.target.value)} />
-                  </div>
+                  <button onClick={handleUpdateEmailRequest} disabled={isProcessingOTP || !newEmailInput || !oldPassword} className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.2)] disabled:opacity-50">
+                    {isProcessingOTP ? "Processing..." : "Send Secure Code"}
+                  </button>
+                  <p className="text-[10px] text-zinc-500 leading-relaxed"><strong className="text-red-400">Warning:</strong> For security reasons, you can only change your registered email address exactly one time per account.</p>
                 </div>
               )}
             </div>
 
-            <div className="flex gap-4">
-               <button onClick={() => setShowSettingsModal(false)} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
-               <button onClick={handleSaveSettings} disabled={isUpdatingSettings} className="flex-1 bg-white text-black py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform disabled:opacity-50">
+            <div>
+              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Name</label>
+              <input type="text" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
+                     placeholder="Applicant Name"
+                     value={settingsName} onChange={e => setSettingsName(e.target.value)} />
+            </div>
+
+            {!showPasswordChange ? (
+              <button
+                onClick={() => setShowPasswordChange(true)}
+                className="w-full flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 rounded-lg p-4 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <AnimatedIcon name="lock" className="text-lg text-zinc-400 group-hover:text-white" />
+                  <span className="text-sm font-bold text-zinc-400 group-hover:text-white uppercase tracking-widest">Change Password</span>
+                </div>
+                <AnimatedIcon name="arrow_forward" className="text-sm text-zinc-600 group-hover:text-white" />
+              </button>
+            ) : (
+              <div className="space-y-4 p-4 rounded-lg border border-white/10 bg-white/[0.02]">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.2em]">Change Password</span>
+                  <button onClick={() => { setShowPasswordChange(false); setOldPassword(''); setSettingsPassword(''); }} className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-widest font-bold transition-colors">Cancel</button>
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">Current Password</label>
+                  <input type="password" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
+                         placeholder="Enter current password"
+                         value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-3">New Password</label>
+                  <input type="password" className="w-full bg-black border border-white/5 rounded-lg p-4 text-white focus:outline-none focus:border-white/20 transition-colors"
+                         placeholder="Enter new password"
+                         value={settingsPassword} onChange={e => setSettingsPassword(e.target.value)} />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="flex-col gap-3 pt-2">
+            <div className="flex gap-3 w-full">
+              <button onClick={() => setShowSettingsModal(false)} className="flex-1 bg-white/5 text-white py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
+              <button onClick={handleSaveSettings} disabled={isUpdatingSettings} className="flex-1 bg-white text-black py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform disabled:opacity-50">
                 {isUpdatingSettings ? "Saving..." : "Save Changes"}
               </button>
             </div>
-
-            <div className="mt-8 pt-8 border-t border-red-500/10">
-              <h3 className="text-red-500 font-bold mb-2">Danger Zone</h3>
-              <p className="text-zinc-500 text-xs mb-4">Permanently delete your account and all associated data.</p>
-              <button onClick={() => { setShowSettingsModal(false); setShowDeleteModal1(true); }} className="w-full bg-red-500/10 text-red-500 py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-red-500/20 transition-colors border border-red-500/20">
+            <div className="border-t border-red-500/10 pt-4 w-full">
+              <p className="text-zinc-500 text-xs mb-3">Permanently delete your account and all associated data.</p>
+              <button onClick={() => { setShowSettingsModal(false); setShowDeleteModal1(true); }} className="w-full bg-red-500/10 text-red-500 py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-red-500/20 transition-colors border border-red-500/20">
                 Delete Account
               </button>
             </div>
-          </div>
-        </div>
-      )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete Account Modal 1 (Password) */}
       {showDeleteModal1 && (
@@ -1270,95 +1276,88 @@ export default function DashboardLayout({
         )}
 
         {/* Profile Modal */}
-        {showProfileModal && userProfile && (
-          <div className="fixed inset-0 z-[150] bg-black/95 flex items-center justify-center p-4">
-            <div className="bg-black border border-white/10 rounded-2xl p-10 max-w-md w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-300">
-              <div className="flex justify-between items-start mb-8">
-                <div>
-                  <h2 className="text-3xl font-black text-white mb-1 flex items-center gap-2">
-                    Your Profile
-                    {userProfile.emailVerified && (
-                      <AnimatedIcon name="verified" className="text-blue-500 text-[28px]" title="Verified Account" />
-                    )}
-                  </h2>
-                  <p className="text-zinc-500 text-sm">Manage your demographic and avatar details.</p>
-                </div>
-                <button onClick={() => setShowProfileModal(false)} className="text-zinc-500 hover:text-white transition-colors">
-                  <AnimatedIcon name="close" />
-                </button>
-              </div>
-
-              <div className="flex flex-col items-center mb-8">
-                <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                  {userProfile.profilePictureUrl ? (
-                    <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${userProfile.profilePictureUrl}`} alt="Profile Avatar" className="w-24 h-24 rounded-full object-cover border-2 border-white/20 group-hover:opacity-50 transition-opacity" />
-                  ) : (
-                    <div className="w-24 h-24 rounded-full bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                      <AnimatedIcon name="add_a_photo" className="text-3xl text-zinc-400" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                    <AnimatedIcon name="upload" className="text-white font-bold text-2xl" />
-                  </div>
-                </div>
-                {isUpdatingProfileImage && <p className="text-xs text-blue-400 mt-3 animate-pulse">Uploading...</p>}
-                <input type="file" ref={fileInputRef} className="hidden" accept="image/png, image/jpeg" onChange={handleProfileImageUpload} />
-                {userProfile.profilePictureUrl && (
-                  <button onClick={handleDeleteProfileImage} className="mt-4 text-xs font-bold text-red-500 hover:text-red-400 transition-colors uppercase tracking-widest border border-red-500/20 px-4 py-2 rounded-lg bg-red-500/5 hover:bg-red-500/10">
-                    Remove Photo
-                  </button>
+        <Dialog open={showProfileModal && !!userProfile} onOpenChange={setShowProfileModal}>
+          <DialogContent showCloseButton className="max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                Your Profile
+                {userProfile?.emailVerified && (
+                  <AnimatedIcon name="verified" className="text-blue-500 text-[24px]" title="Verified Account" />
                 )}
-              </div>
+              </DialogTitle>
+              <DialogDescription>Manage your demographic and avatar details.</DialogDescription>
+            </DialogHeader>
 
-              <div className="space-y-6 mb-8">
-                <div>
-                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-2">Full Name</label>
-                  <input type="text" readOnly value={userProfile.name} className="w-full bg-black border border-white/5 rounded-lg p-3 text-zinc-400 cursor-not-allowed" />
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Email Address</label>
-                    {!userProfile.emailVerified && (
-                      <button onClick={handleSendVerification} disabled={isProcessingOTP} className="text-[10px] font-bold text-red-500 px-2 py-1 bg-red-500/10 hover:bg-red-500/20 rounded border border-red-500/20 uppercase tracking-widest transition-colors flex items-center gap-1 disabled:opacity-50">
-                        <AnimatedIcon name="warning" className="text-[12px]" /> Verify Now
-                      </button>
-                    )}
+            <div className="flex flex-col items-center">
+              <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                {userProfile?.profilePictureUrl ? (
+                  <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${userProfile.profilePictureUrl}`} alt="Profile Avatar" className="w-24 h-24 rounded-full object-cover border-2 border-white/20 group-hover:opacity-50 transition-opacity" />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                    <AnimatedIcon name="add_a_photo" className="text-3xl text-zinc-400" />
                   </div>
-                  <input type="text" readOnly value={userProfile.email} className="w-full bg-black border border-white/5 rounded-lg p-3 text-zinc-400 cursor-not-allowed" />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-2">Age</label>
-                    <input type="number" min="0"
-                      className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-3 text-white focus:outline-none focus:border-white/20 transition-colors"
-                      value={profileAge} onChange={e => setProfileAge(e.target.value ? parseInt(e.target.value) : '')} placeholder="e.g. 25" />
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-2">Current Role</label>
-                    <div className="relative">
-                      <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-3 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
-                              value={profileJobRole} onChange={e => setProfileJobRole(e.target.value)}>
-                        <option value="" disabled className="bg-[#111]">Select Status</option>
-                        <option value="Student" className="bg-[#111]">Student</option>
-                        <option value="Employed" className="bg-[#111]">Employed</option>
-                        <option value="Job Seeker" className="bg-[#111]">Job Seeker</option>
-                      </select>
-                      <AnimatedIcon name="unfold_more" className="absolute right-3 top-3.5 text-zinc-500 pointer-events-none text-sm pointer-events-none" />
-                    </div>
-                  </div>
+                )}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <AnimatedIcon name="upload" className="text-white font-bold text-2xl" />
                 </div>
               </div>
-
-              <div className="flex gap-4">
-                 <button onClick={() => setShowProfileModal(false)} className="flex-1 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
-                 <button onClick={handleSaveProfile} className="flex-1 bg-white text-black py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                  Save Changes
+              {isUpdatingProfileImage && <p className="text-xs text-blue-400 mt-3 animate-pulse">Uploading...</p>}
+              <input type="file" ref={fileInputRef} className="hidden" accept="image/png, image/jpeg" onChange={handleProfileImageUpload} />
+              {userProfile?.profilePictureUrl && (
+                <button onClick={handleDeleteProfileImage} className="mt-4 text-xs font-bold text-red-500 hover:text-red-400 transition-colors uppercase tracking-widest border border-red-500/20 px-4 py-2 rounded-lg bg-red-500/5 hover:bg-red-500/10">
+                  Remove Photo
                 </button>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-2">Full Name</label>
+                <input type="text" readOnly value={userProfile?.name || ''} className="w-full bg-black border border-white/5 rounded-lg p-3 text-zinc-400 cursor-not-allowed" />
+              </div>
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Email Address</label>
+                  {!userProfile?.emailVerified && (
+                    <button onClick={handleSendVerification} disabled={isProcessingOTP} className="text-[10px] font-bold text-red-500 px-2 py-1 bg-red-500/10 hover:bg-red-500/20 rounded border border-red-500/20 uppercase tracking-widest transition-colors flex items-center gap-1 disabled:opacity-50">
+                      <AnimatedIcon name="warning" className="text-[12px]" /> Verify Now
+                    </button>
+                  )}
+                </div>
+                <input type="text" readOnly value={userProfile?.email || ''} className="w-full bg-black border border-white/5 rounded-lg p-3 text-zinc-400 cursor-not-allowed" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-2">Age</label>
+                  <input type="number" min="0"
+                    className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-3 text-white focus:outline-none focus:border-white/20 transition-colors"
+                    value={profileAge} onChange={e => setProfileAge(e.target.value ? parseInt(e.target.value) : '')} placeholder="e.g. 25" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] block mb-2">Current Role</label>
+                  <div className="relative">
+                    <select className="w-full bg-[#1A1A1A] border border-white/5 rounded-lg p-3 text-white appearance-none focus:outline-none focus:border-white/20 transition-colors"
+                            value={profileJobRole} onChange={e => setProfileJobRole(e.target.value)}>
+                      <option value="" disabled className="bg-[#111]">Select Status</option>
+                      <option value="Student" className="bg-[#111]">Student</option>
+                      <option value="Employed" className="bg-[#111]">Employed</option>
+                      <option value="Job Seeker" className="bg-[#111]">Job Seeker</option>
+                    </select>
+                    <AnimatedIcon name="unfold_more" className="absolute right-3 top-3.5 text-zinc-500 pointer-events-none text-sm" />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+
+            <DialogFooter>
+              <button onClick={() => setShowProfileModal(false)} className="flex-1 bg-white/5 text-white py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-white/10 transition-colors border border-white/5">Cancel</button>
+              <button onClick={handleSaveProfile} className="flex-1 bg-white text-black py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                Save Changes
+              </button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Validate OTP Modal */}
         <AlertDialog open={showVerifyOtpModal} onOpenChange={setShowVerifyOtpModal}>
