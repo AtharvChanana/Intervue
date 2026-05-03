@@ -77,9 +77,9 @@ export default function DsaSessionPage() {
         setCode(res.code || "");
         setLanguage(res.language || "python");
       } else {
-        // Init timer
-        if (res.problem?.timerMinutes) {
-           setTimeLeft(res.problem.timerMinutes * 60);
+        // Init timer from top-level timerMinutes field
+        if (res.timerMinutes) {
+           setTimeLeft(res.timerMinutes * 60);
         }
         // Set starter code for the default language (java), fall back to python or first available
         const sc = res.problem?.starterCode;
@@ -201,7 +201,7 @@ export default function DsaSessionPage() {
 
       {/* End Session Confirmation */}
       <AlertDialog open={showEndConfirm} onOpenChange={setShowEndConfirm}>
-        <AlertDialogContent className="bg-[#0D0D0D] border border-white/10 rounded-2xl shadow-2xl max-w-sm">
+        <AlertDialogContent className="bg-[#0D0D0D] border border-white/10 rounded-2xl shadow-2xl max-w-sm z-[300]">
           <AlertDialogHeader>
             <AlertDialogTitle className="text-white font-black tracking-wide">End Session?</AlertDialogTitle>
             <AlertDialogDescription className="text-zinc-400 text-sm leading-relaxed">

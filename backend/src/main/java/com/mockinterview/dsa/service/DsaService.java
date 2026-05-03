@@ -145,6 +145,7 @@ public class DsaService {
         response.put("score", session.getScore());
         response.put("language", session.getLanguage());
         response.put("code", session.getCode());
+        response.put("timerMinutes", session.getTimerMinutes());
 
         try {
             if (session.getProblemJson() != null) {
