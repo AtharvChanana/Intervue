@@ -40,7 +40,7 @@ export default function LeaderboardPage() {
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-[50vh]">
-        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
       </div>
     );
   }
