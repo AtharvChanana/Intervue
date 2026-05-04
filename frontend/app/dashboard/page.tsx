@@ -462,12 +462,12 @@ export default function DashboardPage() {
             <div className="flex items-center gap-12">
               <div className="flex flex-col">
                 <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596] mb-2">Current Streak</span>
-                <h4 className="display-font text-5xl font-bold text-[#DC9F85]">{currentStreak} DAYS</h4>
+                <h4 className="display-font text-6xl md:text-7xl font-black text-[#DC9F85] tracking-tighter">{currentStreak} DAYS</h4>
               </div>
               <div className="h-12 w-[1px] bg-[#35211A] hidden md:block"></div>
               <div className="flex flex-col">
                 <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596] mb-2">Total Active</span>
-                <h4 className="display-font text-5xl font-bold text-[#EBDCC4]">{totalActiveDays} DAYS</h4>
+                <h4 className="display-font text-6xl md:text-7xl font-black text-[#EBDCC4] tracking-tighter">{totalActiveDays} DAYS</h4>
               </div>
             </div>
             
