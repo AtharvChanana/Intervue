@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
-import Logo from '@/components/Logo';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
@@ -29,7 +28,6 @@ export default function LandingPage() {
   const [forgotOtp, setForgotOtp] = useState('');
   const [forgotNewPassword, setForgotNewPassword] = useState('');
   const [isProcessingForgot, setIsProcessingForgot] = useState(false);
-
 
   const handleSendForgotOtp = async () => {
     setIsProcessingForgot(true);
@@ -96,174 +94,274 @@ export default function LandingPage() {
   return (
     <>
       <Toaster position="top-center" theme="dark" richColors />
-      <nav className="fixed top-0 w-full z-50 bg-black border-b border-white/5 flex justify-between items-center px-6 md:px-10 h-20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] font-manrope antialiased tracking-tight">
-        <div className="flex items-center gap-3">
-          <Logo className="w-8 h-8" />
-          <div className="text-xl md:text-2xl font-black tracking-tighter text-white uppercase mt-1">Intervue</div>
-        </div>
-      </nav>
 
-      <main className="relative pt-24 md:pt-32 pb-24 px-6 md:px-10 min-h-screen flex items-center justify-center">
-        {/* Ambient Background Light */}
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-white/5 blur-[120px] rounded-full pointer-events-none"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-white/5 blur-[100px] rounded-full pointer-events-none"></div>
+      {/* Google Fonts */}
+      <style>{`
+        @import url('https://api.fontshare.com/v2/css?f[]=clash-grotesk@700&f[]=general-sans@300,400,500,700&display=swap');
+        :root {
+          --matte-black: #181818;
+          --warm-beige: #EBDCC4;
+          --muted-sage: #B6A596;
+          --coral-rust: #DC9F85;
+          --deep-earth: #66473B;
+          --burnt-umber: #35211A;
+        }
+        .display-font { font-family: 'Clash Grotesk', sans-serif; }
+        .body-font { font-family: 'General Sans', sans-serif; }
+        .headline-outline {
+          -webkit-text-stroke: 1px var(--deep-earth);
+          color: transparent;
+          transform: translate(4px, 4px);
+        }
+        .text-layer-container { display: grid; grid-template-columns: 1fr; }
+        .text-layer-container > * { grid-area: 1 / 1; }
+        .noise-overlay {
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          pointer-events: none; z-index: 9999; opacity: 0.03;
+          background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .rotating-text { animation: rotate 12s linear infinite; transform-origin: center; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .form-input-editorial {
+          background: transparent;
+          border: 1px solid var(--deep-earth);
+          color: var(--warm-beige);
+          outline: none;
+          font-family: 'General Sans', sans-serif;
+        }
+        .form-input-editorial::placeholder { color: var(--deep-earth); }
+        .form-input-editorial:focus { border-color: var(--coral-rust); }
+        .editorial-btn {
+          background-color: var(--coral-rust);
+          color: var(--matte-black);
+          font-family: 'General Sans', sans-serif;
+          transition: filter 0.2s ease;
+        }
+        .editorial-btn:hover:not(:disabled) { filter: brightness(0.9); }
+        .editorial-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .divider-line { height: 1px; background-color: var(--burnt-umber); }
+        ::selection { background: var(--coral-rust); color: var(--matte-black); }
+      `}</style>
 
-        <section className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start w-full">
-          {/* Hero Content (Editorial Asymmetry) */}
-          <div className="lg:col-span-7 pt-12 text-center lg:text-left shadow-none">
-            <h1 className="text-5xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] text-white mb-6 md:mb-8 mt-6">
-              MASTER THE <br /> <span className="text-zinc-600">MOCK INTERVIEW.</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-on-surface-variant font-light leading-relaxed max-w-xl mb-12">
-              Ace your next interview with realistic AI-powered practice. Get instant feedback, track your progress, and build the confidence you need to land your dream job.
-            </p>
+      <div className="min-h-screen flex flex-col relative body-font" style={{ backgroundColor: 'var(--matte-black)', color: 'var(--warm-beige)' }}>
+        <div className="noise-overlay" />
+
+        {/* Nav */}
+        <nav className="absolute top-0 w-full px-8 md:px-12 py-10 flex items-center justify-between z-50">
+          <div className="flex items-center gap-4">
+            <span className="text-[10px] tracking-[0.3em] font-medium" style={{ color: 'var(--muted-sage)' }}>INTERVUE—PROTOCOL 01</span>
           </div>
+          <div className="flex-1 mx-12 hidden md:block">
+            <div className="h-[1px] w-full" style={{ backgroundColor: 'var(--burnt-umber)' }} />
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] tracking-widest font-bold" style={{ color: 'var(--burnt-umber)' }}>PRECISION TRAINING</span>
+          </div>
+        </nav>
 
-          {/* Auth Form (High-Transparency Glass) */}
-          <div className="lg:col-span-5 relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-b from-white/10 to-transparent rounded-xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-            <div className="relative bg-[#0a0a0a] rounded-xl p-10 border border-white/10 shadow-[0_0_40px_rgba(255,255,255,0.05)]">
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold text-white mb-2">Login</h2>
-                <p className="text-zinc-500 text-sm">Create your professional profile.</p>
-              </div>
-
-
-              <form className="space-y-6" onSubmit={handleSubmit}>
-                {!isLogin && (
-                  <div className="space-y-1.5">
-                    <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Full Name</label>
-                    <input
-                      required
-                      className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
-                      placeholder="Alien"
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-                )}
-
-                <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Email</label>
-                  <input
-                    required
-                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
-                    placeholder="name@company.com"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Password</label>
-                  <input
-                    required
-                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
-                    placeholder="••••••••"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                {isLogin && (
-                  <div className="flex justify-end mt-2">
-                    <button type="button" onClick={() => { setShowForgotModal(true); setForgotStep(1); setForgotEmail(''); setForgotOtp(''); setForgotNewPassword(''); }} className="text-[10px] text-zinc-500 hover:text-white transition-colors font-bold tracking-widest uppercase mb-1">Forgot Password?</button>
-                  </div>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-4 bg-white text-on-primary rounded-lg font-bold tracking-tight hover:bg-zinc-200 transition-all active:scale-[0.98] mt-4 disabled:opacity-50"
-                >
-                  {loading ? 'Processing...' : (isLogin ? 'Enter Workspace' : 'Register Profile')}
-                </button>
-              </form>
-
-              <p className="mt-8 text-center text-xs text-zinc-600">
-                {isLogin ? "New participant? " : "Existing participant? "}
-                <button
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-zinc-400 hover:text-white font-bold underline underline-offset-4 decoration-white/20 hover:decoration-white transition-all"
-                >
-                  {isLogin ? "Initiate Registration" : "Enter Portal"}
-                </button>
-              </p>
-
+        {/* Hero */}
+        <main className="flex-1 flex flex-col pt-40 md:pt-52">
+          <div className="px-8 md:px-12 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="w-6 h-[1px]" style={{ backgroundColor: 'var(--coral-rust)' }} />
+              <span className="text-xs uppercase tracking-[0.2em] font-semibold" style={{ color: 'var(--muted-sage)' }}>AI Mock Interview Platform</span>
             </div>
           </div>
-        </section>
-      </main>
 
-      {showForgotModal && (
-        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
-          <div className="bg-[#050505] border border-white/10 rounded-2xl w-full max-w-md p-8 shadow-[0_0_50px_rgba(255,255,255,0.05)] animate-in zoom-in-95 duration-300">
-            <h2 className="text-2xl font-black text-white mb-2">Password Recovery</h2>
-            <p className="text-zinc-500 text-xs mb-8">
-              {forgotStep === 1 ? "Enter your email to receive a recovery code." : "Enter your code and new password."}
-            </p>
+          <section className="px-4 md:px-8">
+            <div className="text-layer-container">
+              <h1 className="display-font font-bold uppercase leading-[0.85] tracking-tighter headline-outline select-none" style={{ fontSize: 'clamp(60px, 14vw, 180px)' }}>
+                INTERVUE
+              </h1>
+              <h1 className="display-font font-bold uppercase leading-[0.85] tracking-tighter" style={{ fontSize: 'clamp(60px, 14vw, 180px)', color: 'var(--warm-beige)' }}>
+                INTERVUE
+              </h1>
+            </div>
+          </section>
 
+          {/* Bottom Content Grid */}
+          <div className="mt-12 md:mt-20 w-full">
+            <div className="divider-line w-full" />
+            <div className="max-w-[1440px] mx-auto px-8 md:px-12 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-0">
 
-            {forgotStep === 1 ? (
-              <div className="space-y-6">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">Account Email</label>
+              {/* Left Statement */}
+              <div className="lg:col-span-5 flex flex-col justify-between gap-8">
+                <p className="text-xl md:text-2xl font-light leading-relaxed max-w-lg" style={{ color: 'var(--warm-beige)' }}>
+                  Master your next interview with realistic AI-powered sessions. Get instant feedback, track your progress, and build the confidence to land your dream role.
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--coral-rust)' }} />
+                  <span className="text-xs uppercase tracking-widest font-medium" style={{ color: 'var(--muted-sage)' }}>Sessions Active Now</span>
+                </div>
+              </div>
+
+              {/* Right Auth Form */}
+              <div className="lg:col-start-7 lg:col-span-6 flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--muted-sage)' }}>
+                    {isLogin ? 'Access Your Profile' : 'Register Protocol'}
+                  </span>
+                  <button
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="text-[10px] uppercase tracking-widest font-bold transition-colors"
+                    style={{ color: 'var(--coral-rust)' }}
+                  >
+                    {isLogin ? 'Register →' : '← Login'}
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+                  {!isLogin && (
+                    <input
+                      required
+                      type="text"
+                      placeholder="FULL NAME"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="form-input-editorial w-full px-4 py-4 text-sm tracking-widest rounded-sm"
+                    />
+                  )}
                   <input
-                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
-                    placeholder="name@company.com"
+                    required
+                    type="email"
+                    placeholder="EMAIL@PROTOCOL.SH"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="form-input-editorial w-full px-4 py-4 text-sm tracking-widest rounded-sm"
+                  />
+                  <div className="flex flex-row w-full">
+                    <input
+                      required
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="form-input-editorial flex-1 px-4 py-4 text-sm tracking-widest"
+                      style={{ borderRadius: '2px 0 0 2px' }}
+                    />
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="editorial-btn px-8 md:px-10 py-4 text-xs font-bold uppercase tracking-widest whitespace-nowrap"
+                      style={{ borderRadius: '0 2px 2px 0' }}
+                    >
+                      {loading ? '...' : (isLogin ? 'Enter' : 'Register')}
+                    </button>
+                  </div>
+                </form>
+
+                {isLogin && (
+                  <button
+                    onClick={() => { setShowForgotModal(true); setForgotStep(1); setForgotEmail(''); setForgotOtp(''); setForgotNewPassword(''); }}
+                    className="mt-3 text-[10px] uppercase tracking-[0.2em] text-left transition-colors"
+                    style={{ color: 'var(--burnt-umber)' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--muted-sage)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--burnt-umber)')}
+                  >
+                    Forgot Password? →
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="px-8 md:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex gap-8 text-[10px] tracking-widest uppercase font-medium" style={{ color: 'var(--burnt-umber)' }}>
+            <span>© 2025 INTERVUE SYSTEMS</span>
+          </div>
+          <div className="text-[10px] tracking-widest uppercase font-medium" style={{ color: 'var(--burnt-umber)' }}>
+            ALL RIGHTS RESERVED
+          </div>
+        </footer>
+
+        {/* Rotating Badge */}
+        <div className="fixed bottom-8 right-8 z-50 pointer-events-none md:pointer-events-auto">
+          <div className="relative w-24 h-24 flex items-center justify-center">
+            <svg className="rotating-text w-full h-full" viewBox="0 0 100 100">
+              <defs>
+                <path id="circlePath" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+              </defs>
+              <text fontSize="7.5" fontWeight="bold" fill="#35211A" letterSpacing="2">
+                <textPath xlinkHref="#circlePath">AI INTERVIEW • AI INTERVIEW • AI INTERVIEW •</textPath>
+              </text>
+            </svg>
+            <div className="absolute w-20 h-20 rounded-full border" style={{ borderColor: 'var(--burnt-umber)' }} />
+          </div>
+        </div>
+
+        {/* Forgot Password Modal */}
+        {showForgotModal && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(24,24,24,0.97)' }}>
+            <div className="w-full max-w-md border p-8 animate-in zoom-in-95 duration-200" style={{ backgroundColor: 'var(--matte-black)', borderColor: 'var(--deep-earth)', borderRadius: '2px' }}>
+              <div className="mb-2">
+                <span className="text-[10px] uppercase tracking-[0.3em] font-medium" style={{ color: 'var(--muted-sage)' }}>Password Recovery Protocol</span>
+              </div>
+              <h2 className="display-font text-2xl font-bold uppercase mb-6" style={{ color: 'var(--warm-beige)' }}>
+                {forgotStep === 1 ? 'Enter Email' : 'Enter Code'}
+              </h2>
+              <div className="h-[1px] mb-6" style={{ backgroundColor: 'var(--burnt-umber)' }} />
+
+              {forgotStep === 1 ? (
+                <div className="space-y-4">
+                  <input
+                    className="form-input-editorial w-full px-4 py-4 text-sm tracking-widest rounded-sm"
+                    placeholder="EMAIL@PROTOCOL.SH"
                     type="email"
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
                   />
-                </div>
-                <div className="flex gap-4 pt-4">
-                  <button onClick={() => setShowForgotModal(false)} className="flex-1 py-3 text-xs bg-white/5 text-white rounded-lg font-bold hover:bg-white/10 transition-colors uppercase tracking-widest">Cancel</button>
-                  <button onClick={handleSendForgotOtp} disabled={isProcessingForgot || !forgotEmail} className="flex-1 py-3 text-xs bg-white text-black rounded-lg font-bold hover:bg-zinc-200 transition-colors uppercase tracking-widest disabled:opacity-50">
-                    {isProcessingForgot ? 'Sending...' : 'Send OTP'}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">6-Digit Code</label>
-                  <div className="flex justify-center pt-1">
-                    <InputOTP maxLength={6} value={forgotOtp} onChange={(val) => setForgotOtp(val)}>
-                      <InputOTPGroup>
-                        <InputOTPSlot index={0} />
-                        <InputOTPSlot index={1} />
-                        <InputOTPSlot index={2} />
-                        <InputOTPSlot index={3} />
-                        <InputOTPSlot index={4} />
-                        <InputOTPSlot index={5} />
-                      </InputOTPGroup>
-                    </InputOTP>
+                  <div className="flex gap-3 pt-2">
+                    <button onClick={() => setShowForgotModal(false)} className="flex-1 py-3 text-xs uppercase tracking-widest font-bold transition-colors border" style={{ color: 'var(--muted-sage)', borderColor: 'var(--deep-earth)', background: 'transparent', borderRadius: '2px' }}>
+                      Cancel
+                    </button>
+                    <button onClick={handleSendForgotOtp} disabled={isProcessingForgot || !forgotEmail} className="editorial-btn flex-1 py-3 text-xs font-bold uppercase tracking-widest rounded-sm">
+                      {isProcessingForgot ? 'Sending...' : 'Send OTP'}
+                    </button>
                   </div>
                 </div>
-                <div className="space-y-1.5 pt-2">
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold ml-1">New Password</label>
-                  <input
-                    className="w-full bg-transparent border-b border-outline-variant py-3 px-1 text-white placeholder:text-zinc-700 focus:outline-none focus:border-white transition-colors duration-300"
-                    placeholder="••••••••"
-                    type="password"
-                    value={forgotNewPassword}
-                    onChange={(e) => setForgotNewPassword(e.target.value)}
-                  />
+              ) : (
+                <div className="space-y-5">
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest mb-3" style={{ color: 'var(--muted-sage)' }}>6-Digit Code</p>
+                    <div className="flex justify-center">
+                      <InputOTP maxLength={6} value={forgotOtp} onChange={(val) => setForgotOtp(val)}>
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-widest mb-2" style={{ color: 'var(--muted-sage)' }}>New Password</p>
+                    <input
+                      className="form-input-editorial w-full px-4 py-4 text-sm tracking-widest rounded-sm"
+                      placeholder="••••••••"
+                      type="password"
+                      value={forgotNewPassword}
+                      onChange={(e) => setForgotNewPassword(e.target.value)}
+                    />
+                  </div>
+                  <div className="flex gap-3 pt-2">
+                    <button onClick={() => setShowForgotModal(false)} className="flex-1 py-3 text-xs uppercase tracking-widest font-bold border transition-colors" style={{ color: 'var(--muted-sage)', borderColor: 'var(--deep-earth)', background: 'transparent', borderRadius: '2px' }}>
+                      Cancel
+                    </button>
+                    <button onClick={handleResetPassword} disabled={isProcessingForgot || forgotOtp.length !== 6 || !forgotNewPassword} className="editorial-btn flex-1 py-3 text-xs font-bold uppercase tracking-widest rounded-sm">
+                      {isProcessingForgot ? 'Resetting...' : 'Reset Password'}
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-4 pt-4">
-                  <button onClick={() => setShowForgotModal(false)} className="flex-1 py-3 text-xs bg-white/5 text-white rounded-lg font-bold hover:bg-white/10 transition-colors uppercase tracking-widest">Cancel</button>
-                  <button onClick={handleResetPassword} disabled={isProcessingForgot || forgotOtp.length !== 6 || !forgotNewPassword} className="flex-1 py-3 text-xs bg-white text-black rounded-lg font-bold hover:bg-zinc-200 transition-colors uppercase tracking-widest disabled:opacity-50">
-                    {isProcessingForgot ? 'Resetting...' : 'Reset Password'}
-                  </button>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      )}
-
+        )}
+      </div>
     </>
   );
 }
