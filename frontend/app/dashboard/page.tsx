@@ -321,138 +321,168 @@ export default function DashboardPage() {
       </div>
 
       {/* TOP MATRIX */}
-      <div className="grid grid-cols-12 gap-6 mb-8">
-        <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
-            <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 p-8 relative flex flex-col justify-between hover:border-[#66473B]/50 transition-colors">
-                <div className="flex justify-between items-start mb-6 relative z-10">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#B6A596]">Average Score</span>
-                    <AnimatedIcon name="token" className="text-[#EBDCC4]/50" />
-                </div>
-                <div className="flex items-baseline gap-2 relative z-10">
-                    <h3 className="display-font text-6xl font-black text-[#EBDCC4] px-2 tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
-                    <span className="text-[#B6A596] text-xs font-bold uppercase tracking-widest">/ 100</span>
-                </div>
-                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Overall Average Score</p>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Metric 01 */}
+        <MagicCard className="dashboard-card flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-12">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Average Score</span>
+            <div className="w-2 h-2 rounded-full bg-[#DC9F85] shadow-[0_0_8px_rgba(220,159,133,0.6)]"></div>
+          </div>
+          <div>
+            <h3 className="display-font text-6xl md:text-7xl font-bold text-[#EBDCC4] tracking-tight">{stats?.averageScore?.toFixed(0) || 0}</h3>
+            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Global Percentile</span>
+          </div>
         </MagicCard>
 
-        <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
-            <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 p-8 relative flex flex-col justify-between hover:border-[#66473B]/50 transition-colors">
-                <div className="flex justify-between items-start mb-6 relative z-10">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#B6A596]">Sessions Completed</span>
-                    <AnimatedIcon name="verified" className="text-[#EBDCC4]/50" />
-                </div>
-                <h3 className="display-font text-6xl font-black text-[#EBDCC4] px-2 tracking-tighter relative z-10">{stats?.completedSessions || 0}</h3>
-                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Total Interviews Finished</p>
-            </div>
+        {/* Metric 02 */}
+        <MagicCard className="dashboard-card flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-12">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Sessions Completed</span>
+          </div>
+          <div>
+            <h3 className="display-font text-6xl md:text-7xl font-bold text-[#EBDCC4] tracking-tight">{stats?.completedSessions || 0}</h3>
+            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Total Interviews</span>
+          </div>
         </MagicCard>
 
-        <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
-            <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 p-8 relative flex flex-col justify-between hover:border-[#66473B]/50 transition-colors">
-                <div className="flex justify-between items-start mb-6 relative z-10">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#B6A596]">Roles Practiced</span>
-                    <AnimatedIcon name="developer_mode" className="text-[#EBDCC4]/50" />
-                </div>
-                <h3 className="display-font text-6xl font-black text-[#EBDCC4] px-2 tracking-tighter relative z-10">{stats?.distinctRolesPracticed || 0}</h3>
-                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Unique Job Profiles</p>
-            </div>
+        {/* Metric 03 */}
+        <MagicCard className="dashboard-card flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-12">
+            <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Roles Practiced</span>
+          </div>
+          <div>
+            <h3 className="display-font text-6xl md:text-7xl font-bold text-[#EBDCC4] tracking-tight">{stats?.distinctRolesPracticed || 0}</h3>
+            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Unique Job Profiles</span>
+          </div>
         </MagicCard>
       </div>
 
       {/* ANALYTICS ENGINE */}
-      <div className="grid grid-cols-12 gap-8 mb-8">
-          <MagicCard className="col-span-12 lg:col-span-6 rounded-3xl">
-              <div className="bg-[#181818] w-full h-full rounded-[23px] border border-[#66473B]/40 p-10 relative flex flex-col hover:border-[#66473B]/50 transition-colors shadow-2xl">
-                  <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase mb-10 flex items-center gap-3 relative z-10">
-                    Skill Analytics
-                    {latestReport && <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>}
-                  </h3>
-                  
-                  {latestReport ? (
-                      <div className="space-y-4 relative z-10 mt-6 flex-1">
-                          <MetricSlider label="Technical Score" score={latestReport.technicalScore} color="text-[#EBDCC4]" />
-                          <MetricSlider label="Problem Solving" score={latestReport.problemSolvingScore} color="text-[#EBDCC4]" />
-                          <MetricSlider label="Communication" score={latestReport.communicationScore} color="text-[#EBDCC4]" />
-                          <MetricSlider label="Relevance" score={latestReport.relevanceScore} color="text-[#EBDCC4]" />
-                          <MetricSlider label="Confidence" score={latestReport.confidenceScore} color="text-[#EBDCC4]" />
-                      </div>
-                  ) : (
-                      <div className="flex-1 flex flex-col items-center justify-center border border-[#66473B]/40 bg-white/[0.01] rounded-2xl relative z-10 min-h-[250px]">
-                          <AnimatedIcon name="radar" className="text-[#B6A596] text-4xl mb-4" />
-                          <p className="text-[#B6A596] text-xs font-bold tracking-widest uppercase mb-2">No Data Available</p>
-                          <p className="text-[#B6A596] text-[10px] uppercase">Complete an interview session.</p>
-                      </div>
-                  )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {/* Skill Analytics */}
+        <div className="dashboard-card flex flex-col">
+          <div className="flex items-center justify-between mb-12">
+            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Skill Analytics</h3>
+            {latestReport && <span className="text-[10px] uppercase tracking-widest text-[#DC9F85] font-bold">LATEST SESSION</span>}
+          </div>
+          
+          {latestReport ? (
+          <div className="space-y-10">
+            <div>
+              <div className="flex justify-between items-end mb-3">
+                <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Technical Depth</span>
+                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.technicalScore}%</span>
               </div>
-          </MagicCard>
-
-          <MagicCard className="col-span-12 lg:col-span-6 rounded-3xl">
-              <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 p-10 relative flex flex-col justify-between hover:border-[#66473B]/50 transition-colors shadow-2xl">
-                  <div className="flex items-center gap-3 mb-8 relative z-10">
-                     <AnimatedIcon name="insights" className="text-[#EBDCC4]" />
-                     <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">AI Performance Report</h3>
-                  </div>
-                  <div className="relative z-10 flex-1 flex flex-col justify-center">
-                      {latestReport?.improvementTips || latestReport?.overallFeedback ? (
-                          <div>
-                              <p className="text-[#EBDCC4] text-sm leading-7 mb-4">
-                                 Based on your recent performance, your key strengths include <strong>{((latestReport as any).strengthsSummary || latestReport.overallFeedback || "effective communication and structured context mapping")}</strong>. 
-                                 Moving forward, the system recommends that you focus closely on <strong>{(latestReport.improvementTips || "expanding your system design patterns and practicing real-time constraints")}</strong> to elevate your global trajectory index.
-                              </p>
-                          </div>
-                      ) : (
-                          <p className="text-[#B6A596] text-xs font-bold tracking-widest uppercase bg-[#231E1A] p-8 rounded-xl border border-[#66473B]/40 text-center mt-4 border-dashed">
-                             Report not generated.
-                          </p>
-                      )}
-                  </div>
-              </div>
-          </MagicCard>
-      </div>
-
-      {/* STREAK TRACKER */}
-      <MagicCard className="mb-8 rounded-3xl">
-        <div className="bg-[#181818] rounded-[23px] border border-[#66473B]/40 p-8 md:p-10 hover:border-[#66473B]/50 transition-colors shadow-2xl relative">
-          <div className="flex flex-col lg:flex-row gap-10">
-
-            {/* Left: Streak stats */}
-            <div className="flex-shrink-0 flex flex-col justify-between gap-6 lg:w-52">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <AnimatedIcon name="local_fire_department" className="text-[#EBDCC4] text-2xl" />
-                  <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">Streak</h3>
-                </div>
-                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest">Practice consistency tracker</p>
-              </div>
-
-              <div className="space-y-3">
-                <div className="bg-[#231E1A] border border-[#66473B]/40 rounded-2xl p-5">
-                  <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em] mb-2">Current Streak</p>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-black text-[#EBDCC4]">{currentStreak}</span>
-                    <span className="text-[#B6A596] text-xs font-bold uppercase">days</span>
-                  </div>
-                  {currentStreak > 0
-                    ? <p className="text-[#DC9F85] text-[10px] font-bold uppercase tracking-widest mt-2 animate-pulse">● Active streak</p>
-                    : <p className="text-zinc-700 text-[10px] font-bold uppercase tracking-widest mt-2">— Start today</p>}
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-[#231E1A] border border-[#66473B]/40 rounded-xl p-4">
-                    <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest mb-1">Best</p>
-                    <p className="text-2xl font-black text-[#EBDCC4]">{longestStreak}<span className="text-[#B6A596] text-[10px] font-bold ml-1">d</span></p>
-                  </div>
-                  <div className="bg-[#231E1A] border border-[#66473B]/40 rounded-xl p-4">
-                    <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest mb-1">Total</p>
-                    <p className="text-2xl font-black text-[#EBDCC4]">{totalActiveDays}<span className="text-[#B6A596] text-[10px] font-bold ml-1">d</span></p>
-                  </div>
-                </div>
-              </div>
+              <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.technicalScore}%`}}></div></div>
             </div>
 
-            {/* Right: Calendar heatmap */}
-            <div className="flex-1 min-w-0">
-              <div className="flex justify-between items-center mb-3">
+            <div>
+              <div className="flex justify-between items-end mb-3">
+                <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Communication</span>
+                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.communicationScore}%</span>
+              </div>
+              <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.communicationScore}%`}}></div></div>
+            </div>
+
+            <div>
+              <div className="flex justify-between items-end mb-3">
+                <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Problem Solving</span>
+                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.problemSolvingScore}%</span>
+              </div>
+              <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.problemSolvingScore}%`}}></div></div>
+            </div>
+
+            <div>
+              <div className="flex justify-between items-end mb-3">
+                <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Relevance</span>
+                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.relevanceScore}%</span>
+              </div>
+              <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.relevanceScore}%`}}></div></div>
+            </div>
+
+            <div>
+              <div className="flex justify-between items-end mb-3">
+                <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Confidence</span>
+                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.confidenceScore}%</span>
+              </div>
+              <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.confidenceScore}%`}}></div></div>
+            </div>
+          </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center border border-[#66473B]/40 bg-[#181818] rounded-2xl relative z-10 min-h-[250px]">
+                <AnimatedIcon name="radar" className="text-[#B6A596] text-4xl mb-4" />
+                <p className="text-[#B6A596] text-xs font-bold tracking-widest uppercase mb-2">No Data Available</p>
+                <p className="text-[#B6A596] text-[10px] uppercase">Complete an interview session.</p>
+            </div>
+          )}
+        </div>
+
+        {/* AI Performance Report */}
+        <div className="dashboard-card flex flex-col">
+          <div className="flex items-center justify-between mb-12">
+            <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#DC9F85] font-bold">AI Performance Report</h3>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#DC9F85] animate-pulse"></div>
+              <span className="text-[10px] uppercase tracking-widest text-[#B6A596]">Generated Analysis</span>
+            </div>
+          </div>
+          
+          <div className="flex-1 space-y-8">
+            {latestReport?.improvementTips || latestReport?.overallFeedback ? (
+            <>
+            <div>
+              <span className="text-[10px] uppercase tracking-widest text-[#66473B] block mb-4">Core Strengths</span>
+              <p className="text-lg font-light leading-relaxed text-[#EBDCC4]">
+                {((latestReport as any).strengthsSummary || latestReport.overallFeedback || "Effective communication and structured context mapping.")}
+              </p>
+            </div>
+            
+            <div className="h-[1px] w-full bg-[#35211A]"></div>
+
+            <div>
+              <span className="text-[10px] uppercase tracking-widest text-[#66473B] block mb-4">Critical Improvement Areas</span>
+              <p className="text-lg font-light leading-relaxed text-[#B6A596]">
+                {(latestReport.improvementTips || "Focus closely on expanding your system design patterns and practicing real-time constraints.")}
+              </p>
+            </div>
+            </>
+            ) : (
+                <p className="text-[#B6A596] text-xs font-bold tracking-widest uppercase bg-[#231E1A] p-8 rounded-xl border border-[#66473B]/40 text-center mt-4 border-dashed">
+                    Report not generated.
+                </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Row: Streak Tracking */}
+      <div className="grid grid-cols-1 gap-6 mb-8">
+        <MagicCard className="dashboard-card border-[#66473B]">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
+            <div className="flex items-center gap-12">
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596] mb-2">Current Streak</span>
+                <h4 className="display-font text-5xl font-bold text-[#DC9F85]">{currentStreak} DAYS</h4>
+              </div>
+              <div className="h-12 w-[1px] bg-[#35211A] hidden md:block"></div>
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596] mb-2">Total Active</span>
+                <h4 className="display-font text-5xl font-bold text-[#EBDCC4]">{totalActiveDays} DAYS</h4>
+              </div>
+            </div>
+            
+            <div className="w-full md:w-auto">
+              <div className="flex items-center gap-2 md:justify-end">
+                <span className="text-[10px] uppercase tracking-widest text-[#B6A596]">Protocol Consistency Rank:</span>
+                <span className="text-[10px] uppercase tracking-widest text-[#DC9F85] font-bold">
+                  {currentStreak >= 7 ? 'VANGUARD ELITE' : currentStreak >= 3 ? 'ACTIVE ROSTER' : 'INITIATE'}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="w-full flex-1 min-w-0">
+            <div className="flex justify-between items-center mb-3">
                 <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em]">Last 6 months activity</p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-zinc-700 text-[9px] font-bold uppercase">Less</span>
@@ -514,69 +544,67 @@ export default function DashboardPage() {
         </div>
       </MagicCard>
 
-        {/* PROGRESS CHART */}
-      <MagicCard className="mb-8 rounded-3xl">
-        <div className="bg-[#181818] rounded-[23px] border border-[#66473B]/40 p-8 md:p-10 hover:border-[#66473B]/50 transition-colors shadow-2xl">
-          <div className="flex items-center gap-3 mb-6">
-            <AnimatedIcon name="trending_up" className="text-[#EBDCC4]" />
-            <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
-            <span className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
-          </div>
-          {history.filter(h => h.status === 'COMPLETED').length === 0 ? (
-            <div className="h-40 flex flex-col items-center justify-center border border-dashed border-[#66473B]/50 rounded-2xl">
-              <AnimatedIcon name="show_chart" className="text-zinc-700 text-3xl mb-3" />
-              <p className="text-zinc-700 text-xs font-bold uppercase tracking-widest">Complete sessions to see your trend</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full min-w-[340px]" style={{ height: SVG_H }}>
-                <defs>
-                  <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="white" stopOpacity="0.08" />
-                    <stop offset="100%" stopColor="white" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                {/* Grid lines */}
-                {[0, 25, 50, 75, 100].map(score => (
-                  <g key={score}>
-                    <line x1={PAD.l} y1={gy(score)} x2={PAD.l + chartPW} y2={gy(score)} stroke="white" strokeOpacity="0.04" />
-                    <text x={PAD.l - 4} y={gy(score) + 4} fill="white" fillOpacity="0.25" fontSize="9" textAnchor="end">{score}</text>
-                  </g>
-                ))}
-                {areaPath && <path d={areaPath} fill="url(#chartAreaGrad)" />}
-                {linePath && <path d={linePath} fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.85" />}
-                {/* Dots: small for history, larger+bright for current week */}
-                {chartDots.map((pt, i) => pt && (
-                  <g key={i}>
-                    {pt.isCurrent ? (
-                      <>
-                        <circle cx={pt.x} cy={pt.y} r="7" fill="white" fillOpacity="0.12" />
-                        <circle cx={pt.x} cy={pt.y} r="4" fill="white" />
-                        <text x={pt.x} y={pt.y - 10} fill="white" fillOpacity="0.9" fontSize="9" textAnchor="middle" fontWeight="bold">{Math.round(pt.score)}</text>
-                      </>
-                    ) : (
-                      <circle cx={pt.x} cy={pt.y} r="2" fill="white" fillOpacity="0.7" />
-                    )}
-                    <title>{chartWeeks[i].label}: avg {pt.score.toFixed(0)} ({chartWeeks[i].count} session{chartWeeks[i].count !== 1 ? 's' : ''})</title>
-                  </g>
-                ))}
-                {/* X axis: month labels only (at first week of each month) */}
-                {chartWeeks.map((w, i) => w.monthLabel && (
-                  <text key={i} x={gx(i)} y={SVG_H - 5} fill="white" fillOpacity="0.3" fontSize="8"
-                    textAnchor={i === 0 ? 'start' : i >= NUM_WEEKS - 2 ? 'end' : 'middle'}>
-                    {w.monthLabel}
-                  </text>
-                ))}
-
-
-              </svg>
-            </div>
-          )}
+      {/* PROGRESS CHART */}
+      <MagicCard className="dashboard-card mb-8 flex flex-col">
+        <div className="flex items-center gap-3 mb-6">
+          <AnimatedIcon name="trending_up" className="text-[#EBDCC4]" />
+          <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
+          <span className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
         </div>
+        {history.filter(h => h.status === 'COMPLETED').length === 0 ? (
+          <div className="h-40 flex flex-col items-center justify-center border border-dashed border-[#66473B]/50 rounded-2xl">
+            <AnimatedIcon name="show_chart" className="text-zinc-700 text-3xl mb-3" />
+            <p className="text-zinc-700 text-xs font-bold uppercase tracking-widest">Complete sessions to see your trend</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} className="w-full min-w-[340px]" style={{ height: SVG_H }}>
+              <defs>
+                <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="white" stopOpacity="0.08" />
+                  <stop offset="100%" stopColor="white" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              {/* Grid lines */}
+              {[0, 25, 50, 75, 100].map(score => (
+                <g key={score}>
+                  <line x1={PAD.l} y1={gy(score)} x2={PAD.l + chartPW} y2={gy(score)} stroke="white" strokeOpacity="0.04" />
+                  <text x={PAD.l - 4} y={gy(score) + 4} fill="white" fillOpacity="0.25" fontSize="9" textAnchor="end">{score}</text>
+                </g>
+              ))}
+              {areaPath && <path d={areaPath} fill="url(#chartAreaGrad)" />}
+              {linePath && <path d={linePath} fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" strokeOpacity="0.85" />}
+              {/* Dots: small for history, larger+bright for current week */}
+              {chartDots.map((pt, i) => pt && (
+                <g key={i}>
+                  {pt.isCurrent ? (
+                    <>
+                      <circle cx={pt.x} cy={pt.y} r="7" fill="white" fillOpacity="0.12" />
+                      <circle cx={pt.x} cy={pt.y} r="4" fill="white" />
+                      <text x={pt.x} y={pt.y - 10} fill="white" fillOpacity="0.9" fontSize="9" textAnchor="middle" fontWeight="bold">{Math.round(pt.score)}</text>
+                    </>
+                  ) : (
+                    <circle cx={pt.x} cy={pt.y} r="2" fill="white" fillOpacity="0.7" />
+                  )}
+                  <title>{chartWeeks[i].label}: avg {pt.score.toFixed(0)} ({chartWeeks[i].count} session{chartWeeks[i].count !== 1 ? 's' : ''})</title>
+                </g>
+              ))}
+              {/* X axis: month labels only (at first week of each month) */}
+              {chartWeeks.map((w, i) => w.monthLabel && (
+                <text key={i} x={gx(i)} y={SVG_H - 5} fill="white" fillOpacity="0.3" fontSize="8"
+                  textAnchor={i === 0 ? 'start' : i >= NUM_WEEKS - 2 ? 'end' : 'middle'}>
+                  {w.monthLabel}
+                </text>
+              ))}
+
+
+            </svg>
+          </div>
+        )}
       </MagicCard>
 
-      <MagicCard className="col-span-12 rounded-3xl">
-          <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 hover:border-[#66473B]/50 transition-colors">
+      <MagicCard className="dashboard-card flex flex-col mb-8 p-0 border-[#66473B]">
+          <div className="w-full h-full">
             <div className="p-8 pb-6 border-b border-[#66473B]/40">
               <h3 className="text-[#EBDCC4] text-lg font-black tracking-widest uppercase">Resume Parsing</h3>
               <p className="text-[#B6A596] text-[10px] uppercase font-bold tracking-[0.1em] mt-1">AI Context Configuration</p>
