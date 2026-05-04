@@ -6,6 +6,8 @@ import { fetchApi } from '@/lib/api';
 import MagicCard from '@/components/MagicCard';
 import AnimatedIcon from '@/components/AnimatedIcon';
 import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 
 interface DashboardStats {
   totalSessions: number;
@@ -48,13 +50,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(false);
-  const [toast, setToast] = useState<{message: string, type: 'success' | 'error'} | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 4000);
-  };
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -605,7 +601,7 @@ export default function DashboardPage() {
                       onChange={async (e) => {
                         if (e.target.files && e.target.files.length > 0) {
                           if (userProfile && !userProfile.emailVerified) {
-                            showToast('Email not verified. Please go to your Profile and verify your email first.', 'error');
+                            toast.error('Email not verified. Please go to your Profile and verify your email first.');
                             e.target.value = '';
                             return;
                           }
@@ -616,9 +612,9 @@ export default function DashboardPage() {
                           try {
                             const resp = await fetchApi('/resume/upload', { method: 'POST', body: formData });
                             setActiveResume(resp);
-                            showToast('Resume uploaded successfully.');
+                            toast.success('Resume uploaded successfully.');
                           } catch (err: any) {
-                            showToast('Upload failed: ' + err.message, 'error');
+                            toast.error('Upload failed: ' + err.message);
                           } finally {
                             setIsUploading(false);
                           }
@@ -645,9 +641,9 @@ export default function DashboardPage() {
                       await fetchApi('/resume', { method: 'DELETE' });
                       setActiveResume(null);
                       setConfirmDelete(false);
-                      showToast('Resume removed.');
+                      toast.success('Resume removed.');
                     } catch(err: any) {
-                      showToast('Removal failed.', 'error');
+                      toast.error('Removal failed.');
                     }
                   }}
                   className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all border border-red-500/20 text-[10px] font-bold uppercase tracking-widest shrink-0"
@@ -662,18 +658,7 @@ export default function DashboardPage() {
             )}
           </div>
       </MagicCard>
-
-      {toast && (
-        <div className={`fixed bottom-8 right-8 z-[200] max-w-sm w-full p-4 rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] border backdrop-blur-2xl animate-in slide-in-from-bottom-5 fade-in duration-300 flex items-start gap-4 ${toast.type === 'error' ? 'bg-red-950/80 border-red-500/50' : 'bg-black/90 border-white/20'}`}>
-           <AnimatedIcon name={toast.type === 'error' ? 'error' : 'memory'} className={`mt-0.5 ${toast.type === 'error' ? 'text-red-500' : 'text-white'}`} />
-           <div>
-             <h4 className={`text-xs font-black uppercase tracking-widest ${toast.type === 'error' ? 'text-red-500' : 'text-white'}`}>
-               {toast.type === 'error' ? 'System Fault' : 'Network Update'}
-             </h4>
-             <p className="text-zinc-300 text-xs mt-1.5 leading-relaxed font-medium tracking-wide">{toast.message}</p>
-           </div>
-        </div>
-      )}
+      <Toaster position="top-center" theme="dark" richColors />
     </div>
   );
 }
