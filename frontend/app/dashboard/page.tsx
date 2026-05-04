@@ -540,9 +540,8 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </MagicCard>
+        </MagicCard>
+      </div>
 
       {/* PROGRESS CHART */}
       <MagicCard className="dashboard-card mb-8 flex flex-col">
