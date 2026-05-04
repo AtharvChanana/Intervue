@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { fetchApi } from "@/lib/api";
 import AnimatedIcon from '@/components/AnimatedIcon';
+import UserAvatar from '@/components/UserAvatar';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type LeaderboardUser = {
   name: string;
@@ -16,7 +18,6 @@ export default function LeaderboardPage() {
   const [users, setUsers] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const [currentUserEmail, setCurrentUserEmail] = useState<string>("");
 
   useEffect(() => {
@@ -39,8 +40,22 @@ export default function LeaderboardPage() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex items-center justify-center min-h-[50vh]">
-        <div className="w-8 h-8 border-4 border-white/20 border-t-white rounded-full animate-spin"></div>
+      <div className="max-w-5xl mx-auto p-4 md:p-8 mt-24 space-y-6">
+        <div className="text-center space-y-3 mb-12">
+          <Skeleton className="h-10 w-64 mx-auto rounded-xl" />
+          <Skeleton className="h-4 w-96 mx-auto rounded-lg" />
+        </div>
+        <div className="flex justify-center items-end gap-6 mb-12">
+          {[1, 0, 2].map((i) => (
+            <div key={i} className="flex flex-col items-center gap-3">
+              <Skeleton className={`rounded-full ${i === 0 ? 'w-28 h-28' : 'w-20 h-20'}`} />
+              <Skeleton className={`rounded-2xl w-32 ${i === 0 ? 'h-44' : 'h-32'}`} />
+            </div>
+          ))}
+        </div>
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} className="h-16 w-full rounded-xl" />
+        ))}
       </div>
     );
   }
@@ -57,12 +72,6 @@ export default function LeaderboardPage() {
   const topThree = users.slice(0, 3);
   const restOfUsers = users.slice(3);
 
-  // Fallback for avatar
-  const getAvatarUrl = (url: string | null, seed: string) => {
-    if (url) return `http://localhost:8080${url}`; // Assuming local dev for now, but should ideally come full via API or config
-    return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}`;
-  };
-
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-8 mt-24">
       <div className="mb-12 text-center">
@@ -74,13 +83,18 @@ export default function LeaderboardPage() {
         </p>
       </div>
 
-      {/* Top 3 Podium (Desktop layout, simplified for mobile) */}
+      {/* Top 3 Podium */}
       <div className="flex flex-col md:flex-row justify-center items-end gap-6 mb-16">
         {/* Silver (2nd) */}
         {topThree[1] && (
           <div className="flex flex-col items-center order-2 md:order-1 animate-in slide-in-from-bottom-8 duration-700 delay-100">
             <div className="text-zinc-300 mb-2 font-bold text-lg"><AnimatedIcon name="workspace_premium" className="text-3xl" /></div>
-            <img src={getAvatarUrl(topThree[1].profilePictureUrl, topThree[1].name)} alt={topThree[1].name} className="w-20 h-20 rounded-full border-4 border-zinc-300 object-cover bg-zinc-900 shadow-[0_0_30px_rgba(212,212,216,0.2)] mb-4" />
+            <UserAvatar
+              name={topThree[1].name}
+              profilePictureUrl={topThree[1].profilePictureUrl}
+              className="w-20 h-20 border-4 border-zinc-300 shadow-[0_0_30px_rgba(212,212,216,0.2)] mb-4"
+              fallbackClassName="text-lg"
+            />
             <div className="bg-gradient-to-t from-zinc-800 to-zinc-800/20 border border-white/5 rounded-t-2xl w-32 md:h-32 p-4 text-center flex flex-col items-center justify-start">
               <span className="font-bold text-white text-sm truncate w-full">{topThree[1].name}</span>
               <span className="text-zinc-500 text-[10px] uppercase font-bold tracking-widest mt-1">{topThree[1].xp} XP</span>
@@ -93,7 +107,12 @@ export default function LeaderboardPage() {
         {topThree[0] && (
           <div className="flex flex-col items-center order-1 md:order-2 z-10 animate-in slide-in-from-bottom-12 duration-700">
             <div className="text-yellow-400 mb-2 font-bold text-xl drop-shadow-[0_0_15px_rgba(250,204,21,0.5)]"><AnimatedIcon name="military_tech" className="text-5xl" /></div>
-            <img src={getAvatarUrl(topThree[0].profilePictureUrl, topThree[0].name)} alt={topThree[0].name} className="w-28 h-28 rounded-full border-4 border-yellow-400 object-cover bg-zinc-900 shadow-[0_0_40px_rgba(250,204,21,0.3)] mb-4" />
+            <UserAvatar
+              name={topThree[0].name}
+              profilePictureUrl={topThree[0].profilePictureUrl}
+              className="w-28 h-28 border-4 border-yellow-400 shadow-[0_0_40px_rgba(250,204,21,0.3)] mb-4"
+              fallbackClassName="text-2xl"
+            />
             <div className="bg-gradient-to-t from-yellow-500/20 to-yellow-500/5 border border-yellow-500/30 rounded-t-2xl w-40 md:h-44 p-4 text-center flex flex-col items-center justify-start relative overflow-hidden">
               <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(250,204,21,0.1),transparent_50%)]"></div>
               <span className="font-bold text-white text-base truncate w-full relative">{topThree[0].name}</span>
@@ -107,7 +126,12 @@ export default function LeaderboardPage() {
         {topThree[2] && (
           <div className="flex flex-col items-center order-3 md:order-3 animate-in slide-in-from-bottom-4 duration-700 delay-200">
             <div className="text-amber-600 mb-2 font-bold text-lg"><AnimatedIcon name="workspace_premium" className="text-3xl" /></div>
-            <img src={getAvatarUrl(topThree[2].profilePictureUrl, topThree[2].name)} alt={topThree[2].name} className="w-20 h-20 rounded-full border-4 border-amber-600 object-cover bg-zinc-900 shadow-[0_0_30px_rgba(217,119,6,0.2)] mb-4" />
+            <UserAvatar
+              name={topThree[2].name}
+              profilePictureUrl={topThree[2].profilePictureUrl}
+              className="w-20 h-20 border-4 border-amber-600 shadow-[0_0_30px_rgba(217,119,6,0.2)] mb-4"
+              fallbackClassName="text-lg"
+            />
             <div className="bg-gradient-to-t from-amber-900/40 to-amber-900/10 border border-amber-500/10 rounded-t-2xl w-32 md:h-24 p-4 text-center flex flex-col items-center justify-start">
               <span className="font-bold text-white text-sm truncate w-full">{topThree[2].name}</span>
               <span className="text-amber-500/80 text-[10px] uppercase font-bold tracking-widest mt-1">{topThree[2].xp} XP</span>
@@ -135,11 +159,13 @@ export default function LeaderboardPage() {
           return (
             <div key={user.email} className={`flex items-center bg-[#111] border ${isMe ? 'border-white/30 bg-white/5 relative overflow-hidden' : 'border-white/5'} hover:bg-[#151515] transition-colors rounded-xl p-4`}>
               {isMe && <div className="absolute left-0 top-0 bottom-0 w-1 bg-white"></div>}
-              
               <div className="w-12 text-center text-zinc-500 font-bold text-sm">#{rank}</div>
-              
               <div className="flex-1 flex items-center gap-4 px-4">
-                <img src={getAvatarUrl(user.profilePictureUrl, user.name)} alt={user.name} className="w-10 h-10 rounded-full bg-black object-cover" />
+                <UserAvatar
+                  name={user.name}
+                  profilePictureUrl={user.profilePictureUrl}
+                  className="w-10 h-10"
+                />
                 <div className="flex flex-col">
                   <span className={`font-bold text-sm ${isMe ? 'text-white' : 'text-zinc-200'} truncate`}>
                     {user.name} {isMe && <span className="ml-2 text-[9px] uppercase bg-white text-black px-1.5 py-0.5 rounded tracking-widest">You</span>}
@@ -147,7 +173,6 @@ export default function LeaderboardPage() {
                   <span className="text-zinc-500 text-[10px] uppercase tracking-widest truncate">{user.currentJobRole || 'Candidate'}</span>
                 </div>
               </div>
-
               <div className="w-24 text-right">
                 <div className="font-black text-white tabular-nums tracking-widest">{user.xp.toLocaleString()}</div>
                 <div className="text-zinc-500 text-[9px] uppercase tracking-widest font-bold">XP</div>

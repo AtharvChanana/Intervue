@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import UserAvatar from "@/components/UserAvatar";
 
 export default function DashboardLayout({
   children,
@@ -1163,12 +1164,13 @@ export default function DashboardLayout({
             </div>
             
             <div className="relative" ref={profileMenuRef}>
-              <button onClick={() => { if (isSessionActive) return; setShowProfileDropdown(!showProfileDropdown); }} disabled={isSessionActive} className={`flex items-center justify-center p-1 rounded-full border border-white/10 relative overflow-hidden h-8 w-8 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed bg-transparent' : 'text-zinc-400 hover:text-white bg-white/5'}`}>
-                {userProfile?.profilePictureUrl ? (
-                  <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${userProfile.profilePictureUrl}`} alt="Profile" className="w-full h-full object-cover" />
-                ) : (
-                  <AnimatedIcon name="person" className="text-white text-sm" />
-                )}
+              <button onClick={() => { if (isSessionActive) return; setShowProfileDropdown(!showProfileDropdown); }} disabled={isSessionActive} className={`flex items-center justify-center rounded-full relative overflow-hidden transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'hover:ring-2 hover:ring-white/20'}`}>
+                <UserAvatar
+                  name={userProfile?.name}
+                  profilePictureUrl={userProfile?.profilePictureUrl}
+                  size="sm"
+                  className="w-8 h-8"
+                />
               </button>
 
               {showProfileDropdown && (
@@ -1272,14 +1274,13 @@ export default function DashboardLayout({
 
             <div className="flex flex-col items-center">
               <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                {userProfile?.profilePictureUrl ? (
-                  <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${userProfile.profilePictureUrl}`} alt="Profile Avatar" className="w-24 h-24 rounded-full object-cover border-2 border-white/20 group-hover:opacity-50 transition-opacity" />
-                ) : (
-                  <div className="w-24 h-24 rounded-full bg-white/10 border-2 border-dashed border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                    <AnimatedIcon name="add_a_photo" className="text-3xl text-zinc-400" />
-                  </div>
-                )}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <UserAvatar
+                  name={userProfile?.name}
+                  profilePictureUrl={userProfile?.profilePictureUrl}
+                  className="w-24 h-24 group-hover:opacity-50 transition-opacity border-2 border-white/20"
+                  fallbackClassName="text-2xl"
+                />
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-full">
                   <AnimatedIcon name="upload" className="text-white font-bold text-2xl" />
                 </div>
               </div>
