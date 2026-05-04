@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
 import Logo from '@/components/Logo';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { toast } from 'sonner';
+import { Toaster } from '@/components/ui/sonner';
 
 export default function LandingPage() {
   const router = useRouter();
@@ -18,8 +20,7 @@ export default function LandingPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState(''); // Only used if registering
-  const [error, setError] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
   const [showForgotModal, setShowForgotModal] = useState(false);
@@ -28,21 +29,19 @@ export default function LandingPage() {
   const [forgotOtp, setForgotOtp] = useState('');
   const [forgotNewPassword, setForgotNewPassword] = useState('');
   const [isProcessingForgot, setIsProcessingForgot] = useState(false);
-  const [forgotError, setForgotError] = useState('');
-  const [forgotSuccess, setForgotSuccess] = useState('');
+
 
   const handleSendForgotOtp = async () => {
     setIsProcessingForgot(true);
-    setForgotError('');
     try {
       await fetchApi('/auth/forgot-password', {
         method: 'POST',
         body: JSON.stringify({ email: forgotEmail })
       });
       setForgotStep(2);
-      setForgotSuccess('OTP sent successfully! Check your email.');
+      toast.success('OTP sent! Check your email for the 6-digit code.');
     } catch (e: any) {
-      setForgotError(e.message || 'Failed to send OTP.');
+      toast.error(e.message || 'Failed to send OTP.');
     } finally {
       setIsProcessingForgot(false);
     }
@@ -50,21 +49,19 @@ export default function LandingPage() {
 
   const handleResetPassword = async () => {
     setIsProcessingForgot(true);
-    setForgotError('');
-    setForgotSuccess('');
     try {
       await fetchApi('/auth/reset-password', {
         method: 'POST',
         body: JSON.stringify({ email: forgotEmail, otp: forgotOtp, newPassword: forgotNewPassword })
       });
-      setForgotSuccess('Password reset successfully! Please wait...');
+      toast.success('Password reset successfully!');
       setTimeout(() => {
         setShowForgotModal(false);
         setIsLogin(true);
         setEmail(forgotEmail);
-      }, 2000);
+      }, 1500);
     } catch (e: any) {
-      setForgotError(e.message || 'Failed to reset password.');
+      toast.error(e.message || 'Failed to reset password.');
     } finally {
       setIsProcessingForgot(false);
     }
@@ -72,9 +69,7 @@ export default function LandingPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
-
     try {
       if (isLogin) {
         const response = await fetchApi('/auth/login', {
@@ -92,7 +87,7 @@ export default function LandingPage() {
         router.replace('/dashboard');
       }
     } catch (err: any) {
-      setError(err.message || 'Authentication failed. Please try again.');
+      toast.error(err.message || 'Authentication failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -100,6 +95,7 @@ export default function LandingPage() {
 
   return (
     <>
+      <Toaster position="top-center" theme="dark" richColors />
       <nav className="fixed top-0 w-full z-50 bg-black border-b border-white/5 flex justify-between items-center px-6 md:px-10 h-20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] font-manrope antialiased tracking-tight">
         <div className="flex items-center gap-3">
           <Logo className="w-8 h-8" />
@@ -132,11 +128,6 @@ export default function LandingPage() {
                 <p className="text-zinc-500 text-sm">Create your professional profile.</p>
               </div>
 
-              {error && (
-                <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
 
               <form className="space-y-6" onSubmit={handleSubmit}>
                 {!isLogin && (
@@ -178,7 +169,7 @@ export default function LandingPage() {
                 </div>
                 {isLogin && (
                   <div className="flex justify-end mt-2">
-                    <button type="button" onClick={() => { setShowForgotModal(true); setForgotStep(1); setForgotError(''); setForgotSuccess(''); setForgotEmail(''); setForgotOtp(''); setForgotNewPassword(''); }} className="text-[10px] text-zinc-500 hover:text-white transition-colors font-bold tracking-widest uppercase mb-1">Forgot Password?</button>
+                    <button type="button" onClick={() => { setShowForgotModal(true); setForgotStep(1); setForgotEmail(''); setForgotOtp(''); setForgotNewPassword(''); }} className="text-[10px] text-zinc-500 hover:text-white transition-colors font-bold tracking-widest uppercase mb-1">Forgot Password?</button>
                   </div>
                 )}
 
@@ -214,17 +205,6 @@ export default function LandingPage() {
               {forgotStep === 1 ? "Enter your email to receive a recovery code." : "Enter your code and new password."}
             </p>
 
-            {forgotError && (
-              <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-xs mb-6 font-medium">
-                {forgotError}
-              </div>
-            )}
-            
-            {forgotSuccess && (
-              <div className="bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-xl text-xs mb-6 font-medium">
-                {forgotSuccess}
-              </div>
-            )}
 
             {forgotStep === 1 ? (
               <div className="space-y-6">

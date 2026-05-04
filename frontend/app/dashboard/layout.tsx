@@ -43,9 +43,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const isSessionActive = pathname.includes('/session/');
-  const [systemToast, setSystemToast] = useState<{title: string, message: string, isError: boolean} | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [navAlertMessage, setNavAlertMessage] = useState("");
   const [roles, setRoles] = useState<any[]>([]);
   const [selectedRole, setSelectedRole] = useState(1);
   const [difficulty, setDifficulty] = useState('MEDIUM');
@@ -180,13 +178,13 @@ export default function DashboardLayout({
       }
       setShowModal(true);
     } catch (e: any) {
-      setSystemToast({title: 'Initialization Failed', message: 'Failed to load roles: ' + e.message, isError: true});
+      toast.error('Failed to load roles: ' + e.message, { description: undefined });
     }
   };
 
   const handleStartSession = async () => {
     if (isCustomMode && !customJobRoleText.trim()) {
-      setSystemToast({title: 'Input Required', message: 'Please describe the role you want to practice.', isError: true});
+      toast.error('Please describe the role you want to practice.', { description: undefined });
       return;
     }
     setIsStarting(true);
@@ -210,7 +208,7 @@ export default function DashboardLayout({
       else localStorage.removeItem(`sessionTimer_${response.sessionId}`);
       router.push('/dashboard/session/' + response.sessionId);
     } catch (e: any) {
-      setSystemToast({title: 'Session Error', message: 'Failed to start session: ' + e.message, isError: true});
+      toast.error('Failed to start session: ' + e.message, { description: undefined });
     } finally {
       setIsStarting(false);
     }
@@ -228,7 +226,7 @@ export default function DashboardLayout({
       setShowDsaModal(false);
       router.push('/dashboard/dsa/' + response.sessionId);
     } catch (e: any) {
-      setSystemToast({title: 'DSA Error', message: 'Failed to start assessment: ' + e.message, isError: true});
+      toast.error('Failed to start assessment: ' + e.message, { description: undefined });
     } finally {
       setIsStartingDsa(false);
     }
@@ -240,7 +238,7 @@ export default function DashboardLayout({
       
       if (profileAge !== '') {
         if (typeof profileAge === 'number' && profileAge < 0) {
-          setSystemToast({title: 'Validation Error', message: 'Age cannot be a negative number.', isError: true});
+          toast.error('Age cannot be a negative number.', { description: undefined });
           return;
         }
         payload.age = profileAge;
@@ -249,9 +247,9 @@ export default function DashboardLayout({
       
       const newProfile = await fetchApi('/user/profile', { method: 'PUT', body: JSON.stringify(payload) });
       setUserProfile(newProfile);
-      setSystemToast({title: 'Profile Updated', message: 'Your demographic info was saved successfully.', isError: false});
+      toast.success('Your demographic info was saved successfully.');
     } catch(e: any) {
-      setSystemToast({title: 'Update Failed', message: e.message, isError: true});
+      toast.error(e.message, { description: undefined });
     }
   };
 
@@ -269,9 +267,9 @@ export default function DashboardLayout({
         // Let fetchApi/browser automatically handle multipart boundaries
       });
       setUserProfile(res);
-      setSystemToast({title: 'Avatar Updated', message: 'Profile picture uploaded.', isError: false});
+      toast.success('Profile picture uploaded.');
     } catch(err: any) {
-      setSystemToast({title: 'Upload Failed', message: err.message, isError: true});
+      toast.error(err.message, { description: undefined });
     } finally {
       setIsUpdatingProfileImage(false);
       setProfileImageFile(null);
@@ -284,9 +282,9 @@ export default function DashboardLayout({
       const payload = { profilePictureUrl: "" };
       const newProfile = await fetchApi('/user/profile', { method: 'PUT', body: JSON.stringify(payload) });
       setUserProfile(newProfile);
-      setSystemToast({title: 'Avatar Removed', message: 'Profile picture removed successfully.', isError: false});
+      toast.success('Profile picture removed successfully.');
     } catch(err: any) {
-      setSystemToast({title: 'Remove Failed', message: err.message, isError: true});
+      toast.error(err.message, { description: undefined });
     } finally {
       setIsUpdatingProfileImage(false);
     }
@@ -309,7 +307,7 @@ export default function DashboardLayout({
       const payload: any = { name: settingsName };
       if (settingsPassword) {
         if (!oldPassword) {
-          setSystemToast({title: 'Validation Error', message: 'You must enter your current password to authorize a new one.', isError: true});
+          toast.error('You must enter your current password to authorize a new one.', { description: undefined });
           setIsUpdatingSettings(false);
           return;
         }
@@ -318,7 +316,7 @@ export default function DashboardLayout({
       }
       await fetchApi('/user/profile', { method: 'PUT', body: JSON.stringify(payload) });
       setShowSettingsModal(false);
-      setSystemToast({title: 'Settings Saved', message: 'Settings updated successfully!', isError: false});
+      toast.success('Settings updated successfully!');
       if (settingsPassword) {
         const timeStr = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }).format(new Date());
         const rawObj = localStorage.getItem('notifications_' + settingsEmail);
@@ -329,7 +327,7 @@ export default function DashboardLayout({
         setNotifications(arr);
       }
     } catch(err: any) {
-      setSystemToast({title: 'Settings Failed', message: err.message, isError: true});
+      toast.error(err.message, { description: undefined });
     } finally {
       setIsUpdatingSettings(false);
     }
@@ -340,11 +338,11 @@ export default function DashboardLayout({
     try {
       await fetchApi('/user/email/send-verification', { method: 'POST' });
       setResendCountdown(30);
-      setSystemToast({title: 'OTP Sent', message: 'Check your Mock Email Console for the 6-digit OTP.', isError: false});
+      toast.success('Check your Mock Email Console for the 6-digit OTP.');
       setShowVerifyOtpModal(true);
       setShowProfileModal(false);
     } catch(err: any) {
-      setSystemToast({title: 'Failed to Send', message: err.message, isError: true});
+      toast.error(err.message, { description: undefined });
     } finally {
       setIsProcessingOTP(false);
     }
@@ -355,12 +353,12 @@ export default function DashboardLayout({
     try {
       const response = await fetchApi('/user/email/verify', { method: 'POST', body: JSON.stringify({ otp: verifyOtpCode }) });
       setUserProfile(response);
-      setSystemToast({title: 'Verified', message: 'Your email has been successfully verified! You have received the blue tick.', isError: false});
+      toast.success('Your email has been successfully verified! You have received the blue tick.');
       setShowVerifyOtpModal(false);
       setVerifyOtpCode("");
       setShowProfileModal(true);
     } catch(err: any) {
-      setSystemToast({title: 'Verification Failed', message: err.message, isError: true});
+      toast.error(err.message, { description: undefined });
     } finally {
       setIsProcessingOTP(false);
     }
@@ -368,18 +366,18 @@ export default function DashboardLayout({
 
   const handleUpdateEmailRequest = async () => {
     if (!oldPassword || !newEmailInput) {
-      setSystemToast({title: 'Validation Error', message: 'Password and New Email are required.', isError: true});
+      toast.error('Password and New Email are required.', { description: undefined });
       return;
     }
     setIsProcessingOTP(true);
     try {
       await fetchApi('/user/email/request-update', { method: 'POST', body: JSON.stringify({ password: oldPassword, newEmail: newEmailInput }) });
       setResendCountdown(30);
-      setSystemToast({title: 'OTP Sent', message: 'Check your Mock Email Console for the update OTP sent to your new email.', isError: false});
+      toast.success('Check your Mock Email Console for the update OTP sent to your new email.');
       setShowSettingsModal(false);
       setShowUpdateEmailOtpModal(true);
     } catch(err: any) {
-      setSystemToast({title: 'Update Request Failed', message: err.message, isError: true});
+      toast.error(err.message, { description: undefined });
     } finally {
       setIsProcessingOTP(false);
     }
@@ -391,7 +389,7 @@ export default function DashboardLayout({
       const response = await fetchApi('/user/email/verify-update', { method: 'POST', body: JSON.stringify({ otp: updateEmailOtpCode }) });
       setUserProfile(response);
       setSettingsEmail(response.email);
-      setSystemToast({title: 'Email Updated', message: 'Your email was successfully updated.', isError: false});
+      toast.success('Your email was successfully updated.');
       setShowUpdateEmailOtpModal(false);
       setUpdateEmailOtpCode("");
       setNewEmailInput("");
@@ -399,7 +397,7 @@ export default function DashboardLayout({
       setShowEmailUpdateForm(false);
       setShowSettingsModal(true);
     } catch(err: any) {
-      setSystemToast({title: 'Update Verification Failed', message: err.message, isError: true});
+      toast.error(err.message);
     } finally {
       setIsProcessingOTP(false);
     }
@@ -412,7 +410,7 @@ export default function DashboardLayout({
       localStorage.removeItem('token');
       router.push('/');
     } catch(err: any) {
-      setSystemToast({title: 'Deletion Failed', message: err.message, isError: true});
+      toast.error(err.message, { description: undefined });
       setIsDeletingAccount(false);
       setShowDeleteModal2(false);
     }
@@ -421,34 +419,8 @@ export default function DashboardLayout({
   return (
     <div className="flex bg-transparent min-h-screen w-full relative">
       <Toaster position="top-center" theme="dark" richColors />
-      {systemToast && (
-        <div className="fixed inset-0 z-[300] bg-black flex items-center justify-center p-4">
-          <div className="bg-black border border-white/10 rounded-xl p-8 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
-            <div className={`w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border ${systemToast.isError ? 'border-red-500/20 text-red-500' : 'border-green-500/20 text-green-500'}`}>
-              <AnimatedIcon name={systemToast.isError ? 'error' : 'check_circle'} />
-            </div>
-            <h2 className="text-xl font-bold text-white mb-2">{systemToast.title}</h2>
-            <p className="text-zinc-400 text-sm mb-8">{systemToast.message}</p>
-            <button onClick={() => setSystemToast(null)} className="w-full bg-white text-black py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform">
-              Understood
-            </button>
-          </div>
-        </div>
-      )}
-      {navAlertMessage && (
-        <div className="fixed inset-0 z-[200] bg-black flex items-center justify-center p-4">
-          <div className="bg-black border border-white/10 rounded-xl p-8 max-w-sm w-[95%] md:w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
-            <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/20 text-red-500">
-              <AnimatedIcon name="block" className="text-red-500" />
-            </div>
-            <h2 className="text-xl font-bold text-white mb-2">Action Blocked</h2>
-            <p className="text-zinc-400 text-sm mb-8">{navAlertMessage}</p>
-            <button onClick={() => setNavAlertMessage("")} className="w-full bg-white text-black py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:scale-[1.02] transition-transform">
-              Understood
-            </button>
-          </div>
-        </div>
-      )}
+
+
       {/* Session Configuration Modal — AnimatedStepper */}
       {showModal && (
         <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) { setShowModal(false); setIsCustomMode(false); setCustomJobRoleText(''); } }}>
@@ -984,7 +956,7 @@ export default function DashboardLayout({
                 onClick={(e) => { 
                     if(isSessionActive) { 
                         e.preventDefault(); 
-                        setNavAlertMessage("Please complete or end your current session before navigating away."); 
+                        toast.error("Please complete or end your current session before navigating away."); 
                     } else {
                         setIsMobileSidebarOpen(false);
                     }
@@ -1000,7 +972,7 @@ export default function DashboardLayout({
                 onClick={(e) => { 
                     if(isSessionActive) { 
                         e.preventDefault(); 
-                        setNavAlertMessage("Please complete or end your current session before navigating away."); 
+                        toast.error("Please complete or end your current session before navigating away."); 
                     } else {
                         setIsMobileSidebarOpen(false);
                     }
@@ -1016,7 +988,7 @@ export default function DashboardLayout({
                 onClick={(e) => { 
                     if(isSessionActive) { 
                         e.preventDefault(); 
-                        setNavAlertMessage("Please complete or end your current session before navigating away."); 
+                        toast.error("Please complete or end your current session before navigating away."); 
                     } else {
                         setIsMobileSidebarOpen(false);
                     }
@@ -1031,7 +1003,7 @@ export default function DashboardLayout({
           <div className="mt-10 px-8">
             <button 
               disabled={isSessionActive}
-              onClick={() => { if(isSessionActive) { setNavAlertMessage("Please complete or end your current session before starting a new one."); return; } handleOpenModal(); }} 
+              onClick={() => { if(isSessionActive) { toast.error("Please complete or end your current session before starting a new one."); return; } handleOpenModal(); }} 
               className={`w-full bg-primary text-on-primary py-3 px-4 rounded-md font-bold tracking-tight text-sm transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'hover:opacity-90'}`}>
               New Session
             </button>
@@ -1065,7 +1037,7 @@ export default function DashboardLayout({
 
            <button 
              disabled={isSessionActive}
-             onClick={() => { if(isSessionActive) { setNavAlertMessage("Please complete or end your current session before logging out."); return; } setShowLogoutConfirm(true); }} 
+             onClick={() => { if(isSessionActive) { toast.error("Please complete or end your current session before logging out."); return; } setShowLogoutConfirm(true); }} 
              className={`w-full flex items-center gap-3 py-3 px-4 rounded-md text-left transition-colors mt-4 ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
             <AnimatedIcon name="logout" className="text-xl" />
             <span>Logout</span>
@@ -1087,7 +1059,7 @@ export default function DashboardLayout({
               onClick={(e) => { 
                   if(isSessionActive) { 
                       e.preventDefault(); 
-                      setNavAlertMessage("Please complete or end your current session before navigating away."); 
+                      toast.error("Please complete or end your current session before navigating away."); 
                   }
               }}
               className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname === '/dashboard' ? 'text-white' : 'text-zinc-500 hover:text-white'}`} 
@@ -1099,7 +1071,7 @@ export default function DashboardLayout({
               onClick={(e) => { 
                   if(isSessionActive) { 
                       e.preventDefault(); 
-                      setNavAlertMessage("Please complete or end your current session before navigating away."); 
+                      toast.error("Please complete or end your current session before navigating away."); 
                   }
               }}
               className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname?.includes('/sessions') ? 'text-white' : 'text-zinc-500 hover:text-white'}`} 
@@ -1111,7 +1083,7 @@ export default function DashboardLayout({
               onClick={(e) => { 
                   if(isSessionActive) { 
                       e.preventDefault(); 
-                      setNavAlertMessage("Please complete or end your current session before navigating away."); 
+                      toast.error("Please complete or end your current session before navigating away."); 
                   }
               }}
               className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname?.includes('/leaderboard') ? 'text-white' : 'text-zinc-500 hover:text-white'}`} 
@@ -1122,9 +1094,9 @@ export default function DashboardLayout({
             <button 
               disabled={isSessionActive}
               onClick={() => { 
-                if(isSessionActive) { setNavAlertMessage("Please complete or end your current session before starting a new one."); return; } 
+                if(isSessionActive) { toast.error("Please complete or end your current session before starting a new one."); return; } 
                 if(userProfile && !userProfile.emailVerified) {
-                  setSystemToast({title: 'Verification Required', message: 'Your email is not verified.', isError: true});
+                  toast.error('Your email is not verified.');
                   return;
                 }
                 setShowDsaModal(true); 
@@ -1138,9 +1110,9 @@ export default function DashboardLayout({
             <button 
               disabled={isSessionActive}
               onClick={() => { 
-                if(isSessionActive) { setNavAlertMessage("Please complete or end your current session before starting a new one."); return; } 
+                if(isSessionActive) { toast.error("Please complete or end your current session before starting a new one."); return; } 
                 if(userProfile && !userProfile.emailVerified) {
-                  setSystemToast({title: 'Verification Required', message: 'Your email is not verified. Please open your Profile and verify your email before starting a session.', isError: true});
+                  toast.error('Your email is not verified. Please open your Profile and verify your email before starting a session.');
                   return;
                 }
                 handleOpenModal(); 
@@ -1218,7 +1190,7 @@ export default function DashboardLayout({
                       disabled={isSessionActive}
                       onClick={() => { 
                          setShowProfileDropdown(false);
-                         if(isSessionActive) { setNavAlertMessage("Please complete or end your current session before logging out."); return; } 
+                         if(isSessionActive) { toast.error("Please complete or end your current session before logging out."); return; } 
                          setShowLogoutConfirm(true); 
                       }} 
                       className={`w-full text-left px-4 py-3 text-sm flex items-center gap-3 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed text-zinc-500' : 'text-red-500/80 hover:text-red-500 hover:bg-red-500/[0.02]'}`}
