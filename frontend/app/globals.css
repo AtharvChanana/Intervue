@@ -244,10 +244,7 @@
   .border-ed-solid{ border-color: var(--ed-earth); }
 
   /* Legacy compat (keep bg-telemetry-grid from old theme) */
-  .bg-telemetry-grid {
-    @apply muddy-bg;
-  }
-
+  .bg-telemetry-grid,
   .muddy-bg {
     background-color: #12100E;
     background-image: 
