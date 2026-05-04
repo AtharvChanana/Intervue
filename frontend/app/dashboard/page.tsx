@@ -329,7 +329,7 @@ export default function DashboardPage() {
             <div className="w-2 h-2 rounded-full bg-[#DC9F85] shadow-[0_0_8px_rgba(220,159,133,0.6)]"></div>
           </div>
           <div>
-            <h3 className="display-font text-6xl md:text-7xl font-bold text-[#EBDCC4] tracking-tight">{stats?.averageScore?.toFixed(0) || 0}</h3>
+            <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
             <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Global Percentile</span>
           </div>
         </MagicCard>
@@ -340,7 +340,7 @@ export default function DashboardPage() {
             <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Sessions Completed</span>
           </div>
           <div>
-            <h3 className="display-font text-6xl md:text-7xl font-bold text-[#EBDCC4] tracking-tight">{stats?.completedSessions || 0}</h3>
+            <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.completedSessions || 0}</h3>
             <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Total Interviews</span>
           </div>
         </MagicCard>
@@ -351,7 +351,7 @@ export default function DashboardPage() {
             <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Roles Practiced</span>
           </div>
           <div>
-            <h3 className="display-font text-6xl md:text-7xl font-bold text-[#EBDCC4] tracking-tight">{stats?.distinctRolesPracticed || 0}</h3>
+            <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.distinctRolesPracticed || 0}</h3>
             <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Unique Job Profiles</span>
           </div>
         </MagicCard>
@@ -371,7 +371,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex justify-between items-end mb-3">
                 <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Technical Depth</span>
-                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.technicalScore}%</span>
+                <span className="display-font text-xl font-bold text-[#DC9F85]">{latestReport.technicalScore}%</span>
               </div>
               <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.technicalScore}%`}}></div></div>
             </div>
@@ -379,7 +379,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex justify-between items-end mb-3">
                 <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Communication</span>
-                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.communicationScore}%</span>
+                <span className="display-font text-xl font-bold text-[#DC9F85]">{latestReport.communicationScore}%</span>
               </div>
               <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.communicationScore}%`}}></div></div>
             </div>
@@ -387,7 +387,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex justify-between items-end mb-3">
                 <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Problem Solving</span>
-                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.problemSolvingScore}%</span>
+                <span className="display-font text-xl font-bold text-[#DC9F85]">{latestReport.problemSolvingScore}%</span>
               </div>
               <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.problemSolvingScore}%`}}></div></div>
             </div>
@@ -395,7 +395,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex justify-between items-end mb-3">
                 <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Relevance</span>
-                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.relevanceScore}%</span>
+                <span className="display-font text-xl font-bold text-[#DC9F85]">{latestReport.relevanceScore}%</span>
               </div>
               <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.relevanceScore}%`}}></div></div>
             </div>
@@ -403,7 +403,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex justify-between items-end mb-3">
                 <span className="text-[11px] uppercase tracking-widest text-[#EBDCC4]">Confidence</span>
-                <span className="text-[11px] font-bold text-[#B6A596]">{latestReport.confidenceScore}%</span>
+                <span className="display-font text-xl font-bold text-[#DC9F85]">{latestReport.confidenceScore}%</span>
               </div>
               <div className="progress-bar-container"><div className="progress-bar-fill" style={{width: `${latestReport.confidenceScore}%`}}></div></div>
             </div>
