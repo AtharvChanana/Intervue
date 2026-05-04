@@ -222,70 +222,70 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
   if (isCompleted) {
     return (
       <div className="max-w-4xl mx-auto mt-20 animate-in fade-in duration-500 pb-20">
-        <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(255,255,255,0.1)]">
-          <AnimatedIcon name="task_alt" className="text-5xl text-white" />
+        <div className="w-24 h-24 bg-[#231E1A] rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(220,159,133,0.08)]">
+          <AnimatedIcon name="task_alt" className="text-5xl text-[#EBDCC4]" />
         </div>
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-black text-white mb-4">Session Evaluated</h2>
-          <p className="text-zinc-400">Your final scores have been computed and apprehended by the Neural Link.</p>
+          <h2 className="text-4xl font-black text-[#EBDCC4] mb-4">Session Evaluated</h2>
+          <p className="text-[#B6A596]">Your final scores have been computed and apprehended by the Neural Link.</p>
         </div>
 
         {!report ? (
-           <div className="text-center text-zinc-500 animate-pulse py-10 tracking-widest text-sm uppercase">Decrypting Final Analysis...</div>
+           <div className="text-center text-[#B6A596] animate-pulse py-10 tracking-widest text-sm uppercase">Decrypting Final Analysis...</div>
         ) : (
           <div className="liquid-glass p-10 rounded-xl space-y-10 animate-in slide-in-from-bottom-5">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-6 bg-white/5 border border-white/10 rounded-lg text-center">
-                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2">Total Score</p>
-                <p className="text-5xl font-black text-white">{report.totalScore?.toFixed(0)}</p>
+              <div className="p-6 bg-[#1F1A17] border border-[#66473B]/50 rounded-lg text-center">
+                <p className="text-xs font-bold text-[#B6A596] tracking-widest uppercase mb-2">Total Score</p>
+                <p className="text-5xl font-black text-[#EBDCC4]">{report.totalScore?.toFixed(0)}</p>
               </div>
-              <div className="p-6 bg-white/5 border border-white/10 rounded-lg text-center">
-                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2">Technical Ability</p>
-                <p className="text-5xl font-black text-white">{report.technicalScore?.toFixed(0)}</p>
+              <div className="p-6 bg-[#1F1A17] border border-[#66473B]/50 rounded-lg text-center">
+                <p className="text-xs font-bold text-[#B6A596] tracking-widest uppercase mb-2">Technical Ability</p>
+                <p className="text-5xl font-black text-[#EBDCC4]">{report.technicalScore?.toFixed(0)}</p>
               </div>
-              <div className="p-6 bg-white/5 border border-white/10 rounded-lg text-center">
-                <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-2">Communication</p>
-                <p className="text-5xl font-black text-white">{report.communicationScore?.toFixed(0)}</p>
+              <div className="p-6 bg-[#1F1A17] border border-[#66473B]/50 rounded-lg text-center">
+                <p className="text-xs font-bold text-[#B6A596] tracking-widest uppercase mb-2">Communication</p>
+                <p className="text-5xl font-black text-[#EBDCC4]">{report.communicationScore?.toFixed(0)}</p>
               </div>
             </div>
 
-            <div className="bg-black p-8 rounded-lg border border-white/10">
-              <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2"><AnimatedIcon name="psychology" className="text-sm" /> Overall Feedback</h4>
-              <p className="text-white text-sm leading-relaxed">{report.overallFeedback}</p>
+            <div className="bg-[#181818] p-8 rounded-lg border border-[#66473B]/50">
+              <h4 className="text-xs font-bold text-[#B6A596] uppercase tracking-widest mb-4 flex items-center gap-2"><AnimatedIcon name="psychology" className="text-sm" /> Overall Feedback</h4>
+              <p className="text-[#EBDCC4] text-sm leading-relaxed">{report.overallFeedback}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-white/5 p-6 rounded-lg border border-white/5">
-                <h4 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3">
+              <div className="bg-[#1F1A17] p-6 rounded-lg border border-[#66473B]/40">
+                <h4 className="text-xs font-bold text-[#EBDCC4] uppercase tracking-widest flex items-center gap-2 mb-3">
                   <AnimatedIcon name="trending_up" className="text-green-400 text-sm" /> Core Strengths
                 </h4>
-                <p className="text-sm text-zinc-400 leading-relaxed italic">{report.strengthsSummary}</p>
+                <p className="text-sm text-[#B6A596] leading-relaxed italic">{report.strengthsSummary}</p>
               </div>
-              <div className="bg-white/5 p-6 rounded-lg border border-white/5">
-                <h4 className="text-xs font-bold text-white uppercase tracking-widest flex items-center gap-2 mb-3">
-                  <AnimatedIcon name="flag" className="text-amber-400 text-sm" /> Focus Areas
+              <div className="bg-[#1F1A17] p-6 rounded-lg border border-[#66473B]/40">
+                <h4 className="text-xs font-bold text-[#EBDCC4] uppercase tracking-widest flex items-center gap-2 mb-3">
+                  <AnimatedIcon name="flag" className="text-[#B6A596] text-sm" /> Focus Areas
                 </h4>
-                <p className="text-sm text-zinc-400 leading-relaxed italic">{report.improvementTips}</p>
+                <p className="text-sm text-[#B6A596] leading-relaxed italic">{report.improvementTips}</p>
               </div>
             </div>
 
             {report.qaBreakdown && report.qaBreakdown.length > 0 && (
               <div className="space-y-4">
-                <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2"><AnimatedIcon name="assignment_turned_in" className="text-sm" /> Question Breakdown</h4>
+                <h4 className="text-xs font-bold text-[#B6A596] uppercase tracking-widest mb-4 flex items-center gap-2"><AnimatedIcon name="assignment_turned_in" className="text-sm" /> Question Breakdown</h4>
                 {report.qaBreakdown.map((q: any, idx: number) => {
                   const isCorrect = q.userAnswer === q.correctOption;
                   return (
-                    <div key={idx} className="bg-black p-6 rounded-lg border border-white/5">
-                      <p className="text-sm text-white font-bold mb-4">{idx + 1}. {q.question}</p>
+                    <div key={idx} className="bg-[#181818] p-6 rounded-lg border border-[#66473B]/40">
+                      <p className="text-sm text-[#EBDCC4] font-bold mb-4">{idx + 1}. {q.question}</p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs flex-col flex sm:grid">
-                        <div className="bg-white/5 p-3 rounded-md border border-white/5">
-                          <span className="block text-zinc-500 uppercase tracking-widest mb-1">Your Answer</span>
+                        <div className="bg-[#1F1A17] p-3 rounded-md border border-[#66473B]/40">
+                          <span className="block text-[#B6A596] uppercase tracking-widest mb-1">Your Answer</span>
                           <span className={`font-bold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
                             {q.userAnswer} - {q[`option${q.userAnswer}`] || ''}
                           </span>
                         </div>
-                        <div className="bg-white/5 p-3 rounded-md border border-white/5">
-                          <span className="block text-zinc-500 uppercase tracking-widest mb-1">Correct Answer</span>
+                        <div className="bg-[#1F1A17] p-3 rounded-md border border-[#66473B]/40">
+                          <span className="block text-[#B6A596] uppercase tracking-widest mb-1">Correct Answer</span>
                           <span className="font-bold text-green-400">
                             {q.correctOption} - {q[`option${q.correctOption}`] || ''}
                           </span>
@@ -297,11 +297,11 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
               </div>
             )}
 
-            <div className="flex gap-4 justify-center pt-8 border-t border-white/10 flex-col sm:flex-row">
-              <button onClick={() => router.push('/dashboard')} className="bg-transparent border border-white/20 text-white px-8 py-4 rounded-md font-bold hover:bg-white/5 transition-all text-sm tracking-widest uppercase w-full sm:w-auto">
+            <div className="flex gap-4 justify-center pt-8 border-t border-[#66473B]/50 flex-col sm:flex-row">
+              <button onClick={() => router.push('/dashboard')} className="bg-transparent border border-[#66473B]/70 text-[#EBDCC4] px-8 py-4 rounded-md font-bold hover:bg-[#1F1A17] transition-all text-sm tracking-widest uppercase w-full sm:w-auto">
                 Back to Dashboard
               </button>
-              <button onClick={() => router.push('/dashboard')} className="bg-white text-black px-12 py-4 rounded-md font-bold hover:scale-105 transition-all text-sm tracking-widest uppercase shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 w-full sm:w-auto">
+              <button onClick={() => router.push('/dashboard')} className="bg-[#DC9F85] text-[#181818] px-12 py-4 rounded-md font-bold hover:scale-105 transition-all text-sm tracking-widest uppercase shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 w-full sm:w-auto">
                 Attempt New Session <AnimatedIcon name="replay" className="text-sm" />
               </button>
             </div>
@@ -312,24 +312,24 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
   }
 
   if (!currentQuestion) {
-    return <div className="p-8 text-white animate-pulse">Initializing Neural Link...</div>;
+    return <div className="p-8 text-[#EBDCC4] animate-pulse">Initializing Neural Link...</div>;
   }
 
   return (
     <div className="max-w-4xl mx-auto pb-20">
       <AlertDialog open={showEndConfirm} onOpenChange={setShowEndConfirm}>
-        <AlertDialogContent className="bg-[#050505] border-white/10 shadow-[0_0_50px_rgba(255,255,255,0.05)] sm:max-w-md gap-6">
+        <AlertDialogContent className="bg-[#050505] border-[#66473B]/50 shadow-[0_0_50px_rgba(220,159,133,0.06)] sm:max-w-md gap-6">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-2xl font-black text-white text-center">End Session?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-500 text-sm text-center">
+            <AlertDialogTitle className="text-2xl font-black text-[#EBDCC4] text-center">End Session?</AlertDialogTitle>
+            <AlertDialogDescription className="text-[#B6A596] text-sm text-center">
               Are you sure you want to end this interview? Your progress will be halted and this cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-4 flex-col sm:flex-col gap-3">
-            <Button onClick={confirmEndSession} className="w-full bg-red-500/20 text-red-500 border border-red-500/20 py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-red-500 hover:text-white transition-all">
+            <Button onClick={confirmEndSession} className="w-full bg-red-500/20 text-red-500 border border-red-500/20 py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-red-500 hover:text-[#EBDCC4] transition-all">
               End It
             </Button>
-            <AlertDialogCancel onClick={() => setShowEndConfirm(false)} className="w-full mt-0 sm:mt-0 bg-white/5 text-white py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-white/10 transition-colors border-white/5">
+            <AlertDialogCancel onClick={() => setShowEndConfirm(false)} className="w-full mt-0 sm:mt-0 bg-[#1F1A17] text-[#EBDCC4] py-4 rounded-lg font-bold tracking-widest uppercase text-[10px] hover:bg-[#231E1A] transition-colors border-[#66473B]/40">
               Stay
             </AlertDialogCancel>
           </AlertDialogFooter>
@@ -337,7 +337,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
       </AlertDialog>
 
       <div className="flex justify-between items-center mb-10">
-        <h2 className="text-xl font-bold text-white tracking-widest uppercase">
+        <h2 className="text-xl font-bold text-[#EBDCC4] tracking-widest uppercase">
           MOCK SESSION
         </h2>
         <button onClick={endSession} className="text-sm font-bold text-red-500 hover:text-red-400 border border-red-500/20 bg-red-500/10 px-4 py-2 rounded-md">
@@ -348,19 +348,19 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
       {!feedback ? (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="liquid-glass rounded-xl p-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 border-b border-l border-white/10 bg-white/5 rounded-bl-lg">
-              <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-zinc-400">
+            <div className="absolute top-0 right-0 p-4 border-b border-l border-[#66473B]/50 bg-[#1F1A17] rounded-bl-lg">
+              <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-[#B6A596]">
                 {currentQuestion.questionCategory}
               </span>
             </div>
-            <h3 className="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-3">
+            <h3 className="text-[#B6A596] text-xs font-bold uppercase tracking-widest mb-3">
               Query 0{currentQuestion.questionNumber}
             </h3>
             {/* Timer display */}
             {timeLimit > 0 && (
               <div className={`flex items-center gap-2 mb-4 ${
                 timeLeft / timeLimit > 0.5 ? 'text-emerald-400' :
-                timeLeft / timeLimit > 0.25 ? 'text-amber-400' : 'text-red-400'
+                timeLeft / timeLimit > 0.25 ? 'text-[#B6A596]' : 'text-red-400'
               } ${timeLeft / timeLimit <= 0.25 && timerActive ? 'animate-pulse' : ''}`}>
                 <AnimatedIcon name="timer" className="text-base" />
                 <span className="text-xl font-black font-mono">
@@ -371,7 +371,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                   : <span className="text-[10px] uppercase tracking-widest opacity-40">left</span>}
               </div>
             )}
-            <p className="text-2xl text-white font-medium leading-relaxed">
+            <p className="text-2xl text-[#EBDCC4] font-medium leading-relaxed">
               {currentQuestion.questionText}
             </p>
           </div>
@@ -386,7 +386,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                 }}
                 rows={6}
                 placeholder="Formulate your comprehensive answer here..."
-                className="w-full bg-black/50 border border-white/10 rounded-xl p-6 text-white text-sm focus:outline-none focus:border-white transition-colors tracking-wide leading-relaxed resize-none shadow-inner"
+                className="w-full bg-[#181818]/80 border border-[#66473B]/50 rounded-xl p-6 text-[#EBDCC4] text-sm focus:outline-none focus:border-[#DC9F85] transition-colors tracking-wide leading-relaxed resize-none shadow-inner"
               />
             </div>
           ) : (
@@ -401,13 +401,13 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                   key={opt.key}
                   onClick={() => setSelectedOption(opt.key)}
                   disabled={isSubmitting}
-                  className={`group relative liquid-glass border ${selectedOption === opt.key ? 'border-white bg-white/10' : 'border-white/5'} rounded-xl p-6 text-left hover:border-white transition-all duration-300 disabled:opacity-50`}
+                  className={`group relative liquid-glass border ${selectedOption === opt.key ? 'border-white bg-[#231E1A]' : 'border-[#66473B]/40'} rounded-xl p-6 text-left hover:border-white transition-all duration-300 disabled:opacity-50`}
                 >
                   <div className="flex items-center gap-4">
-                    <span className={`w-8 h-8 rounded-lg border flex items-center justify-center font-bold text-xs transition-all ${selectedOption === opt.key ? 'bg-white text-black border-white/5' : 'bg-white/5 text-zinc-500 border-white/10 group-hover:bg-white group-hover:text-black'}`}>
+                    <span className={`w-8 h-8 rounded-lg border flex items-center justify-center font-bold text-xs transition-all ${selectedOption === opt.key ? 'bg-[#DC9F85] text-[#181818] border-[#66473B]/40' : 'bg-[#1F1A17] text-[#B6A596] border-[#66473B]/50 group-hover:bg-white group-hover:text-black'}`}>
                       {opt.key}
                     </span>
-                    <p className={`text-white transition-transform ${selectedOption === opt.key ? 'translate-x-1 font-semibold' : 'group-hover:translate-x-1'}`}>{opt.text}</p>
+                    <p className={`text-[#EBDCC4] transition-transform ${selectedOption === opt.key ? 'translate-x-1 font-semibold' : 'group-hover:translate-x-1'}`}>{opt.text}</p>
                   </div>
                 </button>
               ))}
@@ -420,16 +420,16 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
               {!hintRevealed ? (
                 <button
                   onClick={revealHint}
-                  className="flex items-center gap-2 text-zinc-600 text-xs font-bold uppercase tracking-wider hover:text-amber-400 transition-colors py-2"
+                  className="flex items-center gap-2 text-[#B6A596] text-xs font-bold uppercase tracking-wider hover:text-[#B6A596] transition-colors py-2"
                 >
                   <AnimatedIcon name="lightbulb" className="text-sm" />
                   Need a hint?
                 </button>
               ) : (
                 <div className="flex items-start gap-2 p-3 bg-amber-500/5 border border-amber-400/20 rounded-xl max-w-sm">
-                  <AnimatedIcon name="lightbulb" className="text-amber-400 text-sm flex-shrink-0 mt-0.5" />
+                  <AnimatedIcon name="lightbulb" className="text-[#B6A596] text-sm flex-shrink-0 mt-0.5" />
                   {isLoadingHint
-                    ? <p className="text-amber-400/50 text-[10px] animate-pulse uppercase tracking-widest">Generating hint...</p>
+                    ? <p className="text-[#B6A596]/50 text-[10px] animate-pulse uppercase tracking-widest">Generating hint...</p>
                     : <p className="text-amber-200 text-xs leading-relaxed">{hintText}</p>}
                 </div>
               )}
@@ -437,7 +437,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
             <button
               onClick={() => submitAnswer(selectedOption)}
               disabled={!selectedOption || isSubmitting}
-              className="bg-white text-black px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
+              className="bg-[#DC9F85] text-[#181818] px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Evaluating...' : (currentQuestion.questionFormat === 'OPEN_ENDED' ? 'Submit Answer' : 'Submit Option')}
               {!isSubmitting && <AnimatedIcon name="send" className="text-sm" />}
@@ -446,42 +446,42 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
         </div>
       ) : (
         <div className="liquid-glass rounded-xl p-10 animate-in flip-in-y duration-700 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-white/10">
+          <div className="absolute top-0 left-0 w-full h-1 bg-[#231E1A]">
             <div className="h-full bg-white" style={{ width: `${feedback.score}%`}}></div>
           </div>
           
           <div className="flex justify-between items-start mb-10 mt-4">
             <div>
-              <h3 className={`text-3xl font-black mb-2 flex items-center gap-3 ${currentQuestion.questionFormat === 'OPEN_ENDED' ? (feedback.score >= 70 ? 'text-green-400' : 'text-amber-400') : (feedback.score === 100 ? 'text-green-400' : 'text-red-400')}`}>
+              <h3 className={`text-3xl font-black mb-2 flex items-center gap-3 ${currentQuestion.questionFormat === 'OPEN_ENDED' ? (feedback.score >= 70 ? 'text-green-400' : 'text-[#B6A596]') : (feedback.score === 100 ? 'text-green-400' : 'text-red-400')}`}>
                 <AnimatedIcon name={currentQuestion.questionFormat === 'OPEN_ENDED' ? (feedback.score >= 70 ? 'check_circle' : 'change_history') : (feedback.score === 100 ? 'check_circle' : 'cancel')} className="text-4xl" />
                 {currentQuestion.questionFormat === 'OPEN_ENDED' ? `Evaluation Score: ${feedback.score}/100` : (feedback.score === 100 ? 'Correct Answer' : 'Incorrect')}
               </h3>
-              <p className="text-zinc-500 text-sm">Response calibrated against ideal parameters.</p>
+              <p className="text-[#B6A596] text-sm">Response calibrated against ideal parameters.</p>
             </div>
             <div className="text-right">
-              <span className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-1">Score Matrix</span>
-              <span className="text-5xl font-black text-white">{feedback.score}</span>
+              <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mb-1">Score Matrix</span>
+              <span className="text-5xl font-black text-[#EBDCC4]">{feedback.score}</span>
             </div>
           </div>
 
-          <div className="bg-black p-6 rounded-lg mb-10 border border-white/5 flex items-center justify-center min-h-[100px]">
+          <div className="bg-[#181818] p-6 rounded-lg mb-10 border border-[#66473B]/40 flex items-center justify-center min-h-[100px]">
              {feedback.score === 100 ? (
                 <p className="text-green-400 font-bold tracking-widest uppercase text-sm">Your Response was Accurate</p>
              ) : (
                 <p className="text-red-400 font-bold uppercase tracking-widest text-sm flex items-center gap-3">
-                   Correct Option: <span className="px-5 py-2 bg-white/10 border border-white/10 text-white rounded-md ml-1">{feedback.idealAnswer}</span>
+                   Correct Option: <span className="px-5 py-2 bg-[#231E1A] border border-[#66473B]/50 text-[#EBDCC4] rounded-md ml-1">{feedback.idealAnswer}</span>
                 </p>
              )}
           </div>
 
-          <div className="flex justify-end pt-6 border-t border-white/10">
+          <div className="flex justify-end pt-6 border-t border-[#66473B]/50">
             <button onClick={() => {
               if (feedback.isSessionComplete || !feedback.nextQuestion) {
                   setIsCompleted(true);
               } else {
                   nextQuestion();
               }
-            }} className="bg-white text-black px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2">
+            }} className="bg-[#DC9F85] text-[#181818] px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2">
               {(feedback.isSessionComplete || !feedback.nextQuestion) ? 'FINISH SESSION PORTION' : 'PROCEED TO NEXT QUESTION'}
               <AnimatedIcon name="arrow_forward" className="text-sm" />
             </button>

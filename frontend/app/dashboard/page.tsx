@@ -97,41 +97,41 @@ export default function DashboardPage() {
         {/* Header skeleton */}
         <div className="flex justify-between items-end mb-16">
           <div className="space-y-3">
-            <Skeleton className="h-12 w-64 bg-white/5" />
-            <Skeleton className="h-3 w-48 bg-white/5" />
+            <Skeleton className="h-12 w-64 bg-[#1F1A17]" />
+            <Skeleton className="h-3 w-48 bg-[#1F1A17]" />
           </div>
         </div>
 
         {/* Top 3 stat cards */}
         <div className="grid grid-cols-12 gap-6 mb-8">
           {[1,2,3].map(i => (
-            <div key={i} className="col-span-12 md:col-span-4 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-6">
+            <div key={i} className="col-span-12 md:col-span-4 bg-[#1A1512] border border-[#66473B]/40 rounded-3xl p-8 space-y-6">
               <div className="flex justify-between items-start">
-                <Skeleton className="h-3 w-28 bg-white/5" />
-                <Skeleton className="h-5 w-5 rounded bg-white/5" />
+                <Skeleton className="h-3 w-28 bg-[#1F1A17]" />
+                <Skeleton className="h-5 w-5 rounded bg-[#1F1A17]" />
               </div>
-              <Skeleton className="h-14 w-20 bg-white/5" />
-              <Skeleton className="h-3 w-36 bg-white/5" />
+              <Skeleton className="h-14 w-20 bg-[#1F1A17]" />
+              <Skeleton className="h-3 w-36 bg-[#1F1A17]" />
             </div>
           ))}
         </div>
 
         {/* Middle row */}
         <div className="grid grid-cols-12 gap-8 mb-8">
-          <div className="col-span-12 md:col-span-8 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-6">
-            <Skeleton className="h-5 w-40 bg-white/5" />
-            <Skeleton className="h-48 w-full bg-white/5 rounded-2xl" />
+          <div className="col-span-12 md:col-span-8 bg-[#1A1512] border border-[#66473B]/40 rounded-3xl p-8 space-y-6">
+            <Skeleton className="h-5 w-40 bg-[#1F1A17]" />
+            <Skeleton className="h-48 w-full bg-[#1F1A17] rounded-2xl" />
           </div>
-          <div className="col-span-12 md:col-span-4 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-4">
-            <Skeleton className="h-5 w-32 bg-white/5" />
+          <div className="col-span-12 md:col-span-4 bg-[#1A1512] border border-[#66473B]/40 rounded-3xl p-8 space-y-4">
+            <Skeleton className="h-5 w-32 bg-[#1F1A17]" />
             {[1,2,3].map(i => (
               <div key={i} className="flex items-center gap-3">
-                <Skeleton className="h-10 w-10 rounded-xl bg-white/5" />
+                <Skeleton className="h-10 w-10 rounded-xl bg-[#1F1A17]" />
                 <div className="space-y-2 flex-1">
-                  <Skeleton className="h-3 w-full bg-white/5" />
-                  <Skeleton className="h-2 w-3/4 bg-white/5" />
+                  <Skeleton className="h-3 w-full bg-[#1F1A17]" />
+                  <Skeleton className="h-2 w-3/4 bg-[#1F1A17]" />
                 </div>
-                <Skeleton className="h-6 w-10 bg-white/5" />
+                <Skeleton className="h-6 w-10 bg-[#1F1A17]" />
               </div>
             ))}
           </div>
@@ -139,22 +139,22 @@ export default function DashboardPage() {
 
         {/* Bottom row */}
         <div className="grid grid-cols-12 gap-8">
-          <div className="col-span-12 md:col-span-4 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-4">
-            <Skeleton className="h-5 w-28 bg-white/5" />
-            <Skeleton className="h-32 w-32 rounded-full mx-auto bg-white/5" />
-            <Skeleton className="h-3 w-full bg-white/5" />
-            <Skeleton className="h-3 w-2/3 bg-white/5" />
+          <div className="col-span-12 md:col-span-4 bg-[#1A1512] border border-[#66473B]/40 rounded-3xl p-8 space-y-4">
+            <Skeleton className="h-5 w-28 bg-[#1F1A17]" />
+            <Skeleton className="h-32 w-32 rounded-full mx-auto bg-[#1F1A17]" />
+            <Skeleton className="h-3 w-full bg-[#1F1A17]" />
+            <Skeleton className="h-3 w-2/3 bg-[#1F1A17]" />
           </div>
-          <div className="col-span-12 md:col-span-8 bg-[#010101] border border-white/5 rounded-3xl p-8 space-y-4">
-            <Skeleton className="h-5 w-36 bg-white/5" />
+          <div className="col-span-12 md:col-span-8 bg-[#1A1512] border border-[#66473B]/40 rounded-3xl p-8 space-y-4">
+            <Skeleton className="h-5 w-36 bg-[#1F1A17]" />
             {[1,2,3].map(i => (
-              <div key={i} className="flex items-center gap-4 p-4 rounded-2xl border border-white/5">
-                <Skeleton className="h-12 w-12 rounded-xl bg-white/5" />
+              <div key={i} className="flex items-center gap-4 p-4 rounded-2xl border border-[#66473B]/40">
+                <Skeleton className="h-12 w-12 rounded-xl bg-[#1F1A17]" />
                 <div className="space-y-2 flex-1">
-                  <Skeleton className="h-4 w-48 bg-white/5" />
-                  <Skeleton className="h-2 w-32 bg-white/5" />
+                  <Skeleton className="h-4 w-48 bg-[#1F1A17]" />
+                  <Skeleton className="h-2 w-32 bg-[#1F1A17]" />
                 </div>
-                <Skeleton className="h-8 w-12 bg-white/5" />
+                <Skeleton className="h-8 w-12 bg-[#1F1A17]" />
               </div>
             ))}
           </div>
@@ -170,13 +170,13 @@ export default function DashboardPage() {
   const MetricSlider = ({ label, score, color }: { label: string, score: number, color: string }) => (
       <div className="mb-6 group">
           <div className="flex justify-between items-end mb-2">
-              <span className="text-white text-xs font-bold uppercase tracking-widest">{label}</span>
+              <span className="text-[#EBDCC4] text-xs font-bold uppercase tracking-widest">{label}</span>
               <span className={`text-xl font-black ${color}`}>{score || 0}</span>
           </div>
-          <div className="h-1.5 w-full bg-white/[0.02] rounded-full overflow-hidden border border-white/5 relative">
+          <div className="h-1.5 w-full bg-[#231E1A] rounded-full overflow-hidden border border-[#66473B]/40 relative">
               <div 
                   className={`absolute top-0 left-0 h-full rounded-full transition-all duration-[2000ms] shadow-[0_0_15px_currentColor]`}
-                  style={{ width: `${score || 0}%`, backgroundColor: 'currentColor', color: color.replace('text-', '') }}
+                  style={{ width: `${score || 0}%`, backgroundColor: '#DC9F85' }}
               ></div>
           </div>
       </div>
@@ -254,10 +254,10 @@ export default function DashboardPage() {
   });
 
   const cellColor = (count: number) => {
-    if (!count) return 'bg-white/[0.04] border border-white/[0.06]';
-    if (count === 1) return 'bg-blue-950 border border-blue-800/40';
-    if (count === 2) return 'bg-blue-700/80';
-    return 'bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.6)]';
+    if (!count) return 'bg-[#231E1A] border border-[#35211A]';
+    if (count === 1) return 'bg-[#3D2920] border border-[#66473B]/60';
+    if (count === 2) return 'bg-[#66473B]';
+    return 'bg-[#DC9F85] shadow-[0_0_8px_rgba(220,159,133,0.6)]';
   };
 
   // === PROGRESS CHART — 52 rolling weeks, rightmost = current week ===
@@ -314,8 +314,8 @@ export default function DashboardPage() {
     <div className="animate-in fade-in duration-1000 pb-20">
       <div className="flex justify-between items-end mb-16">
         <div className="max-w-2xl">
-          <h2 className="text-4xl lg:text-5xl font-black uppercase tracking-widest mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-white/20">Dashboard</h2>
-          <p className="text-zinc-500 text-sm tracking-widest font-medium overflow-hidden whitespace-nowrap">YOUR RECENT PERFORMANCE METRICS</p>
+          <h2 className="display-font text-4xl lg:text-5xl font-black uppercase tracking-widest mb-4 text-[#EBDCC4]">Dashboard</h2>
+          <p className="text-[#B6A596] text-sm tracking-widest font-medium overflow-hidden whitespace-nowrap">YOUR RECENT PERFORMANCE METRICS</p>
           {error && <p className="text-red-400 mt-4 text-xs font-bold">WARNING: Offline Analytics Cache Served. Engine Connection Fault.</p>}
         </div>
       </div>
@@ -323,38 +323,38 @@ export default function DashboardPage() {
       {/* TOP MATRIX */}
       <div className="grid grid-cols-12 gap-6 mb-8">
         <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
-            <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
+            <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 p-8 relative flex flex-col justify-between hover:border-[#66473B]/50 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Average Score</span>
-                    <AnimatedIcon name="token" className="text-white/50" />
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#B6A596]">Average Score</span>
+                    <AnimatedIcon name="token" className="text-[#EBDCC4]/50" />
                 </div>
                 <div className="flex items-baseline gap-2 relative z-10">
-                    <h3 className="text-6xl font-black text-white px-2 tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
-                    <span className="text-zinc-600 text-xs font-bold uppercase tracking-widest">/ 100</span>
+                    <h3 className="display-font text-6xl font-black text-[#EBDCC4] px-2 tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
+                    <span className="text-[#B6A596] text-xs font-bold uppercase tracking-widest">/ 100</span>
                 </div>
-                <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Overall Average Score</p>
+                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Overall Average Score</p>
             </div>
         </MagicCard>
 
         <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
-            <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
+            <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 p-8 relative flex flex-col justify-between hover:border-[#66473B]/50 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Sessions Completed</span>
-                    <AnimatedIcon name="verified" className="text-white/50" />
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#B6A596]">Sessions Completed</span>
+                    <AnimatedIcon name="verified" className="text-[#EBDCC4]/50" />
                 </div>
-                <h3 className="text-6xl font-black text-white px-2 tracking-tighter relative z-10">{stats?.completedSessions || 0}</h3>
-                <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Total Interviews Finished</p>
+                <h3 className="display-font text-6xl font-black text-[#EBDCC4] px-2 tracking-tighter relative z-10">{stats?.completedSessions || 0}</h3>
+                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Total Interviews Finished</p>
             </div>
         </MagicCard>
 
         <MagicCard className="col-span-12 md:col-span-4 rounded-3xl">
-            <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-8 relative flex flex-col justify-between hover:border-white/10 transition-colors">
+            <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 p-8 relative flex flex-col justify-between hover:border-[#66473B]/50 transition-colors">
                 <div className="flex justify-between items-start mb-6 relative z-10">
-                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-zinc-400">Roles Practiced</span>
-                    <AnimatedIcon name="developer_mode" className="text-white/50" />
+                    <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#B6A596]">Roles Practiced</span>
+                    <AnimatedIcon name="developer_mode" className="text-[#EBDCC4]/50" />
                 </div>
-                <h3 className="text-6xl font-black text-white px-2 tracking-tighter relative z-10">{stats?.distinctRolesPracticed || 0}</h3>
-                <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Unique Job Profiles</p>
+                <h3 className="display-font text-6xl font-black text-[#EBDCC4] px-2 tracking-tighter relative z-10">{stats?.distinctRolesPracticed || 0}</h3>
+                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em] mt-6 relative z-10">Unique Job Profiles</p>
             </div>
         </MagicCard>
       </div>
@@ -362,46 +362,46 @@ export default function DashboardPage() {
       {/* ANALYTICS ENGINE */}
       <div className="grid grid-cols-12 gap-8 mb-8">
           <MagicCard className="col-span-12 lg:col-span-6 rounded-3xl">
-              <div className="bg-black w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col hover:border-white/10 transition-colors shadow-2xl">
-                  <h3 className="text-white text-xl font-black tracking-widest uppercase mb-10 flex items-center gap-3 relative z-10">
+              <div className="bg-[#181818] w-full h-full rounded-[23px] border border-[#66473B]/40 p-10 relative flex flex-col hover:border-[#66473B]/50 transition-colors shadow-2xl">
+                  <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase mb-10 flex items-center gap-3 relative z-10">
                     Skill Analytics
                     {latestReport && <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>}
                   </h3>
                   
                   {latestReport ? (
                       <div className="space-y-4 relative z-10 mt-6 flex-1">
-                          <MetricSlider label="Technical Score" score={latestReport.technicalScore} color="text-white" />
-                          <MetricSlider label="Problem Solving" score={latestReport.problemSolvingScore} color="text-white" />
-                          <MetricSlider label="Communication" score={latestReport.communicationScore} color="text-white" />
-                          <MetricSlider label="Relevance" score={latestReport.relevanceScore} color="text-white" />
-                          <MetricSlider label="Confidence" score={latestReport.confidenceScore} color="text-white" />
+                          <MetricSlider label="Technical Score" score={latestReport.technicalScore} color="text-[#EBDCC4]" />
+                          <MetricSlider label="Problem Solving" score={latestReport.problemSolvingScore} color="text-[#EBDCC4]" />
+                          <MetricSlider label="Communication" score={latestReport.communicationScore} color="text-[#EBDCC4]" />
+                          <MetricSlider label="Relevance" score={latestReport.relevanceScore} color="text-[#EBDCC4]" />
+                          <MetricSlider label="Confidence" score={latestReport.confidenceScore} color="text-[#EBDCC4]" />
                       </div>
                   ) : (
-                      <div className="flex-1 flex flex-col items-center justify-center border border-white/5 bg-white/[0.01] rounded-2xl relative z-10 min-h-[250px]">
-                          <AnimatedIcon name="radar" className="text-zinc-600 text-4xl mb-4" />
-                          <p className="text-zinc-500 text-xs font-bold tracking-widest uppercase mb-2">No Data Available</p>
-                          <p className="text-zinc-600 text-[10px] uppercase">Complete an interview session.</p>
+                      <div className="flex-1 flex flex-col items-center justify-center border border-[#66473B]/40 bg-white/[0.01] rounded-2xl relative z-10 min-h-[250px]">
+                          <AnimatedIcon name="radar" className="text-[#B6A596] text-4xl mb-4" />
+                          <p className="text-[#B6A596] text-xs font-bold tracking-widest uppercase mb-2">No Data Available</p>
+                          <p className="text-[#B6A596] text-[10px] uppercase">Complete an interview session.</p>
                       </div>
                   )}
               </div>
           </MagicCard>
 
           <MagicCard className="col-span-12 lg:col-span-6 rounded-3xl">
-              <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 p-10 relative flex flex-col justify-between hover:border-white/10 transition-colors shadow-2xl">
+              <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 p-10 relative flex flex-col justify-between hover:border-[#66473B]/50 transition-colors shadow-2xl">
                   <div className="flex items-center gap-3 mb-8 relative z-10">
-                     <AnimatedIcon name="insights" className="text-white" />
-                     <h3 className="text-white text-xl font-black tracking-widest uppercase">AI Performance Report</h3>
+                     <AnimatedIcon name="insights" className="text-[#EBDCC4]" />
+                     <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">AI Performance Report</h3>
                   </div>
                   <div className="relative z-10 flex-1 flex flex-col justify-center">
                       {latestReport?.improvementTips || latestReport?.overallFeedback ? (
                           <div>
-                              <p className="text-zinc-300 text-sm leading-7 mb-4">
+                              <p className="text-[#EBDCC4] text-sm leading-7 mb-4">
                                  Based on your recent performance, your key strengths include <strong>{((latestReport as any).strengthsSummary || latestReport.overallFeedback || "effective communication and structured context mapping")}</strong>. 
                                  Moving forward, the system recommends that you focus closely on <strong>{(latestReport.improvementTips || "expanding your system design patterns and practicing real-time constraints")}</strong> to elevate your global trajectory index.
                               </p>
                           </div>
                       ) : (
-                          <p className="text-zinc-500 text-xs font-bold tracking-widest uppercase bg-white/[0.02] p-8 rounded-xl border border-white/5 text-center mt-4 border-dashed">
+                          <p className="text-[#B6A596] text-xs font-bold tracking-widest uppercase bg-[#231E1A] p-8 rounded-xl border border-[#66473B]/40 text-center mt-4 border-dashed">
                              Report not generated.
                           </p>
                       )}
@@ -412,39 +412,39 @@ export default function DashboardPage() {
 
       {/* STREAK TRACKER */}
       <MagicCard className="mb-8 rounded-3xl">
-        <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl relative">
+        <div className="bg-[#181818] rounded-[23px] border border-[#66473B]/40 p-8 md:p-10 hover:border-[#66473B]/50 transition-colors shadow-2xl relative">
           <div className="flex flex-col lg:flex-row gap-10">
 
             {/* Left: Streak stats */}
             <div className="flex-shrink-0 flex flex-col justify-between gap-6 lg:w-52">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <AnimatedIcon name="local_fire_department" className="text-white text-2xl" />
-                  <h3 className="text-white text-xl font-black tracking-widest uppercase">Streak</h3>
+                  <AnimatedIcon name="local_fire_department" className="text-[#EBDCC4] text-2xl" />
+                  <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">Streak</h3>
                 </div>
-                <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest">Practice consistency tracker</p>
+                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest">Practice consistency tracker</p>
               </div>
 
               <div className="space-y-3">
-                <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-5">
-                  <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-2">Current Streak</p>
+                <div className="bg-[#231E1A] border border-[#66473B]/40 rounded-2xl p-5">
+                  <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em] mb-2">Current Streak</p>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-black text-white">{currentStreak}</span>
-                    <span className="text-zinc-600 text-xs font-bold uppercase">days</span>
+                    <span className="text-5xl font-black text-[#EBDCC4]">{currentStreak}</span>
+                    <span className="text-[#B6A596] text-xs font-bold uppercase">days</span>
                   </div>
                   {currentStreak > 0
-                    ? <p className="text-blue-400 text-[10px] font-bold uppercase tracking-widest mt-2 animate-pulse">● Active streak</p>
+                    ? <p className="text-[#DC9F85] text-[10px] font-bold uppercase tracking-widest mt-2 animate-pulse">● Active streak</p>
                     : <p className="text-zinc-700 text-[10px] font-bold uppercase tracking-widest mt-2">— Start today</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                    <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest mb-1">Best</p>
-                    <p className="text-2xl font-black text-white">{longestStreak}<span className="text-zinc-600 text-[10px] font-bold ml-1">d</span></p>
+                  <div className="bg-[#231E1A] border border-[#66473B]/40 rounded-xl p-4">
+                    <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest mb-1">Best</p>
+                    <p className="text-2xl font-black text-[#EBDCC4]">{longestStreak}<span className="text-[#B6A596] text-[10px] font-bold ml-1">d</span></p>
                   </div>
-                  <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-                    <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest mb-1">Total</p>
-                    <p className="text-2xl font-black text-white">{totalActiveDays}<span className="text-zinc-600 text-[10px] font-bold ml-1">d</span></p>
+                  <div className="bg-[#231E1A] border border-[#66473B]/40 rounded-xl p-4">
+                    <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest mb-1">Total</p>
+                    <p className="text-2xl font-black text-[#EBDCC4]">{totalActiveDays}<span className="text-[#B6A596] text-[10px] font-bold ml-1">d</span></p>
                   </div>
                 </div>
               </div>
@@ -453,10 +453,10 @@ export default function DashboardPage() {
             {/* Right: Calendar heatmap */}
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-center mb-3">
-                <p className="text-zinc-600 text-[10px] font-bold uppercase tracking-[0.2em]">Last 6 months activity</p>
+                <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em]">Last 6 months activity</p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-zinc-700 text-[9px] font-bold uppercase">Less</span>
-                  {['bg-white/[0.04] border border-white/[0.06]','bg-blue-950 border border-blue-800/40','bg-blue-700/80','bg-blue-400'].map((c,i) => (
+                  {['bg-white/[0.04] border border-white/[0.06]','bg-blue-950 border border-blue-800/40','bg-blue-700/80','bg-[#DC9F85]'].map((c,i) => (
                     <div key={i} className={`w-2.5 h-2.5 rounded-[2px] ${c}`} />
                   ))}
                   <span className="text-zinc-700 text-[9px] font-bold uppercase">More</span>
@@ -471,7 +471,7 @@ export default function DashboardPage() {
                       const ml = monthLabels.find(m => m.weekIndex === wi);
                       return (
                         <div key={wi} className="w-4 flex-shrink-0 mr-[3px]">
-                          {ml && <span className="text-[9px] text-zinc-500 font-bold uppercase">{ml.label}</span>}
+                          {ml && <span className="text-[9px] text-[#B6A596] font-bold uppercase">{ml.label}</span>}
                         </div>
                       );
                     })}
@@ -516,14 +516,14 @@ export default function DashboardPage() {
 
         {/* PROGRESS CHART */}
       <MagicCard className="mb-8 rounded-3xl">
-        <div className="bg-black rounded-[23px] border border-white/5 p-8 md:p-10 hover:border-white/10 transition-colors shadow-2xl">
+        <div className="bg-[#181818] rounded-[23px] border border-[#66473B]/40 p-8 md:p-10 hover:border-[#66473B]/50 transition-colors shadow-2xl">
           <div className="flex items-center gap-3 mb-6">
-            <AnimatedIcon name="trending_up" className="text-white" />
-            <h3 className="text-white text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
-            <span className="text-zinc-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
+            <AnimatedIcon name="trending_up" className="text-[#EBDCC4]" />
+            <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
+            <span className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
           </div>
           {history.filter(h => h.status === 'COMPLETED').length === 0 ? (
-            <div className="h-40 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl">
+            <div className="h-40 flex flex-col items-center justify-center border border-dashed border-[#66473B]/50 rounded-2xl">
               <AnimatedIcon name="show_chart" className="text-zinc-700 text-3xl mb-3" />
               <p className="text-zinc-700 text-xs font-bold uppercase tracking-widest">Complete sessions to see your trend</p>
             </div>
@@ -576,25 +576,25 @@ export default function DashboardPage() {
       </MagicCard>
 
       <MagicCard className="col-span-12 rounded-3xl">
-          <div className="bg-[#010101] w-full h-full rounded-[23px] border border-white/5 hover:border-white/10 transition-colors">
-            <div className="p-8 pb-6 border-b border-white/5">
-              <h3 className="text-white text-lg font-black tracking-widest uppercase">Resume Parsing</h3>
-              <p className="text-zinc-500 text-[10px] uppercase font-bold tracking-[0.1em] mt-1">AI Context Configuration</p>
+          <div className="bg-[#1A1512] w-full h-full rounded-[23px] border border-[#66473B]/40 hover:border-[#66473B]/50 transition-colors">
+            <div className="p-8 pb-6 border-b border-[#66473B]/40">
+              <h3 className="text-[#EBDCC4] text-lg font-black tracking-widest uppercase">Resume Parsing</h3>
+              <p className="text-[#B6A596] text-[10px] uppercase font-bold tracking-[0.1em] mt-1">AI Context Configuration</p>
             </div>
 
             {!activeResume ? (
               <div className="flex items-center gap-10 px-10 py-10">
-                <div className="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center bg-white/[0.02] shadow-inner cursor-pointer shrink-0" onClick={() => document.getElementById('upload-input')?.click()}>
+                <div className="w-20 h-20 rounded-full border border-[#66473B]/50 flex items-center justify-center bg-[#231E1A] shadow-inner cursor-pointer shrink-0" onClick={() => document.getElementById('upload-input')?.click()}>
                   {isUploading ? (
-                    <AnimatedIcon name="refresh" className="text-3xl text-zinc-400 animate-spin" />
+                    <AnimatedIcon name="refresh" className="text-3xl text-[#B6A596] animate-spin" />
                   ) : (
-                    <AnimatedIcon name="upload_file" className="text-3xl text-zinc-400" />
+                    <AnimatedIcon name="upload_file" className="text-3xl text-[#B6A596]" />
                   )}
                 </div>
                 <div className="flex-1">
-                  <p className="text-white font-bold text-base mb-1">No resume uploaded</p>
-                  <p className="text-zinc-500 text-sm leading-relaxed mb-6">Upload a PDF resume to give the AI context about your background for more personalized mock interviews.</p>
-                  <label className={`inline-flex items-center gap-2 bg-white/10 hover:bg-white text-white hover:text-black px-8 py-3 text-[10px] font-black rounded-full uppercase tracking-[0.2em] transition-colors shadow-xl ${isUploading ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}`}>
+                  <p className="text-[#EBDCC4] font-bold text-base mb-1">No resume uploaded</p>
+                  <p className="text-[#B6A596] text-sm leading-relaxed mb-6">Upload a PDF resume to give the AI context about your background for more personalized mock interviews.</p>
+                  <label className={`inline-flex items-center gap-2 bg-[#231E1A] hover:bg-white text-[#EBDCC4] hover:text-black px-8 py-3 text-[10px] font-black rounded-full uppercase tracking-[0.2em] transition-colors shadow-xl ${isUploading ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}`}>
                     <input
                       id="upload-input"
                       type="file" accept=".pdf" className="hidden" disabled={isUploading}
@@ -627,13 +627,13 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="flex items-center gap-10 px-10 py-10">
-                <div className="w-20 h-20 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-center shadow-inner shrink-0">
-                  <AnimatedIcon name="description" className="text-white text-3xl" />
+                <div className="w-20 h-20 rounded-2xl border border-[#66473B]/50 bg-[#231E1A] flex items-center justify-center shadow-inner shrink-0">
+                  <AnimatedIcon name="description" className="text-[#EBDCC4] text-3xl" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-white font-bold text-base mb-1">{activeResume.fileName}</p>
-                  <p className="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-3">Active System Context</p>
-                  <p className="text-zinc-400 text-sm leading-relaxed">This resume is being used to personalize your AI mock interviews. Remove it to upload a different one.</p>
+                  <p className="text-[#EBDCC4] font-bold text-base mb-1">{activeResume.fileName}</p>
+                  <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest mb-3">Active System Context</p>
+                  <p className="text-[#B6A596] text-sm leading-relaxed">This resume is being used to personalize your AI mock interviews. Remove it to upload a different one.</p>
                 </div>
                 <button
                   onClick={async () => {

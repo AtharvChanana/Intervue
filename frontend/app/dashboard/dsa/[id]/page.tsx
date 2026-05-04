@@ -153,34 +153,34 @@ export default function DsaSessionPage() {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-[#0A0A0A] flex flex-col overflow-hidden">
+      <div className="fixed inset-0 bg-[#181818] flex flex-col overflow-hidden">
         {/* Fake top navbar */}
-        <div className="h-16 border-b border-white/5 flex items-center px-6 gap-4 shrink-0">
-          <Skeleton className="h-4 w-48 bg-white/5" />
+        <div className="h-16 border-b border-[#66473B]/40 flex items-center px-6 gap-4 shrink-0">
+          <Skeleton className="h-4 w-48 bg-[#1F1A17]" />
           <div className="flex-1" />
-          <Skeleton className="h-8 w-20 bg-white/5 rounded-lg" />
-          <Skeleton className="h-8 w-16 bg-white/5 rounded-lg" />
-          <Skeleton className="h-8 w-20 bg-white/5 rounded-lg" />
+          <Skeleton className="h-8 w-20 bg-[#1F1A17] rounded-lg" />
+          <Skeleton className="h-8 w-16 bg-[#1F1A17] rounded-lg" />
+          <Skeleton className="h-8 w-20 bg-[#1F1A17] rounded-lg" />
         </div>
         {/* Fake two-panel layout */}
         <div className="flex flex-1 overflow-hidden">
-          <div className="w-[45%] border-r border-white/5 p-8 space-y-5">
-            <Skeleton className="h-8 w-3/4 bg-white/5" />
-            <Skeleton className="h-3 w-full bg-white/5" />
-            <Skeleton className="h-3 w-5/6 bg-white/5" />
-            <Skeleton className="h-3 w-4/6 bg-white/5" />
+          <div className="w-[45%] border-r border-[#66473B]/40 p-8 space-y-5">
+            <Skeleton className="h-8 w-3/4 bg-[#1F1A17]" />
+            <Skeleton className="h-3 w-full bg-[#1F1A17]" />
+            <Skeleton className="h-3 w-5/6 bg-[#1F1A17]" />
+            <Skeleton className="h-3 w-4/6 bg-[#1F1A17]" />
             <div className="pt-4 space-y-3">
-              <Skeleton className="h-24 w-full bg-white/5 rounded-xl" />
-              <Skeleton className="h-24 w-full bg-white/5 rounded-xl" />
+              <Skeleton className="h-24 w-full bg-[#1F1A17] rounded-xl" />
+              <Skeleton className="h-24 w-full bg-[#1F1A17] rounded-xl" />
             </div>
           </div>
           <div className="flex-1 flex flex-col">
             <div className="flex-1 p-4">
-              <Skeleton className="h-full w-full bg-white/5 rounded" />
+              <Skeleton className="h-full w-full bg-[#1F1A17] rounded" />
             </div>
-            <div className="h-[220px] border-t border-white/5 p-4 space-y-3">
-              <Skeleton className="h-4 w-32 bg-white/5" />
-              <Skeleton className="h-16 w-full bg-white/5 rounded-lg" />
+            <div className="h-[220px] border-t border-[#66473B]/40 p-4 space-y-3">
+              <Skeleton className="h-4 w-32 bg-[#1F1A17]" />
+              <Skeleton className="h-16 w-full bg-[#1F1A17] rounded-lg" />
             </div>
           </div>
         </div>
@@ -189,27 +189,27 @@ export default function DsaSessionPage() {
   }
 
   if (!session || !session.problem) {
-    return <div className="p-8 text-white">Error loading problem.</div>;
+    return <div className="p-8 text-[#EBDCC4]">Error loading problem.</div>;
   }
 
   const { problem } = session;
   const isCompleted = session.status === "COMPLETED";
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col bg-[#0A0A0A] text-white overflow-hidden font-sans">
+    <div className="fixed inset-0 z-[100] flex flex-col bg-[#181818] text-[#EBDCC4] overflow-hidden font-sans">
       <Toaster position="top-center" theme="dark" richColors />
 
       {/* End Session Confirmation */}
       <AlertDialog open={showEndConfirm} onOpenChange={setShowEndConfirm}>
-        <AlertDialogContent className="bg-[#0D0D0D] border border-white/10 rounded-2xl shadow-2xl max-w-sm z-[300]">
+        <AlertDialogContent className="bg-[#0D0D0D] border border-[#66473B]/50 rounded-2xl shadow-2xl max-w-sm z-[300]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white font-black tracking-wide">End Session?</AlertDialogTitle>
-            <AlertDialogDescription className="text-zinc-400 text-sm leading-relaxed">
-              Your code will <strong className="text-white">not</strong> be submitted. Any unsaved progress will be lost. Are you sure you want to leave?
+            <AlertDialogTitle className="text-[#EBDCC4] font-black tracking-wide">End Session?</AlertDialogTitle>
+            <AlertDialogDescription className="text-[#B6A596] text-sm leading-relaxed">
+              Your code will <strong className="text-[#EBDCC4]">not</strong> be submitted. Any unsaved progress will be lost. Are you sure you want to leave?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="gap-2">
-            <AlertDialogCancel className="bg-white/5 border-white/10 text-zinc-300 hover:bg-white/10 hover:text-white rounded-xl font-bold uppercase tracking-widest text-[10px]">
+            <AlertDialogCancel className="bg-[#1F1A17] border-[#66473B]/50 text-[#EBDCC4] hover:bg-[#231E1A] hover:text-[#EBDCC4] rounded-xl font-bold uppercase tracking-widest text-[10px]">
               Stay
             </AlertDialogCancel>
             <AlertDialogAction
@@ -223,16 +223,16 @@ export default function DsaSessionPage() {
       </AlertDialog>
 
       {/* Top Navbar */}
-      <header className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-[#0F0F0F] shrink-0 z-50">
+      <header className="h-16 border-b border-[#66473B]/50 flex items-center justify-between px-6 bg-[#1F1A17] shrink-0 z-50">
         <div className="flex items-center gap-4 flex-1">
           <div className="flex flex-col">
-            <h1 className="font-bold text-sm tracking-wide text-zinc-100 mb-1">
+            <h1 className="font-bold text-sm tracking-wide text-[#EBDCC4] mb-1">
                 {problem.title || "Algorithm Challenge"}
             </h1>
             <div className="flex gap-2">
                 {problem.difficulty && (
-                <span className={`text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-white/5 border border-white/10 ${
-                    problem.difficulty === 'HARD' ? 'text-red-400' : problem.difficulty === 'MEDIUM' ? 'text-yellow-400' : 'text-green-400'
+                <span className={`text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-[#1F1A17] border border-[#66473B]/50 ${
+                    problem.difficulty === 'HARD' ? 'text-red-400' : problem.difficulty === 'MEDIUM' ? 'text-[#DC9F85]' : 'text-green-400'
                 }`}>
                     {problem.difficulty}
                 </span>
@@ -245,14 +245,14 @@ export default function DsaSessionPage() {
         {!isCompleted && (
           <div className="flex-1 flex justify-center items-center">
             {timeLeft !== null ? (
-              <div className={`px-5 py-2 flex items-center justify-center gap-3 rounded-xl transition-colors shadow-lg ${timeLeft < 300 ? 'text-red-400 bg-red-500/10 border border-red-500/20' : 'text-zinc-300 bg-white/5 border border-white/10'}`}>
+              <div className={`px-5 py-2 flex items-center justify-center gap-3 rounded-xl transition-colors shadow-lg ${timeLeft < 300 ? 'text-red-400 bg-red-500/10 border border-red-500/20' : 'text-[#EBDCC4] bg-[#1F1A17] border border-[#66473B]/50'}`}>
                 <AnimatedIcon name="timer" className="text-[18px]" />
                 <span className="font-mono text-lg font-black tracking-widest leading-none">{formatTime(timeLeft)}</span>
               </div>
             ) : (
-              <div className="px-5 py-2 flex items-center gap-3 rounded-xl bg-white/5 border border-white/10">
-                <AnimatedIcon name="timer" className="text-[18px] text-zinc-500" />
-                <span className="font-mono text-sm font-bold tracking-widest text-zinc-500">No Timer</span>
+              <div className="px-5 py-2 flex items-center gap-3 rounded-xl bg-[#1F1A17] border border-[#66473B]/50">
+                <AnimatedIcon name="timer" className="text-[18px] text-[#B6A596]" />
+                <span className="font-mono text-sm font-bold tracking-widest text-[#B6A596]">No Timer</span>
               </div>
              )}
           </div>
@@ -266,11 +266,11 @@ export default function DsaSessionPage() {
         {/* Right Actions */}
         <div className="flex items-center gap-3 flex-1 justify-end">
           {isCompleted ? (
-            <button onClick={() => router.push('/dashboard')} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
+            <button onClick={() => router.push('/dashboard')} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-[#B6A596] hover:text-[#EBDCC4] bg-[#1F1A17] hover:bg-[#231E1A] transition-colors border border-[#66473B]/50">
               Dashboard
             </button>
           ) : (
-            <button onClick={() => setShowEndConfirm(true)} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors border border-white/10">
+            <button onClick={() => setShowEndConfirm(true)} className="px-4 py-2 rounded-lg text-[10px] font-bold tracking-widest uppercase text-[#B6A596] hover:text-[#EBDCC4] bg-[#1F1A17] hover:bg-[#231E1A] transition-colors border border-[#66473B]/50">
               End Session
             </button>
           )}
@@ -279,7 +279,7 @@ export default function DsaSessionPage() {
               <button 
                 disabled={isRunning || isSubmitting}
                 onClick={handleRunCode} 
-                className="flex items-center gap-2 px-5 py-2 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-colors leading-none bg-white/10 text-white hover:bg-white/20 border border-white/10 disabled:opacity-50"
+                className="flex items-center gap-2 px-5 py-2 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-colors leading-none bg-[#231E1A] text-[#EBDCC4] hover:bg-[#2A221D] border border-[#66473B]/50 disabled:opacity-50"
               >
                 <AnimatedIcon name="play_arrow" className="text-[14px] leading-none" />
                 {isRunning ? "Running..." : "Run"}
@@ -302,46 +302,46 @@ export default function DsaSessionPage() {
 
         {/* Left Panel: Problem Description */}
         <ResizablePanel defaultSize={45} minSize={25}>
-        <div className="h-full border-r border-white/10 flex flex-col bg-[#050505] overflow-y-auto scroll-smooth">
+        <div className="h-full border-r border-[#66473B]/50 flex flex-col bg-[#050505] overflow-y-auto scroll-smooth">
           
           {/* If completed, show Report Banner on top */}
           {isCompleted && report && (
-            <div className="m-4 p-5 rounded-xl border bg-[#111] border-green-500/20 shadow-[0_4px_30px_rgba(34,197,94,0.1)] shrink-0">
+            <div className="m-4 p-5 rounded-xl border bg-[#1F1A17] border-green-500/20 shadow-[0_4px_30px_rgba(34,197,94,0.1)] shrink-0">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-bold uppercase tracking-widest text-[#3b82f6] text-xs">Evaluation Results</h3>
-                <div className="flex items-center gap-2 bg-black px-3 py-1.5 rounded-lg border border-white/5">
-                  <span className="text-[10px] text-zinc-500 uppercase tracking-widest">Score</span>
-                  <span className={`font-mono text-xl font-bold ${report.score >= 80 ? 'text-green-400' : report.score >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
+                <div className="flex items-center gap-2 bg-[#181818] px-3 py-1.5 rounded-lg border border-[#66473B]/40">
+                  <span className="text-[10px] text-[#B6A596] uppercase tracking-widest">Score</span>
+                  <span className={`font-mono text-xl font-bold ${report.score >= 80 ? 'text-green-400' : report.score >= 50 ? 'text-[#DC9F85]' : 'text-red-400'}`}>
                     {report.score}/100
                   </span>
                 </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="bg-black border border-white/5 p-3 rounded-lg flex flex-col gap-1">
-                   <span className="text-[10px] text-zinc-500 uppercase tracking-widest">Time Complexity</span>
-                   <span className="font-mono text-sm font-bold text-white tracking-widest">{report.timeComplexity || "N/A"}</span>
+                <div className="bg-[#181818] border border-[#66473B]/40 p-3 rounded-lg flex flex-col gap-1">
+                   <span className="text-[10px] text-[#B6A596] uppercase tracking-widest">Time Complexity</span>
+                   <span className="font-mono text-sm font-bold text-[#EBDCC4] tracking-widest">{report.timeComplexity || "N/A"}</span>
                 </div>
-                <div className="bg-black border border-white/5 p-3 rounded-lg flex flex-col gap-1">
-                   <span className="text-[10px] text-zinc-500 uppercase tracking-widest">Space Complexity</span>
-                   <span className="font-mono text-sm font-bold text-white tracking-widest">{report.spaceComplexity || "N/A"}</span>
+                <div className="bg-[#181818] border border-[#66473B]/40 p-3 rounded-lg flex flex-col gap-1">
+                   <span className="text-[10px] text-[#B6A596] uppercase tracking-widest">Space Complexity</span>
+                   <span className="font-mono text-sm font-bold text-[#EBDCC4] tracking-widest">{report.spaceComplexity || "N/A"}</span>
                 </div>
               </div>
 
-              <div className="text-sm text-zinc-300 leading-relaxed bg-black border border-white/5 p-4 rounded-lg mb-4">
+              <div className="text-sm text-[#EBDCC4] leading-relaxed bg-[#181818] border border-[#66473B]/40 p-4 rounded-lg mb-4">
                 {report.feedback}
               </div>
 
               {report.testResults && report.testResults.length > 0 && (
                 <div className="space-y-2 mt-6">
-                  <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-3">Hidden Test Cases</h4>
+                  <h4 className="text-[10px] font-bold text-[#B6A596] uppercase tracking-widest mb-3">Hidden Test Cases</h4>
                   {report.testResults.map((tc: any, i: number) => (
                     <div key={i} className={`p-3 rounded-lg border flex flex-col gap-2 ${tc.passed ? 'border-green-500/20 bg-green-500/5' : 'border-red-500/20 bg-red-500/5'}`}>
                       <div className="flex items-center gap-2">
                          <AnimatedIcon name={tc.passed ? 'check_circle' : 'cancel'} className={`text-[14px] ${tc.passed ? 'text-green-400' : 'text-red-400'}`} />
-                         <span className="font-bold text-xs uppercase tracking-widest text-zinc-200">{tc.name}</span>
+                         <span className="font-bold text-xs uppercase tracking-widest text-[#EBDCC4]">{tc.name}</span>
                       </div>
-                      <p className="text-[11px] text-zinc-500 font-mono tracking-tight leading-relaxed">{tc.details}</p>
+                      <p className="text-[11px] text-[#B6A596] font-mono tracking-tight leading-relaxed">{tc.details}</p>
                     </div>
                   ))}
                 </div>
@@ -353,20 +353,20 @@ export default function DsaSessionPage() {
           <div className="p-8 pb-32">
             <h2 className="text-2xl font-black mb-6 leading-tight">{problem.title}</h2>
             
-            <div className="prose prose-invert max-w-none text-zinc-300 text-sm leading-relaxed mb-10 pb-6 border-b border-white/5"
+            <div className="prose prose-invert max-w-none text-[#EBDCC4] text-sm leading-relaxed mb-10 pb-6 border-b border-[#66473B]/40"
                  dangerouslySetInnerHTML={{__html: problem.description}}>
             </div>
 
             {/* Examples */}
             {problem.examples && problem.examples.length > 0 && (
               <div className="mb-10 space-y-4">
-                <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-4">Examples</h3>
+                <h3 className="text-[10px] font-bold text-[#B6A596] uppercase tracking-[0.2em] mb-4">Examples</h3>
                 {problem.examples.map((ex: any, i: number) => (
-                  <div key={i} className="bg-[#111] border border-white/5 rounded-xl p-5 font-mono text-xs space-y-3">
-                    <div className="flex flex-col gap-1"><span className="text-zinc-500 tracking-widest font-bold uppercase text-[9px]">Input:</span> <span className="text-zinc-200">{ex.input}</span></div>
-                    <div className="flex flex-col gap-1"><span className="text-zinc-500 tracking-widest font-bold uppercase text-[9px]">Output:</span> <span className="text-blue-300">{ex.output}</span></div>
+                  <div key={i} className="bg-[#1F1A17] border border-[#66473B]/40 rounded-xl p-5 font-mono text-xs space-y-3">
+                    <div className="flex flex-col gap-1"><span className="text-[#B6A596] tracking-widest font-bold uppercase text-[9px]">Input:</span> <span className="text-[#EBDCC4]">{ex.input}</span></div>
+                    <div className="flex flex-col gap-1"><span className="text-[#B6A596] tracking-widest font-bold uppercase text-[9px]">Output:</span> <span className="text-[#DC9F85]">{ex.output}</span></div>
                     {ex.explanation && (
-                      <div className="pt-3 border-t border-white/5 mt-3 text-zinc-400 whitespace-pre-wrap leading-relaxed"><span className="text-zinc-500 tracking-widest font-bold uppercase text-[9px]">Explanation:</span><br/>{ex.explanation}</div>
+                      <div className="pt-3 border-t border-[#66473B]/40 mt-3 text-[#B6A596] whitespace-pre-wrap leading-relaxed"><span className="text-[#B6A596] tracking-widest font-bold uppercase text-[9px]">Explanation:</span><br/>{ex.explanation}</div>
                     )}
                   </div>
                 ))}
@@ -376,10 +376,10 @@ export default function DsaSessionPage() {
             {/* Constraints */}
             {problem.constraints && problem.constraints.length > 0 && (
               <div className="mb-10">
-                <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-4">Constraints</h3>
+                <h3 className="text-[10px] font-bold text-[#B6A596] uppercase tracking-[0.2em] mb-4">Constraints</h3>
                 <ul className="list-disc list-outside ml-4 space-y-2">
                   {problem.constraints.map((c: string, i: number) => (
-                    <li key={i} className="text-[13px] font-mono text-zinc-400">{c}</li>
+                    <li key={i} className="text-[13px] font-mono text-[#B6A596]">{c}</li>
                   ))}
                 </ul>
               </div>
@@ -387,17 +387,17 @@ export default function DsaSessionPage() {
 
             {/* Hints */}
             {problem.hints && problem.hints.length > 0 && !isCompleted && (
-              <div className="mb-8 border-t border-white/5 pt-8">
+              <div className="mb-8 border-t border-[#66473B]/40 pt-8">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Hints</h3>
-                  <span className="text-[10px] bg-white/5 px-2 py-1 rounded text-zinc-400 font-bold tracking-widest">{hintsRevealed} / {problem.hints.length}</span>
+                  <h3 className="text-[10px] font-bold text-[#B6A596] uppercase tracking-[0.2em]">Hints</h3>
+                  <span className="text-[10px] bg-[#1F1A17] px-2 py-1 rounded text-[#B6A596] font-bold tracking-widest">{hintsRevealed} / {problem.hints.length}</span>
                 </div>
                 <div className="space-y-3">
                   {problem.hints.map((hint: string, i: number) => (
-                    <div key={i} className="bg-[#111] border border-white/5 rounded-xl p-1 relative overflow-hidden group">
+                    <div key={i} className="bg-[#1F1A17] border border-[#66473B]/40 rounded-xl p-1 relative overflow-hidden group">
                       {i < hintsRevealed ? (
-                        <div className="p-5 text-[13px] text-zinc-300 animate-in fade-in slide-in-from-top-2 duration-300 leading-relaxed">
-                           <strong className="text-blue-400 tracking-widest block mb-2 text-[10px] uppercase">HINT {i+1}</strong>
+                        <div className="p-5 text-[13px] text-[#EBDCC4] animate-in fade-in slide-in-from-top-2 duration-300 leading-relaxed">
+                           <strong className="text-[#DC9F85] tracking-widest block mb-2 text-[10px] uppercase">HINT {i+1}</strong>
                            {hint}
                         </div>
                       ) : (
@@ -406,7 +406,7 @@ export default function DsaSessionPage() {
                           onClick={() => setHintsRevealed(i + 1)}
                           className={`w-full p-4 flex items-center justify-between text-xs font-bold tracking-widest uppercase transition-colors ${
                             i === hintsRevealed 
-                              ? 'text-zinc-400 hover:bg-white/5 hover:text-white cursor-pointer' 
+                              ? 'text-[#B6A596] hover:bg-[#1F1A17] hover:text-[#EBDCC4] cursor-pointer' 
                               : 'text-zinc-700 cursor-not-allowed'
                           }`}
                         >
@@ -423,7 +423,7 @@ export default function DsaSessionPage() {
         </div>
         </ResizablePanel>
 
-        <ResizableHandle withHandle className="bg-white/5 hover:bg-white/10 transition-colors" />
+        <ResizableHandle withHandle className="bg-[#1F1A17] hover:bg-[#231E1A] transition-colors" />
 
         {/* Right Panel: Monaco Editor + Test Cases — vertically resizable */}
         <ResizablePanel defaultSize={55} minSize={30}>
@@ -434,25 +434,25 @@ export default function DsaSessionPage() {
           {/* Editor Header Tools */}
           <div className="h-10 bg-[#1e1e1e] border-b border-black/50 flex items-center px-4 justify-between shrink-0 z-10 shadow-sm">
              <div className="flex items-center gap-3">
-                 <AnimatedIcon name="code" className="text-[14px] text-zinc-500" />
+                 <AnimatedIcon name="code" className="text-[14px] text-[#B6A596]" />
                  {/* Custom language dropdown */}
                  <div className="relative">
                    <button
                      disabled={isCompleted}
                      onClick={() => setLangOpen(o => !o)}
-                     className="flex items-center gap-1.5 text-xs text-zinc-300 hover:text-white transition-colors uppercase tracking-widest font-bold disabled:opacity-50"
+                     className="flex items-center gap-1.5 text-xs text-[#EBDCC4] hover:text-[#EBDCC4] transition-colors uppercase tracking-widest font-bold disabled:opacity-50"
                    >
                      {language === 'python' ? 'Python 3' : language === 'javascript' ? 'JavaScript' : language === 'java' ? 'Java' : 'C++'}
-                     <AnimatedIcon name="expand_more" className={`text-[14px] text-zinc-400 transition-transform ${langOpen ? 'rotate-180' : ''}`} />
+                     <AnimatedIcon name="expand_more" className={`text-[14px] text-[#B6A596] transition-transform ${langOpen ? 'rotate-180' : ''}`} />
                    </button>
                    {langOpen && !isCompleted && (
-                     <div className="absolute top-full left-0 mt-1 bg-[#1A1A1A] border border-white/10 rounded-lg shadow-xl z-50 overflow-hidden min-w-[130px]">
+                     <div className="absolute top-full left-0 mt-1 bg-[#1A1A1A] border border-[#66473B]/50 rounded-lg shadow-xl z-50 overflow-hidden min-w-[130px]">
                        {[{val:'java',label:'Java'},{val:'python',label:'Python 3'},{val:'javascript',label:'JavaScript'},{val:'cpp',label:'C++'}].map(opt => (
                          <button
                            key={opt.val}
                            onClick={() => { setLanguage(opt.val); setLangOpen(false); }}
                            className={`w-full text-left px-4 py-2.5 text-xs font-bold uppercase tracking-widest transition-colors ${
-                             language === opt.val ? 'bg-white/10 text-white' : 'text-zinc-400 hover:bg-white/5 hover:text-white'
+                             language === opt.val ? 'bg-[#231E1A] text-[#EBDCC4]' : 'text-[#B6A596] hover:bg-[#1F1A17] hover:text-[#EBDCC4]'
                            }`}
                          >
                            {opt.label}
@@ -489,49 +489,49 @@ export default function DsaSessionPage() {
           </div>
           </ResizablePanel>
 
-          <ResizableHandle withHandle className="bg-white/5 hover:bg-white/10 transition-colors" />
+          <ResizableHandle withHandle className="bg-[#1F1A17] hover:bg-[#231E1A] transition-colors" />
 
           {/* Bottom Panel */}
           <ResizablePanel defaultSize={35} minSize={15}>
-          <div className="flex flex-col bg-[#111] h-full overflow-hidden shadow-[0_-5px_20px_rgba(0,0,0,0.5)] z-20">
-             <div className="flex items-center px-2 h-10 border-b border-white/5 bg-[#0a0a0a]">
-                 <button onClick={() => setActiveTab('testcases')} className={`text-[10px] font-bold uppercase tracking-widest h-full px-4 border-b-2 transition-colors ${activeTab === 'testcases' ? 'border-zinc-400 text-zinc-200' : 'border-transparent text-zinc-600 hover:text-zinc-400'}`}>Test Cases</button>
-                 <button onClick={() => setActiveTab('run_results')} className={`text-[10px] flex items-center gap-2 font-bold uppercase tracking-widest h-full px-4 border-b-2 transition-colors ${activeTab === 'run_results' ? 'border-blue-500 text-blue-400' : 'border-transparent text-zinc-600 hover:text-zinc-400'}`}>
+          <div className="flex flex-col bg-[#1F1A17] h-full overflow-hidden shadow-[0_-5px_20px_rgba(0,0,0,0.5)] z-20">
+             <div className="flex items-center px-2 h-10 border-b border-[#66473B]/40 bg-[#0a0a0a]">
+                 <button onClick={() => setActiveTab('testcases')} className={`text-[10px] font-bold uppercase tracking-widest h-full px-4 border-b-2 transition-colors ${activeTab === 'testcases' ? 'border-zinc-400 text-[#EBDCC4]' : 'border-transparent text-[#B6A596] hover:text-[#B6A596]'}`}>Test Cases</button>
+                 <button onClick={() => setActiveTab('run_results')} className={`text-[10px] flex items-center gap-2 font-bold uppercase tracking-widest h-full px-4 border-b-2 transition-colors ${activeTab === 'run_results' ? 'border-blue-500 text-[#DC9F85]' : 'border-transparent text-[#B6A596] hover:text-[#B6A596]'}`}>
                     Test Results
-                    {isRunning && <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse block"></span>}
+                    {isRunning && <span className="w-1.5 h-1.5 rounded-full bg-[#DC9F85] animate-pulse block"></span>}
                  </button>
              </div>
              
-             <div className="flex-1 overflow-y-auto p-5 custom-scrollbar bg-[#111]">
+             <div className="flex-1 overflow-y-auto p-5 custom-scrollbar bg-[#1F1A17]">
                 {activeTab === 'testcases' && (
                   <>
-                    <h4 className="text-[10px] text-zinc-500 uppercase tracking-widest mb-4 font-bold flex items-center gap-2">
+                    <h4 className="text-[10px] text-[#B6A596] uppercase tracking-widest mb-4 font-bold flex items-center gap-2">
                       <AnimatedIcon name="science" className="text-[14px]" /> Public Test Cases
                     </h4>
                     {problem.publicTestCases ? problem.publicTestCases.map((tc: any, i: number) => (
-                      <div key={i} className="mb-4 last:mb-0 bg-[#1A1A1A] border border-white/5 rounded-lg p-4">
-                          <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest mb-3 border-b border-white/5 pb-2">Case {i+1}</div>
+                      <div key={i} className="mb-4 last:mb-0 bg-[#1A1A1A] border border-[#66473B]/40 rounded-lg p-4">
+                          <div className="text-[10px] text-[#B6A596] font-bold uppercase tracking-widest mb-3 border-b border-[#66473B]/40 pb-2">Case {i+1}</div>
                           <div className="space-y-3">
                             <div className="flex flex-col gap-1">
-                              <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-600 font-bold">Input</span>
-                              <div className="font-mono text-xs text-zinc-300 bg-black/40 p-2 rounded border border-white/5 break-words">{tc.input}</div>
+                              <span className="font-mono text-[9px] uppercase tracking-widest text-[#B6A596] font-bold">Input</span>
+                              <div className="font-mono text-xs text-[#EBDCC4] bg-[#181818]/40 p-2 rounded border border-[#66473B]/40 break-words">{tc.input}</div>
                             </div>
                             <div className="flex flex-col gap-1">
-                              <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-600 font-bold">Expected Output</span>
-                              <div className="font-mono text-xs text-zinc-300 bg-black/40 p-2 rounded border border-white/5">{tc.expectedOutput}</div>
+                              <span className="font-mono text-[9px] uppercase tracking-widest text-[#B6A596] font-bold">Expected Output</span>
+                              <div className="font-mono text-xs text-[#EBDCC4] bg-[#181818]/40 p-2 rounded border border-[#66473B]/40">{tc.expectedOutput}</div>
                             </div>
                           </div>
                       </div>
                     )) : (
-                      <div className="text-zinc-600 text-xs italic">No public test cases provided for this problem.</div>
+                      <div className="text-[#B6A596] text-xs italic">No public test cases provided for this problem.</div>
                     )}
                   </>
                 )}
 
                 {activeTab === 'run_results' && runResult && (
                    <div className="space-y-5">
-                      <div className="flex items-center gap-3 bg-[#1A1A1A] p-4 rounded-lg border border-white/5">
-                         <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Status</span>
+                      <div className="flex items-center gap-3 bg-[#1A1A1A] p-4 rounded-lg border border-[#66473B]/40">
+                         <span className="text-[10px] font-bold uppercase tracking-widest text-[#B6A596]">Status</span>
                          <span className={`text-sm font-black uppercase tracking-widest ${runResult.status === 'Accepted' ? 'text-green-500' : 'text-red-500'}`}>
                            {runResult.status}
                          </span>
@@ -539,9 +539,9 @@ export default function DsaSessionPage() {
                       </div>
                       
                       {runResult.results?.map((res: any, i: number) => (
-                         <div key={i} className="bg-[#1A1A1A] rounded-lg p-1 border border-white/5">
-                            <div className={`px-4 py-3 border-b border-white/5 flex justify-between items-center bg-black/50 rounded-t-lg ${res.passed ? '' : 'bg-red-500/5'}`}>
-                               <div className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest flex items-center gap-2">
+                         <div key={i} className="bg-[#1A1A1A] rounded-lg p-1 border border-[#66473B]/40">
+                            <div className={`px-4 py-3 border-b border-[#66473B]/40 flex justify-between items-center bg-[#181818]/80 rounded-t-lg ${res.passed ? '' : 'bg-red-500/5'}`}>
+                               <div className="text-[10px] text-[#B6A596] font-bold uppercase tracking-widest flex items-center gap-2">
                                  Case {i+1}
                                </div>
                                <span className={`text-[10px] font-bold uppercase tracking-widest ${res.passed ? 'text-green-500' : 'text-red-500'}`}>
@@ -550,23 +550,23 @@ export default function DsaSessionPage() {
                             </div>
                             <div className="p-4 space-y-3">
                               <div className="flex flex-col gap-1">
-                                <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-600 font-bold">Input</span>
-                                <div className="font-mono text-xs text-zinc-300 bg-black/40 p-2 rounded border border-white/5">{res.input}</div>
+                                <span className="font-mono text-[9px] uppercase tracking-widest text-[#B6A596] font-bold">Input</span>
+                                <div className="font-mono text-xs text-[#EBDCC4] bg-[#181818]/40 p-2 rounded border border-[#66473B]/40">{res.input}</div>
                               </div>
                               <div className="flex flex-col gap-1">
-                                <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-600 font-bold">Expected</span>
-                                <div className="font-mono text-xs text-zinc-300 bg-black/40 p-2 rounded border border-white/5">{res.expectedOutput}</div>
+                                <span className="font-mono text-[9px] uppercase tracking-widest text-[#B6A596] font-bold">Expected</span>
+                                <div className="font-mono text-xs text-[#EBDCC4] bg-[#181818]/40 p-2 rounded border border-[#66473B]/40">{res.expectedOutput}</div>
                               </div>
                               <div className="flex flex-col gap-1">
-                                <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-600 font-bold border-red-500">Actual Output</span>
+                                <span className="font-mono text-[9px] uppercase tracking-widest text-[#B6A596] font-bold border-red-500">Actual Output</span>
                                 <div className={`font-mono text-xs p-2 rounded border ${res.passed ? 'bg-green-500/5 border-green-500/20 text-green-300' : 'bg-red-500/5 border-red-500/20 text-red-300'}`}>
                                   {res.actualOutput || 'Empty'}
                                 </div>
                               </div>
                               {res.stdout && (
                                 <div className="flex flex-col gap-1 mt-2">
-                                  <span className="font-mono text-[9px] uppercase tracking-widest text-blue-500 font-bold">Stdout (Logs)</span>
-                                  <div className="font-mono text-xs text-zinc-300 bg-black p-3 rounded border border-blue-500/20 whitespace-pre-wrap">{res.stdout}</div>
+                                  <span className="font-mono text-[9px] uppercase tracking-widest text-[#DC9F85] font-bold">Stdout (Logs)</span>
+                                  <div className="font-mono text-xs text-[#EBDCC4] bg-[#181818] p-3 rounded border border-blue-500/20 whitespace-pre-wrap">{res.stdout}</div>
                                 </div>
                               )}
                             </div>
@@ -575,7 +575,7 @@ export default function DsaSessionPage() {
                    </div>
                 )}
                 {activeTab === 'run_results' && !runResult && !isRunning && (
-                   <div className="h-full flex flex-col items-center justify-center text-center text-zinc-600 opacity-50">
+                   <div className="h-full flex flex-col items-center justify-center text-center text-[#B6A596] opacity-50">
                       <AnimatedIcon name="terminal" className="text-4xl mb-2" />
                       <div className="text-xs font-bold uppercase tracking-widest">Awaiting Execution</div>
                       <p className="text-[10px] mt-1 max-w-xs leading-relaxed">Click "Run" against the public testcases to preview results and view terminal print logs.</p>
@@ -583,9 +583,9 @@ export default function DsaSessionPage() {
                 )}
                 {activeTab === 'run_results' && isRunning && (
                    <div className="h-full flex flex-col gap-2 p-4">
-                      <Skeleton className="h-8 w-full bg-white/5" />
-                      <Skeleton className="h-20 w-full bg-white/5" />
-                      <Skeleton className="h-20 w-full bg-white/5" />
+                      <Skeleton className="h-8 w-full bg-[#1F1A17]" />
+                      <Skeleton className="h-20 w-full bg-[#1F1A17]" />
+                      <Skeleton className="h-20 w-full bg-[#1F1A17]" />
                    </div>
                 )}
              </div>
