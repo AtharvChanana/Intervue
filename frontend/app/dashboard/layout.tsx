@@ -1048,168 +1048,143 @@ export default function DashboardLayout({
 
       {/* Main Container */}
       <div className="flex-1 flex flex-col ml-0 min-h-screen">
-        {/* Top Navigation Bar (Desktop) */}
-        <header className="fixed top-0 left-0 right-0 h-20 z-30 bg-[#181818]/80 backdrop-blur-lg border-b border-[#66473B]/40 hidden md:flex justify-between items-center px-12 w-full">
-          
-          <div className="flex-1 flex justify-start items-center">
-            <h1 className="display-font font-black text-xl text-[#EBDCC4] tracking-widest uppercase">INTERVUE</h1>
+        {/* Top Navigation Bar (Desktop) — Superdesign Editorial Style */}
+        <header className="fixed top-0 left-0 right-0 z-30 bg-[#181818] border-b border-[#35211A] hidden md:flex items-center justify-between px-8 md:px-12 py-8 w-full">
+
+          {/* LEFT — Brand monogram */}
+          <div className="flex items-center gap-4">
+            <span className="display-font text-[10px] tracking-[0.4em] font-bold text-[#DC9F85] uppercase">INTERVUE—PROTOCOL 01</span>
+            <span className="text-[10px] tracking-[0.4em] font-medium text-[#66473B] hidden lg:block">// DASHBOARD_V.2.4</span>
           </div>
 
-          <nav className="flex-none flex items-center justify-center gap-10 h-full">
-            <Link 
-              onClick={(e) => { 
-                  if(isSessionActive) { 
-                      e.preventDefault(); 
-                      toast.error("Please complete or end your current session before navigating away."); 
-                  }
-              }}
-              className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname === '/dashboard' ? 'text-[#EBDCC4]' : 'text-[#B6A596] hover:text-[#EBDCC4]'}`} 
-              href="/dashboard">
-              Dashboard
-            </Link>
-
-            <Link 
-              onClick={(e) => { 
-                  if(isSessionActive) { 
-                      e.preventDefault(); 
-                      toast.error("Please complete or end your current session before navigating away."); 
-                  }
-              }}
-              className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname?.includes('/sessions') ? 'text-[#EBDCC4]' : 'text-[#B6A596] hover:text-[#EBDCC4]'}`} 
-              href="/dashboard/sessions">
-              Sessions
-            </Link>
-
-            <Link 
-              onClick={(e) => { 
-                  if(isSessionActive) { 
-                      e.preventDefault(); 
-                      toast.error("Please complete or end your current session before navigating away."); 
-                  }
-              }}
-              className={`text-[11px] font-bold uppercase tracking-[0.2em] transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname?.includes('/leaderboard') ? 'text-[#EBDCC4]' : 'text-[#B6A596] hover:text-[#EBDCC4]'}`} 
-              href="/dashboard/leaderboard">
-              Leaderboard
-            </Link>
-            
-            <button 
-              disabled={isSessionActive}
-              onClick={() => { 
-                if(isSessionActive) { toast.error("Please complete or end your current session before starting a new one."); return; } 
-                if(userProfile && !userProfile.emailVerified) {
-                  toast.error('Your email is not verified.');
-                  return;
-                }
-                setShowDsaModal(true); 
-              }} 
-              className={`editorial-btn-outline flex items-center gap-2 py-2.5 px-6 text-[10px] ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''}`}
-            >
-              <AnimatedIcon name="code" className="text-[14px]" />
-              Code Assessment
-            </button>
-
-            <button 
-              disabled={isSessionActive}
-              onClick={() => { 
-                if(isSessionActive) { toast.error("Please complete or end your current session before starting a new one."); return; } 
-                if(userProfile && !userProfile.emailVerified) {
-                  toast.error('Your email is not verified. Please open your Profile and verify your email before starting a session.');
-                  return;
-                }
-                handleOpenModal(); 
-              }} 
-              className={`editorial-btn flex items-center gap-2 py-2.5 px-6 text-[10px] ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''}`}
-            >
-              <AnimatedIcon name="add" className="text-[14px]" />
-              Start Session
-            </button>
+          {/* CENTER — Nav links */}
+          <nav className="flex items-center gap-8">
+            {[
+              { href: '/dashboard',             label: 'Dashboard',   active: pathname === '/dashboard' },
+              { href: '/dashboard/sessions',    label: 'Sessions',    active: !!pathname?.includes('/sessions') },
+              { href: '/dashboard/leaderboard', label: 'Leaderboard', active: !!pathname?.includes('/leaderboard') },
+            ].map(({ href, label, active }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={(e) => {
+                  if (isSessionActive) { e.preventDefault(); toast.error('Please complete or end your current session before navigating away.'); }
+                }}
+                className={`relative text-[10px] font-bold uppercase tracking-widest transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${active ? 'text-[#EBDCC4]' : 'text-[#B6A596] hover:text-[#EBDCC4]'}`}
+              >
+                {label}
+                {active && <span className="absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#DC9F85]" />}
+              </Link>
+            ))}
           </nav>
 
-          <div className="flex-1 flex justify-end items-center gap-6">
+          {/* RIGHT — Actions + Divider + Avatar */}
+          <div className="flex items-center gap-5">
+            {/* Code Assessment */}
+            <button
+              disabled={isSessionActive}
+              onClick={() => {
+                if (isSessionActive) { toast.error('Please complete or end your current session before starting a new one.'); return; }
+                if (userProfile && !userProfile.emailVerified) { toast.error('Your email is not verified.'); return; }
+                setShowDsaModal(true);
+              }}
+              className={`text-[10px] font-bold uppercase tracking-[0.25em] border border-[#66473B] text-[#B6A596] px-5 py-2 transition-colors hover:border-[#B6A596] hover:text-[#EBDCC4] ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''}`}
+            >
+              &lt;/&gt; Code
+            </button>
 
+            {/* Start Session */}
+            <button
+              disabled={isSessionActive}
+              onClick={() => {
+                if (isSessionActive) { toast.error('Please complete or end your current session before starting a new one.'); return; }
+                if (userProfile && !userProfile.emailVerified) { toast.error('Your email is not verified. Please verify your email before starting a session.'); return; }
+                handleOpenModal();
+              }}
+              className={`text-[10px] font-bold uppercase tracking-[0.25em] border border-[#DC9F85] text-[#DC9F85] px-5 py-2 transition-colors hover:bg-[#DC9F85] hover:text-[#181818] ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''}`}
+            >
+              + Start Session
+            </button>
+
+            {/* Divider */}
+            <div className="h-8 w-[1px] bg-[#35211A]" />
+
+            {/* Notifications */}
             <div className="relative" ref={notifRef}>
-              <button 
+              <button
                 onClick={() => { if (isSessionActive) return; setShowNotifications(!showNotifications); if (!showNotifications) markAsRead(); }}
                 disabled={isSessionActive}
-                className={`transition-colors relative flex items-center justify-center p-1 ${isSessionActive ? 'opacity-30 cursor-not-allowed text-zinc-600' : 'text-[#B6A596] hover:text-[#EBDCC4]'}`}
+                className={`relative flex items-center justify-center transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed text-[#66473B]' : 'text-[#B6A596] hover:text-[#EBDCC4]'}`}
               >
                 <AnimatedIcon name="notifications" className="text-xl" />
                 {notifications.some(n => !n.read) && (
-                  <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#DC9F85] rounded-full animate-pulse shadow-[0_0_8px_rgba(220,159,133,0.8)]"></span>
+                  <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-[#DC9F85] rounded-full" />
                 )}
               </button>
-              
               {showNotifications && (
-                <div className="hidden md:block absolute right-0 top-12 mt-2 w-96 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="max-h-[400px] overflow-y-auto pb-12 [mask-image:linear-gradient(to_bottom,black_80%,transparent)] scrollbar-hide pr-1">
+                <div className="absolute right-0 top-10 mt-2 w-80 bg-[#181818] border border-[#35211A] z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="px-5 py-3 border-b border-[#35211A]">
+                    <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#B6A596]">Notifications</span>
+                  </div>
+                  <div className="max-h-[340px] overflow-y-auto">
                     {notifications.length === 0 ? (
-                      <Alert className="bg-[#0a0a0a] border border-[#66473B]/50 shadow-2xl backdrop-blur-md rounded-xl text-center text-[#B6A596] text-xs">
-                        No active alerts at this time.
-                      </Alert>
-                    ) : (
-                      <div className="space-y-3">
-                        {notifications.map(n => (
-                          <Alert key={n.id} className="bg-[#0a0a0a] border border-[#66473B]/50 shadow-2xl backdrop-blur-md rounded-xl p-4">
-                            <AlertTitle className="text-sm font-medium text-[#EBDCC4] mb-1.5">{n.message}</AlertTitle>
-                            <AlertDescription className="text-sm text-[#B6A596]">
-                              {n.time}
-                            </AlertDescription>
-                          </Alert>
-                        ))}
+                      <p className="text-[#66473B] text-[10px] uppercase tracking-widest text-center py-8">No active alerts</p>
+                    ) : notifications.map(n => (
+                      <div key={n.id} className="px-5 py-4 border-b border-[#35211A] last:border-0">
+                        <p className="text-[11px] text-[#EBDCC4] font-medium leading-relaxed">{n.message}</p>
+                        <p className="text-[10px] text-[#66473B] mt-1 uppercase tracking-widest">{n.time}</p>
                       </div>
-                    )}
+                    ))}
                   </div>
                 </div>
               )}
             </div>
-            
+
+            {/* Avatar + dropdown */}
             <div className="relative" ref={profileMenuRef}>
-              <button onClick={() => { if (isSessionActive) return; setShowProfileDropdown(!showProfileDropdown); }} disabled={isSessionActive} className={`flex items-center justify-center rounded-full relative overflow-hidden transition-all ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'hover:ring-2 hover:ring-[#DC9F85]/20'}`}>
-                <UserAvatar
-                  name={userProfile?.name}
-                  profilePictureUrl={userProfile?.profilePictureUrl}
-                  size="sm"
-                  className="w-8 h-8"
-                />
+              <button
+                onClick={() => { if (isSessionActive) return; setShowProfileDropdown(!showProfileDropdown); }}
+                disabled={isSessionActive}
+                className={`flex items-center gap-3 ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''}`}
+              >
+                <span className="text-[10px] tracking-widest font-bold text-[#EBDCC4] hidden lg:block uppercase">
+                  {userProfile?.name?.split(' ')[0] || 'User'}
+                </span>
+                <div className="w-8 h-8 rounded-full border border-[#DC9F85] bg-[#1A1512] flex items-center justify-center overflow-hidden">
+                  {userProfile?.profilePictureUrl
+                    ? <img src={userProfile.profilePictureUrl} alt="avatar" className="w-full h-full object-cover" />
+                    : <span className="text-[#DC9F85] text-xs font-bold uppercase">{userProfile?.name?.[0] || 'U'}</span>
+                  }
+                </div>
               </button>
-
               {showProfileDropdown && (
-                <div className="absolute right-0 top-12 mt-2 w-64 bg-[#181818] border border-[#66473B]/50 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div className="p-4 border-b border-[#66473B]/40 bg-[#181818]/80">
-                    <p className="text-xs font-bold text-[#EBDCC4] uppercase tracking-wider">{userProfile ? userProfile.name : "Applicant"}</p>
-                    <p className="text-[10px] text-[#B6A596] mt-1 truncate">{userProfile ? userProfile.email : ""}</p>
+                <div className="absolute right-0 top-12 mt-2 w-52 bg-[#181818] border border-[#35211A] z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <div className="px-5 py-4 border-b border-[#35211A]">
+                    <p className="text-[10px] font-bold text-[#EBDCC4] uppercase tracking-widest truncate">{userProfile?.name || 'Applicant'}</p>
+                    <p className="text-[10px] text-[#66473B] mt-0.5 truncate">{userProfile?.email || ''}</p>
                   </div>
-                  <div className="py-2">
-                    <button onClick={() => { setShowProfileDropdown(false); setShowProfileModal(true); }} className="w-full text-left px-4 py-3 text-sm text-[#EBDCC4] hover:text-[#EBDCC4] hover:bg-[#231E1A] transition-colors flex items-center gap-3">
-                      <AnimatedIcon name="person" className="text-lg" /> Profile
-                    </button>
-                    <button onClick={() => { setShowProfileDropdown(false); handleOpenSettings(); }} className="w-full text-left px-4 py-3 text-sm text-[#EBDCC4] hover:text-[#EBDCC4] hover:bg-[#231E1A] transition-colors flex items-center gap-3">
-                      <AnimatedIcon name="settings" className="text-lg" /> Settings
-                    </button>
-                  </div>
-                  <div className="py-2 border-t border-[#66473B]/40">
-                    <button 
-                      disabled={isSessionActive}
-                      onClick={() => { 
-                         setShowProfileDropdown(false);
-                         if(isSessionActive) { toast.error("Please complete or end your current session before logging out."); return; } 
-                         setShowLogoutConfirm(true); 
-                      }} 
-                      className={`w-full text-left px-4 py-3 text-sm flex items-center gap-3 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed text-[#B6A596]' : 'text-red-500/80 hover:text-red-500 hover:bg-red-500/[0.02]'}`}
-                    >
-                      <AnimatedIcon name="logout" className="text-lg" /> Logout
-                    </button>
-                  </div>
+                  <button onClick={() => { setShowProfileDropdown(false); setShowProfileModal(true); }} className="w-full text-left px-5 py-3 text-[10px] uppercase tracking-widest font-bold text-[#B6A596] hover:text-[#EBDCC4] hover:bg-[#1A1512] transition-colors border-b border-[#35211A] flex items-center gap-3">
+                    <AnimatedIcon name="person" className="text-base" /> Profile
+                  </button>
+                  <button onClick={() => { setShowProfileDropdown(false); handleOpenSettings(); }} className="w-full text-left px-5 py-3 text-[10px] uppercase tracking-widest font-bold text-[#B6A596] hover:text-[#EBDCC4] hover:bg-[#1A1512] transition-colors border-b border-[#35211A] flex items-center gap-3">
+                    <AnimatedIcon name="settings" className="text-base" /> Settings
+                  </button>
+                  <button
+                    disabled={isSessionActive}
+                    onClick={() => { setShowProfileDropdown(false); if (isSessionActive) { toast.error('Please end your session before logging out.'); return; } setShowLogoutConfirm(true); }}
+                    className={`w-full text-left px-5 py-3 text-[10px] uppercase tracking-widest font-bold flex items-center gap-3 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed text-[#B6A596]' : 'text-[#DC9F85] hover:bg-[#1A1512]'}`}
+                  >
+                    <AnimatedIcon name="logout" className="text-base" /> Logout
+                  </button>
                 </div>
               )}
             </div>
-
           </div>
         </header>
 
         {/* Logout Confirm Modal */}
         <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
-          <AlertDialogContent className="bg-[#050505] border-[#66473B]/50 shadow-[0_0_50px_rgba(220,159,133,0.06)] sm:max-w-md gap-6">
+          <AlertDialogContent className="bg-[#181818] border-[#35211A] sm:max-w-md gap-6">
             <AlertDialogHeader>
               <AlertDialogTitle className="text-2xl font-black text-[#EBDCC4] text-center">Confirm Logout</AlertDialogTitle>
               <AlertDialogDescription className="text-[#B6A596] text-sm text-center">
@@ -1217,15 +1192,15 @@ export default function DashboardLayout({
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter className="mt-4 flex-col sm:flex-col gap-3">
-              <Button onClick={() => { localStorage.removeItem('token'); router.push('/'); }} className="w-full bg-red-500/20 text-red-500 border border-red-500/20 py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-red-500 hover:text-[#EBDCC4] transition-all">
+              <Button onClick={() => { localStorage.removeItem('token'); router.push('/'); }} className="w-full bg-transparent text-[#DC9F85] border border-[#DC9F85] py-4 font-bold tracking-widest uppercase text-xs hover:bg-[#DC9F85] hover:text-[#181818] transition-all rounded-none">
                 Logout
               </Button>
-              <AlertDialogCancel onClick={() => setShowLogoutConfirm(false)} className="w-full mt-0 sm:mt-0 bg-[#1F1A17] text-[#EBDCC4] py-4 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-[#231E1A] transition-colors border-[#66473B]/40">
+              <AlertDialogCancel onClick={() => setShowLogoutConfirm(false)} className="w-full mt-0 sm:mt-0 bg-transparent text-[#B6A596] py-4 font-bold tracking-widest uppercase text-xs hover:bg-[#1A1512] hover:text-[#EBDCC4] transition-colors border-[#35211A] rounded-none">
                 Stay Signed In
               </AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
-        </AlertDialog>
+                </AlertDialog>
 
         {/* Mobile Notifications Modal */}
         {showNotifications && (
