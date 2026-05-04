@@ -1051,10 +1051,9 @@ export default function DashboardLayout({
         {/* Top Navigation Bar (Desktop) — Superdesign Editorial Style */}
         <header className="fixed top-0 left-0 right-0 z-30 bg-[#181818] border-b border-[#35211A] hidden md:flex items-center justify-between px-8 md:px-12 py-8 w-full">
 
-          {/* LEFT — Brand monogram */}
+          {/* LEFT — Brand */}
           <div className="flex items-center gap-4">
-            <span className="display-font text-[10px] tracking-[0.4em] font-bold text-[#DC9F85] uppercase">INTERVUE—PROTOCOL 01</span>
-            <span className="text-[10px] tracking-[0.4em] font-medium text-[#66473B] hidden lg:block">// DASHBOARD_V.2.4</span>
+            <h1 className="display-font font-black text-xl text-[#EBDCC4] tracking-widest uppercase">INTERVUE</h1>
           </div>
 
           {/* CENTER — Nav links */}
