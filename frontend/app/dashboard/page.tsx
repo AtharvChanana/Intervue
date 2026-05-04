@@ -323,7 +323,7 @@ export default function DashboardPage() {
       {/* TOP MATRIX */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Metric 01 */}
-        <MagicCard className="dashboard-card flex flex-col justify-between">
+        <div className="dashboard-card flex flex-col justify-between">
           <div className="flex justify-between items-start mb-12">
             <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Average Score</span>
             <div className="w-2 h-2 rounded-full bg-[#DC9F85] shadow-[0_0_8px_rgba(220,159,133,0.6)]"></div>
@@ -332,10 +332,10 @@ export default function DashboardPage() {
             <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
             <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Global Percentile</span>
           </div>
-        </MagicCard>
+        </div>
 
         {/* Metric 02 */}
-        <MagicCard className="dashboard-card flex flex-col justify-between">
+        <div className="dashboard-card flex flex-col justify-between">
           <div className="flex justify-between items-start mb-12">
             <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Sessions Completed</span>
           </div>
@@ -343,10 +343,10 @@ export default function DashboardPage() {
             <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.completedSessions || 0}</h3>
             <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Total Interviews</span>
           </div>
-        </MagicCard>
+        </div>
 
         {/* Metric 03 */}
-        <MagicCard className="dashboard-card flex flex-col justify-between">
+        <div className="dashboard-card flex flex-col justify-between">
           <div className="flex justify-between items-start mb-12">
             <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Roles Practiced</span>
           </div>
@@ -354,7 +354,7 @@ export default function DashboardPage() {
             <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.distinctRolesPracticed || 0}</h3>
             <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Unique Job Profiles</span>
           </div>
-        </MagicCard>
+        </div>
       </div>
 
       {/* ANALYTICS ENGINE */}
@@ -457,7 +457,7 @@ export default function DashboardPage() {
 
       {/* Bottom Row: Streak Tracking */}
       <div className="grid grid-cols-1 gap-6 mb-8">
-        <MagicCard className="dashboard-card border-[#66473B]">
+        <div className="dashboard-card border-[#66473B]">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
             <div className="flex items-center gap-12">
               <div className="flex flex-col">
@@ -540,11 +540,11 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-        </MagicCard>
+        </div>
       </div>
 
       {/* PROGRESS CHART */}
-      <MagicCard className="dashboard-card mb-8 flex flex-col">
+      <div className="dashboard-card mb-8 flex flex-col">
         <div className="flex items-center gap-3 mb-6">
           <AnimatedIcon name="trending_up" className="text-[#EBDCC4]" />
           <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
@@ -600,9 +600,9 @@ export default function DashboardPage() {
             </svg>
           </div>
         )}
-      </MagicCard>
+      </div>
 
-      <MagicCard className="dashboard-card flex flex-col mb-8 p-0 border-[#66473B]">
+      <div className="dashboard-card flex flex-col mb-8 p-0 border-[#66473B]">
           <div className="w-full h-full">
             <div className="p-8 pb-6 border-b border-[#66473B]/40">
               <h3 className="text-[#EBDCC4] text-lg font-black tracking-widest uppercase">Resume Parsing</h3>
@@ -684,7 +684,7 @@ export default function DashboardPage() {
               </div>
             )}
           </div>
-      </MagicCard>
+      </div>
       <Toaster position="top-center" theme="dark" richColors />
     </div>
   );

@@ -246,13 +246,13 @@
   /* Legacy compat (keep bg-telemetry-grid from old theme) */
   .bg-telemetry-grid,
   .muddy-bg {
-    background-color: #12100E;
-    background-image: 
-      radial-gradient(circle at 0% 0%, rgba(102, 71, 59, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 100% 100%, rgba(102, 71, 59, 0.15) 0%, transparent 50%),
-      radial-gradient(circle at 100% 0%, rgba(102, 71, 59, 0.1) 0%, transparent 40%),
-      radial-gradient(circle at 0% 100%, rgba(102, 71, 59, 0.1) 0%, transparent 40%),
-      radial-gradient(rgba(53, 33, 26, 0.4) 1px, transparent 1px);
+    background-color: #181818;
+    background-image:
+      radial-gradient(circle at 0% 0%, rgba(102, 71, 59, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(102, 71, 59, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 100% 0%, rgba(102, 71, 59, 0.08) 0%, transparent 40%),
+      radial-gradient(circle at 0% 100%, rgba(102, 71, 59, 0.08) 0%, transparent 40%),
+      radial-gradient(#35211A 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 40px 40px;
     background-attachment: fixed;
     position: relative;
@@ -307,46 +307,27 @@
     transform: translate(4px, 4px);
   }
 }
-/* DASHBOARD UTILITIES */
+/* DASHBOARD UTILITIES — exact Superdesign style */
 .dashboard-card {
-  background-color: rgba(31, 26, 23, 0.6);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(102, 71, 59, 0.3);
+  background-color: #1A1512;
+  border: 1px solid #66473B;
+  border-radius: 4px;
   padding: 2.5rem;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.dashboard-card::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(135deg, rgba(220, 159, 133, 0.05) 0%, transparent 50%);
-  pointer-events: none;
+  transition: border-color 0.3s ease;
 }
 
 .dashboard-card:hover {
-  border-color: rgba(220, 159, 133, 0.5);
-  background-color: rgba(35, 30, 26, 0.75);
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  border-color: #DC9F85;
 }
 
 .progress-bar-container {
   width: 100%;
   height: 2px;
-  background-color: var(--burnt-umber, #35211A);
-  position: relative;
+  background-color: #35211A;
   overflow: hidden;
 }
 .progress-bar-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
   height: 100%;
-  background-color: var(--coral-rust, #DC9F85);
+  background-color: #DC9F85;
   transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
-  box-shadow: 0 0 10px rgba(220, 159, 133, 0.8);
 }
