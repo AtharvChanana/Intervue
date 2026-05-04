@@ -7,8 +7,110 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
 
+const REVIEWS = [
+  { name: "Arjun Mehta", role: "SWE @ Google", stars: 5, text: "Intervue's AI questions were scarily close to my actual Google L4 interviews. Nailed the offer after 3 weeks of practice." },
+  { name: "Priya Sharma", role: "PM @ Microsoft", stars: 5, text: "The behavioral module is phenomenal. It identified my weak points in STAR format and I improved drastically within days." },
+  { name: "James O'Brien", role: "Backend Eng @ Stripe", stars: 5, text: "I used 6 platforms before this. Intervue is the only one that actually gave me contextual feedback on my code explanations." },
+  { name: "Ananya Rao", role: "ML Eng @ Amazon", stars: 5, text: "The leaderboard kept me competitive. Finished top 10 and got shortlisted by 4 companies in the same week." },
+  { name: "Carlos Vega", role: "Frontend Dev @ Meta", stars: 5, text: "Real-time feedback after every answer was game-changing. I knew exactly what I was messing up before my actual interviews." },
+  { name: "Shreya Patel", role: "Fullstack @ Atlassian", stars: 5, text: "The DSA assessment interface is identical to the real thing. Zero shock factor on interview day — I was completely prepared." },
+  { name: "David Kim", role: "DevOps @ Cloudflare", stars: 5, text: "I practiced mock sessions every day for 2 weeks. The AI never repeated a question. Got my dream role at Cloudflare." },
+  { name: "Nidhi Kapoor", role: "Data Eng @ Swiggy", stars: 5, text: "The scoring system is brutally honest. It doesn't inflate your confidence — it shows you exactly where you need to grow." },
+  { name: "Rohan Desai", role: "iOS Eng @ Apple", stars: 5, text: "I went from failing screening rounds to clearing 5 of 6 final interviews. The progress tracking feature kept me on track." },
+  { name: "Sophie Laurent", role: "SRE @ Spotify", stars: 5, text: "The mixed interview mode combining tech and behavioral is unique. Nothing else on the market does this as well as Intervue." },
+];
+
+// Duplicate for seamless infinite loop
+const ROW_1 = [...REVIEWS.slice(0, 6), ...REVIEWS.slice(0, 6)];
+const ROW_2 = [...REVIEWS.slice(4), ...REVIEWS.slice(0, 4), ...REVIEWS.slice(4), ...REVIEWS.slice(0, 4)];
+
+function StarRating({ count }: { count: number }) {
+  return (
+    <div className="flex gap-0.5 mb-3">
+      {Array.from({ length: count }).map((_, i) => (
+        <span key={i} style={{ color: 'var(--coral-rust)', fontSize: '11px' }}>★</span>
+      ))}
+    </div>
+  );
+}
+
+function ReviewCard({ review }: { review: typeof REVIEWS[0] }) {
+  return (
+    <div
+      className="flex-shrink-0 w-72 p-5 mx-3"
+      style={{
+        backgroundColor: 'var(--burnt-umber)',
+        border: '1px solid var(--deep-earth)',
+        borderRadius: '2px',
+      }}
+    >
+      <StarRating count={review.stars} />
+      <p className="text-[12px] leading-relaxed mb-4" style={{ color: 'var(--warm-beige)', fontFamily: 'General Sans, sans-serif' }}>
+        "{review.text}"
+      </p>
+      <div className="border-t pt-3" style={{ borderColor: 'var(--deep-earth)' }}>
+        <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--coral-rust)' }}>{review.name}</p>
+        <p className="text-[10px] uppercase tracking-widest mt-0.5" style={{ color: 'var(--muted-sage)' }}>{review.role}</p>
+      </div>
+    </div>
+  );
+}
+
+function ReviewsTicker() {
+  return (
+    <div className="w-full overflow-hidden py-10" style={{ borderTop: '1px solid var(--burnt-umber)', borderBottom: '1px solid var(--burnt-umber)' }}>
+      {/* Label */}
+      <div className="px-8 md:px-12 mb-6 flex items-center gap-4">
+        <div className="w-6 h-[1px]" style={{ backgroundColor: 'var(--coral-rust)' }} />
+        <span className="text-[10px] uppercase tracking-[0.25em] font-semibold" style={{ color: 'var(--muted-sage)' }}>
+          What Interviewers Say
+        </span>
+      </div>
+
+      {/* Row 1 — moves left */}
+      <div className="relative mb-4">
+        <div
+          className="flex"
+          style={{
+            animation: 'ticker-left 40s linear infinite',
+            width: 'max-content',
+          }}
+        >
+          {ROW_1.map((r, i) => <ReviewCard key={`r1-${i}`} review={r} />)}
+        </div>
+      </div>
+
+      {/* Row 2 — moves left (slightly faster, offset) */}
+      <div className="relative">
+        <div
+          className="flex"
+          style={{
+            animation: 'ticker-left 55s linear infinite',
+            width: 'max-content',
+            animationDelay: '-12s',
+          }}
+        >
+          {ROW_2.map((r, i) => <ReviewCard key={`r2-${i}`} review={r} />)}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes ticker-left {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          @keyframes ticker-left { 0%, 100% { transform: translateX(0); } }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+
 export default function LandingPage() {
   const router = useRouter();
+
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
@@ -265,6 +367,9 @@ export default function LandingPage() {
             </div>
           </div>
         </main>
+
+        {/* Reviews Ticker */}
+        <ReviewsTicker />
 
         {/* Footer */}
         <footer className="px-8 md:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
