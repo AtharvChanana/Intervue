@@ -156,8 +156,8 @@
     top: 0; left: 0;
     width: 100%; height: 100%;
     pointer-events: none;
-    z-index: 9999;
-    opacity: 0.03;
+    z-index: 9998;
+    opacity: 0.04;
     background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
 
@@ -245,11 +245,21 @@
 
   /* Legacy compat (keep bg-telemetry-grid from old theme) */
   .bg-telemetry-grid {
-    background-color: var(--ed-black);
-    position: relative;
-    z-index: 0;
+    @apply muddy-bg;
   }
-  .bg-telemetry-grid::before { display: none; }
+
+  .muddy-bg {
+    background-color: #12100E;
+    background-image: 
+      radial-gradient(circle at 0% 0%, rgba(102, 71, 59, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, rgba(102, 71, 59, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 100% 0%, rgba(102, 71, 59, 0.1) 0%, transparent 40%),
+      radial-gradient(circle at 0% 100%, rgba(102, 71, 59, 0.1) 0%, transparent 40%),
+      radial-gradient(rgba(53, 33, 26, 0.4) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 40px 40px;
+    background-attachment: fixed;
+    position: relative;
+  }
 
   .liquid-glass {
     background: var(--ed-card);

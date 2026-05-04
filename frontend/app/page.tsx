@@ -88,7 +88,7 @@ function FeaturesSection() {
   ];
 
   return (
-    <div className="w-full" style={{ backgroundColor: 'var(--matte-black)' }}>
+    <div className="w-full bg-transparent">
       {/* Top divider */}
       <div className="h-[1px] w-full" style={{ backgroundColor: 'var(--burnt-umber)' }} />
 
@@ -361,36 +361,10 @@ export default function LandingPage() {
         }
         .text-layer-container { display: grid; grid-template-columns: 1fr; }
         .text-layer-container > * { grid-area: 1 / 1; }
-        .noise-overlay {
-          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-          pointer-events: none; z-index: 9999; opacity: 0.03;
-          background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-        .rotating-text { animation: rotate 12s linear infinite; transform-origin: center; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .form-input-editorial {
-          background: transparent;
-          border: 1px solid var(--deep-earth);
-          color: var(--warm-beige);
-          outline: none;
-          font-family: 'General Sans', sans-serif;
-        }
-        .form-input-editorial::placeholder { color: var(--deep-earth); }
-        .form-input-editorial:focus { border-color: var(--coral-rust); }
-        .editorial-btn {
-          background-color: var(--coral-rust);
-          color: var(--matte-black);
-          font-family: 'General Sans', sans-serif;
-          transition: filter 0.2s ease;
-        }
-        .editorial-btn:hover:not(:disabled) { filter: brightness(0.9); }
-        .editorial-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .divider-line { height: 1px; background-color: var(--burnt-umber); }
         ::selection { background: var(--coral-rust); color: var(--matte-black); }
       `}</style>
 
-      <div className="min-h-screen flex flex-col relative body-font" style={{ backgroundColor: 'var(--matte-black)', color: 'var(--warm-beige)' }}>
-        <div className="noise-overlay" />
+      <div className="min-h-screen flex flex-col relative body-font" style={{ color: 'var(--warm-beige)' }}>
 
         {/* Nav */}
         <nav className="absolute top-0 w-full px-8 md:px-12 py-10 flex items-center justify-between z-50">

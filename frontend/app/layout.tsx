@@ -26,7 +26,8 @@ export default function RootLayout({
         {/* Fontshare — Clash Grotesk + General Sans */}
         <link href="https://api.fontshare.com/v2/css?f[]=clash-grotesk@700&f[]=general-sans@300,400,500,700&display=swap" rel="stylesheet" />
       </head>
-      <body className="bg-ed-black text-ed-beige selection:bg-[#DC9F85] selection:text-[#181818] overflow-x-hidden body-font min-h-screen">
+      <body className="muddy-bg text-ed-beige selection:bg-[#DC9F85] selection:text-[#181818] overflow-x-hidden body-font min-h-screen">
+        <div className="noise-overlay" />
         {children}
       </body>
     </html>
