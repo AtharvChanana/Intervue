@@ -56,6 +56,150 @@ function ReviewCard({ review }: { review: typeof REVIEWS[0] }) {
   );
 }
 
+function FeaturesSection() {
+  const features = [
+    {
+      num: '01',
+      title: 'AI-Powered Mock Sessions',
+      desc: 'Realistic behavioural and technical interview rounds designed to simulate high-stakes environments with precision. The AI adapts to your role and experience level.',
+    },
+    {
+      num: '02',
+      title: 'DSA Code Assessments',
+      desc: 'Real coding problems integrated into a high-performance live IDE with instant compilation. Practice LeetCode-style questions under timed conditions.',
+    },
+    {
+      num: '03',
+      title: 'Instant AI Feedback',
+      desc: 'Quantified scoring across technical and soft-skill metrics with granular insight into strengths and improvement areas — delivered the moment your session ends.',
+    },
+    {
+      num: '04',
+      title: 'Global Leaderboard',
+      desc: 'Benchmark your performance against the global talent pool. Earn XP, climb protocol ranks, and track improvement over weeks of consistent practice.',
+    },
+  ];
+
+  const stats = [
+    { label: 'Mock Sessions Run',   value: '12,400+' },
+    { label: 'Avg Score Improvement', value: '31%' },
+    { label: 'Companies Placed At', value: '80+' },
+    { label: 'Questions in Bank',   value: '2,000+' },
+  ];
+
+  return (
+    <div className="w-full" style={{ backgroundColor: 'var(--matte-black)' }}>
+      {/* Top divider */}
+      <div className="h-[1px] w-full" style={{ backgroundColor: 'var(--burnt-umber)' }} />
+
+      <div className="max-w-[1440px] mx-auto px-8 md:px-12 py-24 md:py-32">
+
+        {/* Section Header */}
+        <div className="mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <div>
+            <span className="text-[10px] uppercase tracking-[0.4em] block mb-4" style={{ color: 'var(--burnt-umber)' }}>
+              Protocol Capabilities
+            </span>
+            <h2 className="display-font text-5xl md:text-7xl font-bold uppercase leading-[0.85] tracking-tight" style={{ color: 'var(--warm-beige)' }}>
+              System<br />Features
+            </h2>
+          </div>
+          <p className="text-sm font-light leading-relaxed max-w-sm" style={{ color: 'var(--muted-sage)' }}>
+            Every module is precision-engineered to expose your exact gaps and close them — faster than any other platform.
+          </p>
+        </div>
+
+        {/* 4-column feature grid — editorial numbered cells */}
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+          style={{ borderTop: '1px solid var(--burnt-umber)', borderLeft: '1px solid var(--burnt-umber)' }}
+        >
+          {features.map((f) => (
+            <div
+              key={f.num}
+              className="p-10 flex flex-col justify-between group transition-colors duration-300"
+              style={{
+                minHeight: '420px',
+                borderRight: '1px solid var(--burnt-umber)',
+                borderBottom: '1px solid var(--burnt-umber)',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--ed-card, #1F1A17)')}
+              onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+            >
+              <div>
+                {/* Oversized number */}
+                <span
+                  className="display-font font-bold block mb-8 leading-none select-none transition-colors duration-300 group-hover:text-opacity-80"
+                  style={{ fontSize: 'clamp(72px, 8vw, 120px)', color: 'var(--burnt-umber)', lineHeight: 1 }}
+                >
+                  {f.num}
+                </span>
+                {/* Thin divider */}
+                <div className="h-[1px] mb-6" style={{ backgroundColor: 'var(--deep-earth)' }} />
+                <h3 className="display-font text-xl font-bold uppercase tracking-tight mb-4" style={{ color: 'var(--warm-beige)' }}>
+                  {f.title}
+                </h3>
+              </div>
+              <p className="text-[11px] leading-loose uppercase tracking-[0.18em]" style={{ color: 'var(--muted-sage)' }}>
+                {f.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Stats bar */}
+        <div
+          className="mt-0 grid grid-cols-2 md:grid-cols-4"
+          style={{ borderLeft: '1px solid var(--burnt-umber)', borderBottom: '1px solid var(--burnt-umber)' }}
+        >
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              className="px-10 py-8 flex flex-col gap-2"
+              style={{ borderRight: '1px solid var(--burnt-umber)' }}
+            >
+              <span className="display-font text-3xl md:text-4xl font-bold" style={{ color: 'var(--coral-rust)' }}>
+                {s.value}
+              </span>
+              <span className="text-[10px] uppercase tracking-[0.25em]" style={{ color: 'var(--burnt-umber)' }}>
+                {s.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Closing editorial statement */}
+        <div className="mt-24 flex flex-col md:flex-row items-end justify-between gap-12">
+          <h2 className="display-font text-4xl md:text-6xl font-bold uppercase leading-[0.85] tracking-tight max-w-2xl" style={{ color: 'var(--warm-beige)' }}>
+            Built for those who prepare like professionals.
+          </h2>
+          <div className="flex flex-col gap-3 shrink-0">
+            {[
+              ['Interview Types', 'Technical · Behavioural · Mixed'],
+              ['Feedback Latency', '< 3 Seconds'],
+              ['Session Length', '15 – 45 Min'],
+            ].map(([label, value]) => (
+              <div key={label} className="flex items-center gap-6">
+                <span className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--muted-sage)' }}>{label}</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold" style={{ color: 'var(--warm-beige)' }}>{value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom ruled line with centred label */}
+        <div className="mt-20 flex items-center gap-6">
+          <div className="h-[1px] flex-1" style={{ backgroundColor: 'var(--burnt-umber)' }} />
+          <span className="text-[10px] uppercase tracking-[0.5em] font-bold" style={{ color: 'var(--coral-rust)' }}>
+            Optimised for the Serious Candidate
+          </span>
+          <div className="h-[1px] flex-1" style={{ backgroundColor: 'var(--burnt-umber)' }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ReviewsTicker() {
   return (
     <div className="w-full overflow-hidden py-10" style={{ borderTop: '1px solid var(--burnt-umber)', borderBottom: '1px solid var(--burnt-umber)' }}>
@@ -370,6 +514,9 @@ export default function LandingPage() {
 
         {/* Reviews Ticker */}
         <ReviewsTicker />
+
+        {/* Features Section */}
+        <FeaturesSection />
 
         {/* Footer */}
         <footer className="px-8 md:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
