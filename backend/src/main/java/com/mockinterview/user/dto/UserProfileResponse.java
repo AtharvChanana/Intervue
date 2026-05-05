@@ -18,4 +18,5 @@ public class UserProfileResponse {
     private Boolean emailVerified;
     private Integer emailUpdateCount;
     private Integer xp;
+    private Boolean banned;
 }

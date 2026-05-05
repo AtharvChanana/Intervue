@@ -6,6 +6,7 @@ import com.mockinterview.interview.model.SessionStatus;
 import com.mockinterview.interview.repository.InterviewSessionRepository;
 import com.mockinterview.interview.repository.SessionScoreRepository;
 import com.mockinterview.jobrole.repository.JobRoleRepository;
+import com.mockinterview.admin.repository.SiteVisitRepository;
 import com.mockinterview.user.model.User;
 import com.mockinterview.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class AdminService {
     private final InterviewSessionRepository sessionRepository;
     private final SessionScoreRepository scoreRepository;
     private final JobRoleRepository jobRoleRepository;
+    private final SiteVisitRepository siteVisitRepository;
 
     public AdminStatsDto getPlatformStats() {
         long totalUsers = userRepository.count();
@@ -31,9 +33,12 @@ public class AdminService {
         double avg = scoreRepository.findAll().stream()
                 .mapToDouble(s -> s.getTotalScore() != null ? s.getTotalScore() : 0)
                 .average().orElse(0.0);
+        long totalVisits = siteVisitRepository.count();
+        
         return AdminStatsDto.builder().totalUsers(totalUsers).totalSessions(totalSessions)
                 .completedSessions(completed).totalJobRoles(roles)
-                .platformAverageScore(Math.round(avg * 10.0) / 10.0).build();
+                .platformAverageScore(Math.round(avg * 10.0) / 10.0)
+                .totalSiteVisits(totalVisits).build();
     }
 
     public void deleteUser(Long userId) {

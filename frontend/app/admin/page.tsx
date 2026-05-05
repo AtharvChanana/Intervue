@@ -38,6 +38,7 @@ interface Stats {
   completedSessions: number;
   totalJobRoles: number;
   platformAverageScore: number;
+  totalSiteVisits: number;
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
@@ -71,18 +72,24 @@ export default function AdminDashboard() {
 
   const loadData = useCallback(async () => {
     try {
-      const [s, u, r, sess] = await Promise.all([
+      const results = await Promise.allSettled([
         fetchApi('/admin/stats'),
         fetchApi('/admin/users'),
         fetchApi('/admin/users/recent'),
         fetchApi('/admin/sessions'),
       ]);
-      setStats(s);
-      setUsers(u);
-      setRecentUsers(r);
-      setSessions(sess);
+      
+      if (results[0].status === 'fulfilled') setStats(results[0].value);
+      if (results[1].status === 'fulfilled') setUsers(results[1].value);
+      if (results[2].status === 'fulfilled') setRecentUsers(results[2].value);
+      if (results[3].status === 'fulfilled') setSessions(results[3].value);
+      
+      const failedCount = results.filter(r => r.status === 'rejected').length;
+      if (failedCount > 0) {
+        toast.warning(`Failed to load some data. Make sure backend is updated.`);
+      }
     } catch {
-      toast.error('Failed to load admin data');
+      toast.error('Failed to connect to the server');
     } finally {
       setLoading(false);
     }
@@ -217,8 +224,9 @@ export default function AdminDashboard() {
             {/* KPI Grid */}
             <section>
               <p className="text-[10px] uppercase tracking-[0.3em] text-[#66473B] mb-6">Platform Telemetry</p>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
                 {[
+                  { label: 'Total Visits', value: stats?.totalSiteVisits ?? 0, icon: 'public' },
                   { label: 'Total Users', value: stats?.totalUsers ?? 0, icon: 'group' },
                   { label: 'Total Sessions', value: stats?.totalSessions ?? 0, icon: 'play_arrow' },
                   { label: 'Completed', value: stats?.completedSessions ?? 0, icon: 'task_alt' },

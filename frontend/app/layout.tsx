@@ -8,6 +8,8 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
+import VisitTracker from "@/components/VisitTracker";
+
 export const metadata: Metadata = {
   title: "Intervue - Precision Training",
   description: "Master the mock interview with AI-powered precision training.",
@@ -28,6 +30,7 @@ export default function RootLayout({
       </head>
       <body className="muddy-bg text-ed-beige selection:bg-[#DC9F85] selection:text-[#181818] overflow-x-hidden body-font min-h-screen">
         <div className="noise-overlay" />
+        <VisitTracker />
         {children}
       </body>
     </html>

@@ -32,7 +32,7 @@ public class AdminController {
                 .id(u.getId()).name(u.getName()).email(u.getEmail())
                 .role(u.getRole()).profilePictureUrl(u.getProfilePictureUrl())
                 .createdAt(u.getCreatedAt()).emailVerified(u.getEmailVerified())
-                .xp(u.getXp()).build()
+                .xp(u.getXp()).banned(u.getBanned()).build()
         ).toList());
     }
 
@@ -42,7 +42,8 @@ public class AdminController {
             UserProfileResponse.builder()
                 .id(u.getId()).name(u.getName()).email(u.getEmail())
                 .role(u.getRole()).profilePictureUrl(u.getProfilePictureUrl())
-                .createdAt(u.getCreatedAt()).emailVerified(u.getEmailVerified()).build()
+                .createdAt(u.getCreatedAt()).emailVerified(u.getEmailVerified())
+                .banned(u.getBanned()).build()
         ).toList());
     }
 
