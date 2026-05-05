@@ -1,164 +1,422 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
-import Logo from '@/components/Logo';
 import AnimatedIcon from '@/components/AnimatedIcon';
+import { toast, Toaster } from 'sonner';
+
+type Tab = 'overview' | 'users' | 'sessions';
+
+interface UserRecord {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  profilePictureUrl?: string;
+  createdAt: string;
+  emailVerified?: boolean;
+  xp?: number;
+  banned?: boolean;
+}
+
+interface SessionRecord {
+  id: number;
+  userName: string;
+  userEmail: string;
+  jobRole: string;
+  difficulty: string;
+  interviewType: string;
+  status: string;
+  score?: number;
+  createdAt: string;
+}
+
+interface Stats {
+  totalUsers: number;
+  totalSessions: number;
+  completedSessions: number;
+  totalJobRoles: number;
+  platformAverageScore: number;
+}
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+const IMG_BASE = API_BASE.replace(/\/api$/, '');
+
+function statusColor(status: string) {
+  if (status === 'COMPLETED') return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+  if (status === 'IN_PROGRESS') return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+  return 'bg-red-500/10 text-red-400 border-red-500/20';
+}
+
+function difficultyColor(d: string) {
+  if (d === 'HARD') return 'text-red-400';
+  if (d === 'MEDIUM') return 'text-amber-400';
+  if (d === 'EASY') return 'text-emerald-400';
+  return 'text-[#B6A596]';
+}
 
 export default function AdminDashboard() {
   const router = useRouter();
-  const [stats, setStats] = useState<any>(null);
-  const [users, setUsers] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [users, setUsers] = useState<UserRecord[]>([]);
+  const [recentUsers, setRecentUsers] = useState<UserRecord[]>([]);
+  const [sessions, setSessions] = useState<SessionRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadingUsers, setLoadingUsers] = useState(true);
+  const [search, setSearch] = useState('');
+  const [sessionSearch, setSessionSearch] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState<UserRecord | null>(null);
+  const [actionLoading, setActionLoading] = useState<number | null>(null);
+
+  const loadData = useCallback(async () => {
+    try {
+      const [s, u, r, sess] = await Promise.all([
+        fetchApi('/admin/stats'),
+        fetchApi('/admin/users'),
+        fetchApi('/admin/users/recent'),
+        fetchApi('/admin/sessions'),
+      ]);
+      setStats(s);
+      setUsers(u);
+      setRecentUsers(r);
+      setSessions(sess);
+    } catch {
+      toast.error('Failed to load admin data');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    // Auth Guard
     fetchApi('/user/profile').then(profile => {
-      if (profile.role !== 'ADMIN') {
-        router.replace('/dashboard');
-        return;
-      }
-      
-      // Load stats
-      fetchApi('/admin/stats').then(setStats).catch(console.error).finally(() => setLoading(false));
-      fetchApi('/admin/users').then(setUsers).catch(console.error).finally(() => setLoadingUsers(false));
-    }).catch(() => {
-      router.replace('/');
-    });
-  }, [router]);
+      if (profile.role !== 'ADMIN') { router.replace('/dashboard'); return; }
+      loadData();
+    }).catch(() => router.replace('/'));
+  }, [router, loadData]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.replace('/');
+  const handleDelete = async (user: UserRecord) => {
+    setActionLoading(user.id);
+    try {
+      await fetchApi(`/admin/users/${user.id}`, { method: 'DELETE' });
+      toast.success(`${user.name} deleted`);
+      setUsers(prev => prev.filter(u => u.id !== user.id));
+      setDeleteTarget(null);
+    } catch {
+      toast.error('Failed to delete user');
+    } finally {
+      setActionLoading(null);
+    }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-telemetry-grid flex items-center justify-center font-manrope">
-        <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  const handleBan = async (user: UserRecord) => {
+    setActionLoading(user.id);
+    try {
+      const res = await fetchApi(`/admin/users/${user.id}/ban`, { method: 'PATCH' });
+      toast.success(res.message);
+      setUsers(prev => prev.map(u => u.id === user.id ? { ...u, banned: res.banned } : u));
+    } catch {
+      toast.error('Failed to update ban status');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const filteredUsers = users.filter(u =>
+    u.name.toLowerCase().includes(search.toLowerCase()) ||
+    u.email.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const filteredSessions = sessions.filter(s =>
+    s.userName.toLowerCase().includes(sessionSearch.toLowerCase()) ||
+    s.jobRole.toLowerCase().includes(sessionSearch.toLowerCase()) ||
+    s.status.toLowerCase().includes(sessionSearch.toLowerCase())
+  );
+
+  if (loading) return (
+    <div className="min-h-screen bg-[#181818] flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-[#35211A] border-t-[#DC9F85] rounded-full animate-spin" />
+    </div>
+  );
+
+  const tabs: { id: Tab; label: string; icon: string }[] = [
+    { id: 'overview', label: 'Overview', icon: 'dashboard' },
+    { id: 'users', label: `Users (${users.length})`, icon: 'group' },
+    { id: 'sessions', label: `Sessions (${sessions.length})`, icon: 'play_arrow' },
+  ];
 
   return (
-    <div className="min-h-screen bg-telemetry-grid text-white font-manrope selection:bg-white/20 relative w-full overflow-x-hidden">
-      
-      {/* Top Navbar */}
-      <nav className="fixed top-0 w-full z-50 bg-black border-b border-white/5 flex justify-between items-center px-6 md:px-10 h-20 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-        <div className="flex items-center gap-3">
-          <Logo className="w-10 h-10" />
-          <div>
-            <h1 className="font-bold text-lg text-white">Intervue Admin</h1>
-            <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em]">Oversight Console</p>
+    <div className="min-h-screen bg-[#181818] text-[#EBDCC4]" style={{ fontFamily: "'Inter', sans-serif" }}>
+      <Toaster theme="dark" />
+
+      {/* Delete Confirm Modal */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
+          <div className="bg-[#1A1512] border border-[#35211A] w-full max-w-sm p-8">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#DC9F85] mb-4">Confirm Delete</p>
+            <p className="text-[#EBDCC4] font-bold text-lg mb-1">{deleteTarget.name}</p>
+            <p className="text-[#B6A596] text-sm mb-6">{deleteTarget.email}</p>
+            <p className="text-[#B6A596] text-xs mb-8">This action is permanent. All sessions, scores and data for this user will be deleted.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => handleDelete(deleteTarget)}
+                disabled={actionLoading === deleteTarget.id}
+                className="flex-1 bg-red-500/10 border border-red-500/30 text-red-400 py-3 text-xs font-bold uppercase tracking-widest hover:bg-red-500/20 transition-colors disabled:opacity-50"
+              >
+                {actionLoading === deleteTarget.id ? 'Deleting...' : 'Delete'}
+              </button>
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="flex-1 border border-[#35211A] text-[#B6A596] py-3 text-xs font-bold uppercase tracking-widest hover:bg-[#231E1A] transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
+      )}
 
-        <button onClick={handleLogout} className="text-zinc-500 hover:text-white transition-colors flex items-center gap-2 text-xs font-bold uppercase tracking-widest bg-white/5 px-4 py-2 rounded-lg border border-white/5 hover:bg-white/10">
-          Sign out <AnimatedIcon name="logout" className="text-sm" />
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-30 bg-[#181818] border-b border-[#35211A] flex items-center justify-between px-8 md:px-12 h-16">
+        <div className="flex items-center gap-8">
+          <h1 className="display-font font-black text-xl text-[#EBDCC4] tracking-widest uppercase">INTERVUE</h1>
+          <span className="text-[10px] text-[#66473B] tracking-[0.3em] uppercase hidden md:block">// Admin Console</span>
+        </div>
+        <button
+          onClick={() => { localStorage.removeItem('token'); router.replace('/'); }}
+          className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#B6A596] hover:text-[#DC9F85] transition-colors"
+        >
+          <AnimatedIcon name="logout" className="text-sm" /> Sign Out
         </button>
-      </nav>
+      </header>
 
-      {/* Main Container */}
-      <main className="pt-32 px-6 md:px-10 pb-20 max-w-7xl mx-auto w-full relative z-10">
-        
-        {/* KPI Cards */}
-        <section className="mb-16">
-          <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-zinc-500 mb-6">Platform Telemetry</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            
-            <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <AnimatedIcon name="group" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-blue-500/[0.05] transition-colors pointer-events-none" />
-              <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Total Users</p>
-              <p className="text-4xl font-black">{stats?.totalUsers || 0}</p>
-            </div>
+      {/* Tab Bar */}
+      <div className="fixed top-16 left-0 right-0 z-20 bg-[#181818] border-b border-[#35211A] flex px-8 md:px-12">
+        {tabs.map(t => (
+          <button
+            key={t.id}
+            onClick={() => setActiveTab(t.id)}
+            className={`flex items-center gap-2 py-4 px-1 mr-8 text-[10px] font-bold uppercase tracking-widest border-b-2 transition-colors ${
+              activeTab === t.id
+                ? 'border-[#DC9F85] text-[#DC9F85]'
+                : 'border-transparent text-[#66473B] hover:text-[#B6A596]'
+            }`}
+          >
+            <AnimatedIcon name={t.icon} className="text-sm" />
+            {t.label}
+          </button>
+        ))}
+      </div>
 
-            <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <AnimatedIcon name="work" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-purple-500/[0.05] transition-colors pointer-events-none" />
-              <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Job Roles</p>
-              <p className="text-4xl font-black">{stats?.totalJobRoles || 0}</p>
-            </div>
+      {/* Main Content */}
+      <main className="pt-36 px-8 md:px-12 pb-20 max-w-screen-xl mx-auto">
 
-            <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <AnimatedIcon name="play_arrow" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-green-500/[0.05] transition-colors pointer-events-none" />
-              <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Sessions Active</p>
-              <p className="text-4xl font-black">{stats?.totalSessions || 0}</p>
-            </div>
-
-            <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <AnimatedIcon name="task_alt" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-amber-500/[0.05] transition-colors pointer-events-none" />
-              <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Completed</p>
-              <p className="text-4xl font-black">{stats?.completedSessions || 0}</p>
-            </div>
-
-            <div className="bg-black border border-white/5 rounded-2xl p-6 flex flex-col items-center justify-center text-center shadow-lg hover:bg-white/5 transition-colors relative overflow-hidden group">
-              <AnimatedIcon name="sports_score" className="absolute -bottom-4 -right-4 text-7xl text-white/[0.02] group-hover:text-red-500/[0.05] transition-colors pointer-events-none" />
-              <p className="text-xs text-zinc-500 uppercase tracking-widest font-bold mb-2">Avg Score</p>
-              <p className="text-4xl font-black text-white">{stats?.platformAverageScore || 0}</p>
-            </div>
-
-          </div>
-        </section>
-
-        {/* User Table */}
-        <section>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-[10px] uppercase tracking-[0.3em] font-bold text-zinc-500">Registered Directory</h2>
-            <span className="text-xs font-bold bg-white/5 px-3 py-1 rounded-full">{users.length} Users</span>
-          </div>
-
-          <div className="bg-black border border-white/5 rounded-2xl overflow-hidden shadow-2xl">
-            {loadingUsers ? (
-              <div className="p-10 flex justify-center"><div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin"></div></div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-white/[0.02] border-b border-white/5">
-                      <th className="p-5 text-xs font-bold uppercase tracking-widest text-zinc-500">User</th>
-                      <th className="p-5 text-xs font-bold uppercase tracking-widest text-zinc-500">Email Address</th>
-                      <th className="p-5 text-xs font-bold uppercase tracking-widest text-zinc-500">Type</th>
-                      <th className="p-5 text-xs font-bold uppercase tracking-widest text-zinc-500">Joined</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map(u => (
-                      <tr key={u.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors group">
-                        <td className="p-5">
-                          <div className="flex items-center gap-4">
-                            {u.profilePictureUrl ? (
-                              <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api').replace(/\/api$/, '')}${u.profilePictureUrl}`} alt={u.name} className="w-10 h-10 rounded-full object-cover border border-white/10" />
-                            ) : (
-                              <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center border border-white/5">
-                                <AnimatedIcon name="person" className="text-sm text-zinc-500" />
-                              </div>
-                            )}
-                            <span className="font-bold text-sm tracking-wide">{u.name}</span>
-                          </div>
-                        </td>
-                        <td className="p-5 text-sm text-zinc-400 tracking-wide">{u.email}</td>
-                        <td className="p-5">
-                          <span className={`text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest border ${u.role === 'ADMIN' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-blue-500/10 text-blue-500 border-blue-500/20'}`}>
-                            {u.role}
-                          </span>
-                        </td>
-                        <td className="p-5 text-sm text-zinc-500">
-                           {new Date(u.createdAt).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    ))}
-                    {users.length === 0 && (
-                      <tr>
-                        <td colSpan={4} className="p-10 text-center text-zinc-500 text-sm">No registered users found.</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+        {/* ── OVERVIEW TAB ── */}
+        {activeTab === 'overview' && (
+          <div className="space-y-12">
+            {/* KPI Grid */}
+            <section>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#66473B] mb-6">Platform Telemetry</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                {[
+                  { label: 'Total Users', value: stats?.totalUsers ?? 0, icon: 'group' },
+                  { label: 'Total Sessions', value: stats?.totalSessions ?? 0, icon: 'play_arrow' },
+                  { label: 'Completed', value: stats?.completedSessions ?? 0, icon: 'task_alt' },
+                  { label: 'Job Roles', value: stats?.totalJobRoles ?? 0, icon: 'work' },
+                  { label: 'Avg Score', value: `${stats?.platformAverageScore ?? 0}%`, icon: 'sports_score' },
+                ].map(card => (
+                  <div key={card.label} className="bg-[#1A1512] border border-[#35211A] p-6 flex flex-col gap-3 hover:border-[#66473B] transition-colors">
+                    <AnimatedIcon name={card.icon} className="text-[#66473B] text-xl" />
+                    <p className="text-3xl font-black text-[#EBDCC4]">{card.value}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-[#66473B]">{card.label}</p>
+                  </div>
+                ))}
               </div>
-            )}
+            </section>
+
+            {/* Recent Registrations */}
+            <section>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#66473B] mb-6">Recent Registrations</p>
+              <div className="bg-[#1A1512] border border-[#35211A]">
+                {recentUsers.length === 0 ? (
+                  <p className="p-8 text-center text-[#66473B] text-sm">No recent registrations.</p>
+                ) : recentUsers.map((u, i) => (
+                  <div key={u.id} className={`flex items-center justify-between px-6 py-4 ${i !== recentUsers.length - 1 ? 'border-b border-[#35211A]' : ''} hover:bg-[#231E1A] transition-colors`}>
+                    <div className="flex items-center gap-4">
+                      {u.profilePictureUrl ? (
+                        <img src={`${IMG_BASE}${u.profilePictureUrl}`} alt={u.name} className="w-8 h-8 rounded-full object-cover border border-[#35211A]" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-[#231E1A] border border-[#35211A] flex items-center justify-center text-[#DC9F85] text-xs font-bold">
+                          {u.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm font-bold text-[#EBDCC4]">{u.name}</p>
+                        <p className="text-[10px] text-[#B6A596]">{u.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className={`text-[9px] font-bold px-2 py-1 border uppercase tracking-widest ${u.role === 'ADMIN' ? 'bg-[#DC9F85]/10 text-[#DC9F85] border-[#DC9F85]/20' : 'bg-[#231E1A] text-[#B6A596] border-[#35211A]'}`}>
+                        {u.role}
+                      </span>
+                      <span className="text-[10px] text-[#66473B]">
+                        {new Date(u.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
           </div>
-        </section>
+        )}
+
+        {/* ── USERS TAB ── */}
+        {activeTab === 'users' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#66473B]">Registered Directory</p>
+              <div className="relative">
+                <AnimatedIcon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-[#66473B] text-sm" />
+                <input
+                  type="text"
+                  placeholder="Search users..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  className="bg-[#1A1512] border border-[#35211A] text-[#EBDCC4] text-xs pl-8 pr-4 py-2.5 w-64 outline-none focus:border-[#66473B] placeholder:text-[#66473B] transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="bg-[#1A1512] border border-[#35211A] overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-[#35211A]">
+                    {['User', 'Email', 'Role', 'XP', 'Verified', 'Joined', 'Actions'].map(h => (
+                      <th key={h} className="px-5 py-4 text-[9px] font-bold uppercase tracking-widest text-[#66473B]">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers.map(u => (
+                    <tr key={u.id} className={`border-b border-[#35211A] hover:bg-[#231E1A] transition-colors ${u.banned ? 'opacity-50' : ''}`}>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          {u.profilePictureUrl ? (
+                            <img src={`${IMG_BASE}${u.profilePictureUrl}`} alt={u.name} className="w-8 h-8 rounded-full object-cover border border-[#35211A]" />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-[#231E1A] border border-[#35211A] flex items-center justify-center text-[#DC9F85] text-xs font-bold">
+                              {u.name.charAt(0).toUpperCase()}
+                            </div>
+                          )}
+                          <span className="text-sm font-semibold text-[#EBDCC4]">
+                            {u.name} {u.banned && <span className="text-[9px] text-red-400 ml-1">[BANNED]</span>}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-5 py-4 text-xs text-[#B6A596]">{u.email}</td>
+                      <td className="px-5 py-4">
+                        <span className={`text-[9px] font-bold px-2 py-1 border uppercase tracking-widest ${u.role === 'ADMIN' ? 'bg-[#DC9F85]/10 text-[#DC9F85] border-[#DC9F85]/20' : 'bg-[#231E1A] text-[#B6A596] border-[#35211A]'}`}>
+                          {u.role}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 text-xs text-[#B6A596]">{u.xp ?? 0}</td>
+                      <td className="px-5 py-4">
+                        <span className={`text-[9px] font-bold px-2 py-1 border uppercase tracking-widest ${u.emailVerified ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-[#231E1A] text-[#66473B] border-[#35211A]'}`}>
+                          {u.emailVerified ? '✓' : '—'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 text-[10px] text-[#66473B]">
+                        {new Date(u.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleBan(u)}
+                            disabled={u.role === 'ADMIN' || actionLoading === u.id}
+                            title={u.banned ? 'Unban user' : 'Ban user'}
+                            className="text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 border transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                          >
+                            {actionLoading === u.id ? '...' : u.banned ? 'Unban' : 'Ban'}
+                          </button>
+                          <button
+                            onClick={() => setDeleteTarget(u)}
+                            disabled={u.role === 'ADMIN' || actionLoading === u.id}
+                            title="Delete user"
+                            className="text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 border transition-colors disabled:opacity-30 disabled:cursor-not-allowed border-red-500/30 text-red-400 hover:bg-red-500/10"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {filteredUsers.length === 0 && (
+                    <tr><td colSpan={7} className="px-5 py-12 text-center text-[#66473B] text-sm">No users found.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* ── SESSIONS TAB ── */}
+        {activeTab === 'sessions' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#66473B]">All Sessions</p>
+              <div className="relative">
+                <AnimatedIcon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-[#66473B] text-sm" />
+                <input
+                  type="text"
+                  placeholder="Search sessions..."
+                  value={sessionSearch}
+                  onChange={e => setSessionSearch(e.target.value)}
+                  className="bg-[#1A1512] border border-[#35211A] text-[#EBDCC4] text-xs pl-8 pr-4 py-2.5 w-64 outline-none focus:border-[#66473B] placeholder:text-[#66473B] transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="bg-[#1A1512] border border-[#35211A] overflow-x-auto">
+              <table className="w-full text-left">
+                <thead>
+                  <tr className="border-b border-[#35211A]">
+                    {['#', 'User', 'Role', 'Type', 'Difficulty', 'Status', 'Score', 'Date'].map(h => (
+                      <th key={h} className="px-5 py-4 text-[9px] font-bold uppercase tracking-widest text-[#66473B]">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredSessions.map(s => (
+                    <tr key={s.id} className="border-b border-[#35211A] hover:bg-[#231E1A] transition-colors">
+                      <td className="px-5 py-4 text-[10px] text-[#66473B]">#{s.id}</td>
+                      <td className="px-5 py-4">
+                        <p className="text-sm font-semibold text-[#EBDCC4]">{s.userName}</p>
+                        <p className="text-[10px] text-[#66473B]">{s.userEmail}</p>
+                      </td>
+                      <td className="px-5 py-4 text-xs text-[#B6A596]">{s.jobRole}</td>
+                      <td className="px-5 py-4 text-[10px] text-[#B6A596] uppercase tracking-wider">{s.interviewType}</td>
+                      <td className={`px-5 py-4 text-[10px] font-bold uppercase tracking-wider ${difficultyColor(s.difficulty)}`}>{s.difficulty}</td>
+                      <td className="px-5 py-4">
+                        <span className={`text-[9px] font-bold px-2 py-1 border uppercase tracking-widest ${statusColor(s.status)}`}>
+                          {s.status.replace('_', ' ')}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4 text-sm font-bold text-[#DC9F85]">
+                        {s.score != null ? `${Math.round(s.score)}%` : '—'}
+                      </td>
+                      <td className="px-5 py-4 text-[10px] text-[#66473B]">
+                        {new Date(s.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </td>
+                    </tr>
+                  ))}
+                  {filteredSessions.length === 0 && (
+                    <tr><td colSpan={8} className="px-5 py-12 text-center text-[#66473B] text-sm">No sessions found.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
       </main>
     </div>

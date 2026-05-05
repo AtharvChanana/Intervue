@@ -68,6 +68,10 @@ public class User implements UserDetails {
     @Column(name = "xp", columnDefinition = "integer default 0")
     private Integer xp = 0;
 
+    @Builder.Default
+    @Column(name = "banned", columnDefinition = "boolean default false")
+    private Boolean banned = false;
+
     @Column(name = "email_verification_code")
     private String emailVerificationCode;
 
