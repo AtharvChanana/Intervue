@@ -275,6 +275,46 @@ export default function LandingPage() {
   const [forgotNewPassword, setForgotNewPassword] = useState('');
   const [isProcessingForgot, setIsProcessingForgot] = useState(false);
 
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
+  const [verifyOtp, setVerifyOtp] = useState('');
+  const [verifyEmail, setVerifyEmail] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+
+  const handleVerifyEmail = async () => {
+    setIsVerifying(true);
+    try {
+      await fetchApi('/user/email/verify', {
+        method: 'POST',
+        body: JSON.stringify({ otp: verifyOtp }),
+      });
+      toast.success('Email verified! Welcome to Intervue.');
+      setShowVerifyModal(false);
+      router.replace('/dashboard');
+    } catch (e: any) {
+      toast.error(e.message || 'Invalid or expired OTP.');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const handleResendVerifyOtp = async () => {
+    setIsResending(true);
+    try {
+      await fetchApi('/user/email/send-verification', { method: 'POST' });
+      toast.success('A new code has been sent to your email.');
+    } catch (e: any) {
+      toast.error(e.message || 'Failed to resend code.');
+    } finally {
+      setIsResending(false);
+    }
+  };
+
+  const handleSkipVerification = () => {
+    setShowVerifyModal(false);
+    router.replace('/dashboard');
+  };
+
   const handleSendForgotOtp = async () => {
     setIsProcessingForgot(true);
     try {
@@ -328,7 +368,10 @@ export default function LandingPage() {
           body: JSON.stringify({ name, email, password }),
         });
         localStorage.setItem('token', response.accessToken);
-        router.replace('/dashboard');
+        setVerifyEmail(email);
+        setVerifyOtp('');
+        setShowVerifyModal(true);
+        toast.success('Account created — check your email for the 6-digit code.');
       }
     } catch (err: any) {
       toast.error(err.message || 'Authentication failed. Please try again.');
@@ -584,6 +627,74 @@ export default function LandingPage() {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Verify Email Modal — shown right after register */}
+        {showVerifyModal && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(24,24,24,0.97)' }}>
+            <div className="w-full max-w-md border p-8 animate-in zoom-in-95 duration-200" style={{ backgroundColor: 'var(--matte-black)', borderColor: 'var(--deep-earth)', borderRadius: '2px' }}>
+              <div className="mb-2">
+                <span className="text-[10px] uppercase tracking-[0.3em] font-medium" style={{ color: 'var(--muted-sage)' }}>Email Verification Protocol</span>
+              </div>
+              <h2 className="display-font text-2xl font-bold uppercase mb-2" style={{ color: 'var(--warm-beige)' }}>
+                Verify Email
+              </h2>
+              <p className="text-[11px] tracking-wide mb-6" style={{ color: 'var(--muted-sage)' }}>
+                We sent a 6-digit code to <span style={{ color: 'var(--coral-rust)' }}>{verifyEmail}</span>
+              </p>
+              <div className="h-[1px] mb-6" style={{ backgroundColor: 'var(--burnt-umber)' }} />
+
+              <div className="space-y-5">
+                <div>
+                  <p className="text-[10px] uppercase tracking-widest mb-3" style={{ color: 'var(--muted-sage)' }}>6-Digit Code</p>
+                  <div className="flex justify-center">
+                    <InputOTP maxLength={6} value={verifyOtp} onChange={(val) => setVerifyOtp(val)}>
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={handleResendVerifyOtp}
+                    disabled={isResending}
+                    className="text-[10px] uppercase tracking-[0.2em] transition-colors"
+                    style={{ color: 'var(--muted-sage)' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--coral-rust)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted-sage)')}
+                  >
+                    {isResending ? 'Sending...' : 'Resend Code'}
+                  </button>
+                  <button
+                    onClick={handleSkipVerification}
+                    className="text-[10px] uppercase tracking-[0.2em] transition-colors"
+                    style={{ color: 'var(--burnt-umber)' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--muted-sage)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--burnt-umber)')}
+                  >
+                    Skip for now →
+                  </button>
+                </div>
+
+                <div className="pt-2">
+                  <button
+                    onClick={handleVerifyEmail}
+                    disabled={isVerifying || verifyOtp.length !== 6}
+                    className="editorial-btn w-full py-3 text-xs font-bold uppercase tracking-widest rounded-sm"
+                  >
+                    {isVerifying ? 'Verifying...' : 'Verify & Continue'}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
