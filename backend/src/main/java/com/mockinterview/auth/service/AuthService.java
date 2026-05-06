@@ -29,14 +29,30 @@ public class AuthService {
         if (userRepository.existsByEmail(request.getEmail()))
             throw new IllegalArgumentException("Email already registered: " + request.getEmail());
 
+        String otp = String.format("%06d", new java.util.Random().nextInt(999999));
+
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.CANDIDATE)
+                .emailVerified(false)
+                .emailVerificationCode(otp)
+                .verificationCodeExpiry(java.time.LocalDateTime.now().plusMinutes(10))
                 .build();
 
         User saved = userRepository.save(user);
+
+        try {
+            emailService.sendEmail(
+                saved.getEmail(),
+                "Your Verification OTP for Intervue",
+                "Welcome to Intervue!\n\nYour Verification OTP is: " + otp + "\n\nThis code will expire in 10 minutes."
+            );
+        } catch (Exception e) {
+            // Email send failure must not break registration; user can resend via /api/user/email/send-verification
+        }
+
         return buildResponse(saved);
     }
 
