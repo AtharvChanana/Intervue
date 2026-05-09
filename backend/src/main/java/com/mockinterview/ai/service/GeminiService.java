@@ -139,15 +139,21 @@ public class GeminiService {
 
     private String getHardcodedFallback(String prompt) {
         log.warn("All AI providers failed. Serving hardcoded fallback.");
+
+        // Extract role from prompt for context-aware fallbacks
+        String role = "Software Engineer";
+        java.util.regex.Matcher roleMatcher = java.util.regex.Pattern.compile("Role: (.+?)\\n").matcher(prompt);
+        if (roleMatcher.find()) role = roleMatcher.group(1).trim();
+
         if (prompt.contains("\"extractedSkills\"")) {
             return "{\"extractedSkills\":\"Java, Spring Boot, React, Next.js\",\"experienceSummary\":\"Strong automated fallback experience.\",\"educationSummary\":\"Computer Science\"}";
         } else if (prompt.contains("\"questionText\"")) {
-            String[] mocks = {
-                "{\"questionFormat\":\"MCQ\",\"questionText\":\"What is Dependency Injection?\",\"optionA\":\"A design pattern\",\"optionB\":\"A database table\",\"optionC\":\"A CSS framework\",\"optionD\":\"A security vulnerability\",\"correctOption\":\"A\",\"explanation\":\"A software engineering design pattern.\"}",
-                "{\"questionFormat\":\"OPEN_ENDED\",\"questionText\":\"Explain how the Virtual DOM operates in React and why it improves performance.\",\"optionA\":\"\",\"optionB\":\"\",\"optionC\":\"\",\"optionD\":\"\",\"correctOption\":\"\",\"explanation\":\"\"}",
-                "{\"questionFormat\":\"MCQ\",\"questionText\":\"What does a REST API rely on?\",\"optionA\":\"GraphQL schemas\",\"optionB\":\"HTTP methods statelessly\",\"optionC\":\"WebSockets\",\"optionD\":\"Direct SQL\",\"correctOption\":\"B\",\"explanation\":\"Stateless HTTP-based architecture.\"}"
-            };
-            return mocks[new java.util.Random().nextInt(mocks.length)];
+            boolean isMcq = prompt.contains("\"questionFormat\":\"MCQ\"") || prompt.contains("format: MCQ");
+            if (isMcq) {
+                return String.format("{\"questionFormat\":\"MCQ\",\"questionText\":\"Which of the following best describes a core responsibility of a %s?\",\"optionA\":\"Managing database migrations\",\"optionB\":\"Fulfilling the primary duties of the role\",\"optionC\":\"Only writing documentation\",\"optionD\":\"Exclusively handling deployments\",\"correctOption\":\"B\",\"explanation\":\"A %s's core responsibilities align with option B.\"}", role, role);
+            } else {
+                return String.format("{\"questionFormat\":\"OPEN_ENDED\",\"questionText\":\"Describe a challenging situation you faced as a %s and how you resolved it. What was the outcome?\",\"optionA\":\"\",\"optionB\":\"\",\"optionC\":\"\",\"optionD\":\"\",\"correctOption\":\"\",\"explanation\":\"\"}", role);
+            }
         } else if (prompt.contains("\"overallFeedback\"")) {
             double avg = 70.0;
             java.util.regex.Matcher m = java.util.regex.Pattern.compile("Average Score: ([0-9.]+)").matcher(prompt);
