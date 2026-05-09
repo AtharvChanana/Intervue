@@ -81,6 +81,9 @@ public class User implements UserDetails {
     @Column(name = "pending_new_email")
     private String pendingNewEmail;
 
+    @Column(name = "ip_address")
+    private String ipAddress;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

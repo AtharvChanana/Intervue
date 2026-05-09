@@ -32,7 +32,8 @@ public class AdminController {
                 .id(u.getId()).name(u.getName()).email(u.getEmail())
                 .role(u.getRole()).profilePictureUrl(u.getProfilePictureUrl())
                 .createdAt(u.getCreatedAt()).emailVerified(u.getEmailVerified())
-                .xp(u.getXp()).banned(u.getBanned()).build()
+                .xp(u.getXp()).banned(u.getBanned())
+                .ipAddress(u.getIpAddress()).build()
         ).toList());
     }
 
@@ -43,7 +44,8 @@ public class AdminController {
                 .id(u.getId()).name(u.getName()).email(u.getEmail())
                 .role(u.getRole()).profilePictureUrl(u.getProfilePictureUrl())
                 .createdAt(u.getCreatedAt()).emailVerified(u.getEmailVerified())
-                .banned(u.getBanned()).build()
+                .banned(u.getBanned())
+                .ipAddress(u.getIpAddress()).build()
         ).toList());
     }
 

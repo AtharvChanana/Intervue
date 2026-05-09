@@ -18,6 +18,7 @@ interface UserRecord {
   emailVerified?: boolean;
   xp?: number;
   banned?: boolean;
+  ipAddress?: string;
 }
 
 interface SessionRecord {
@@ -131,7 +132,8 @@ export default function AdminDashboard() {
 
   const filteredUsers = users.filter(u =>
     u.name.toLowerCase().includes(search.toLowerCase()) ||
-    u.email.toLowerCase().includes(search.toLowerCase())
+    u.email.toLowerCase().includes(search.toLowerCase()) ||
+    (u.ipAddress && u.ipAddress.toLowerCase().includes(search.toLowerCase()))
   );
 
   const filteredSessions = sessions.filter(s =>
@@ -264,6 +266,11 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
+                      {u.ipAddress && (
+                         <span className="text-[10px] text-[#B6A596] font-mono tracking-widest border border-[#35211A] px-2 py-1 bg-[#231E1A]">
+                            IP: {u.ipAddress}
+                         </span>
+                      )}
                       <span className={`text-[9px] font-bold px-2 py-1 border uppercase tracking-widest ${u.role === 'ADMIN' ? 'bg-[#DC9F85]/10 text-[#DC9F85] border-[#DC9F85]/20' : 'bg-[#231E1A] text-[#B6A596] border-[#35211A]'}`}>
                         {u.role}
                       </span>
@@ -287,7 +294,7 @@ export default function AdminDashboard() {
                 <AnimatedIcon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-[#66473B] text-sm" />
                 <input
                   type="text"
-                  placeholder="Search users..."
+                  placeholder="Search users or IP..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   className="bg-[#1A1512] border border-[#35211A] text-[#EBDCC4] text-xs pl-8 pr-4 py-2.5 w-64 outline-none focus:border-[#66473B] placeholder:text-[#66473B] transition-colors"
@@ -299,7 +306,7 @@ export default function AdminDashboard() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="border-b border-[#35211A]">
-                    {['User', 'Email', 'Role', 'XP', 'Verified', 'Joined', 'Actions'].map(h => (
+                    {['User', 'Email', 'Role', 'IP Address', 'Joined', 'Actions'].map(h => (
                       <th key={h} className="px-5 py-4 text-[9px] font-bold uppercase tracking-widest text-[#66473B]">{h}</th>
                     ))}
                   </tr>
@@ -327,12 +334,7 @@ export default function AdminDashboard() {
                           {u.role}
                         </span>
                       </td>
-                      <td className="px-5 py-4 text-xs text-[#B6A596]">{u.xp ?? 0}</td>
-                      <td className="px-5 py-4">
-                        <span className={`text-[9px] font-bold px-2 py-1 border uppercase tracking-widest ${u.emailVerified ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-[#231E1A] text-[#66473B] border-[#35211A]'}`}>
-                          {u.emailVerified ? '✓' : '—'}
-                        </span>
-                      </td>
+                      <td className="px-5 py-4 text-xs font-mono text-[#DC9F85] tracking-wider">{u.ipAddress || '—'}</td>
                       <td className="px-5 py-4 text-[10px] text-[#66473B]">
                         {new Date(u.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                       </td>

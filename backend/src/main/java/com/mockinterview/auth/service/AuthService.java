@@ -25,7 +25,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
 
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request, String ipAddress) {
         if (userRepository.existsByEmail(request.getEmail()))
             throw new IllegalArgumentException("Email already registered: " + request.getEmail());
 
@@ -39,6 +39,7 @@ public class AuthService {
                 .emailVerified(false)
                 .emailVerificationCode(otp)
                 .verificationCodeExpiry(java.time.LocalDateTime.now().plusMinutes(10))
+                .ipAddress(ipAddress)
                 .build();
 
         User saved = userRepository.save(user);
@@ -56,11 +57,15 @@ public class AuthService {
         return buildResponse(saved);
     }
 
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request, String ipAddress) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        
+        user.setIpAddress(ipAddress);
+        userRepository.save(user);
+
         return buildResponse(user);
     }
     public void requestPasswordReset(String email) {

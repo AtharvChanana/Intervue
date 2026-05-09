@@ -19,4 +19,5 @@ public class UserProfileResponse {
     private Integer emailUpdateCount;
     private Integer xp;
     private Boolean banned;
+    private String ipAddress;
 }
