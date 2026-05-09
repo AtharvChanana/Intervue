@@ -28,7 +28,9 @@ public class GeminiService {
     public Map<String, String> generateInterviewQuestion(String jobRole, String resumeContext, Difficulty difficulty,
             InterviewType interviewType, int questionNumber, int totalQuestions, String previousQA) {
         StringBuilder sb = new StringBuilder();
-        sb.append("You are an expert technical interviewer.\n\n");
+        sb.append("You are an expert interviewer conducting a mock interview.\n\n");
+        sb.append("IMPORTANT: The candidate is interviewing for the role of \"").append(jobRole).append("\". ");
+        sb.append("ALL questions MUST be directly relevant to this specific role. Do NOT ask generic programming or software engineering questions unless the role is specifically a software/engineering role.\n\n");
         sb.append("Role: ").append(jobRole).append("\nDifficulty: ").append(difficulty.name());
         sb.append("\nInterview Type: ").append(interviewType.name());
         sb.append("\nQuestion ").append(questionNumber).append(" of ").append(totalQuestions).append("\n\n");
@@ -36,7 +38,7 @@ public class GeminiService {
             sb.append("Candidate Background:\n").append(resumeContext).append("\n\n");
         if (previousQA != null && !previousQA.isBlank())
             sb.append("Previous Q&A (do NOT repeat topics):\n").append(previousQA).append("\n\n");
-        sb.append("Generate ONE focused interview question. ");
+        sb.append("Generate ONE focused interview question specifically for a \"").append(jobRole).append("\" position. ");
         String targetFormat = questionNumber % 2 != 0 ? "MCQ" : "OPEN_ENDED";
         sb.append("You MUST generate an interview question exactly of this format: ").append(targetFormat).append(". ");
         if ("MCQ".equals(targetFormat)) {
@@ -45,9 +47,9 @@ public class GeminiService {
             sb.append("Do NOT provide any options because the candidate will type their answer. ");
         }
         switch (interviewType) {
-            case TECHNICAL -> sb.append("Focus on technical knowledge, algorithms, or system design.");
-            case BEHAVIORAL -> sb.append("Use STAR-method style: past experiences, teamwork, leadership.");
-            case MIXED -> sb.append(questionNumber % 2 == 0 ? "Ask a technical question." : "Ask a behavioral question.");
+            case TECHNICAL -> sb.append("Focus on technical/domain-specific knowledge, tools, and concepts that a ").append(jobRole).append(" would need to know.");
+            case BEHAVIORAL -> sb.append("Use STAR-method style: past experiences, teamwork, and leadership scenarios relevant to a ").append(jobRole).append(".");
+            case MIXED -> sb.append(questionNumber % 2 == 0 ? "Ask a technical/domain-specific question for a " + jobRole + "." : "Ask a behavioral question relevant to a " + jobRole + ".");
         }
         sb.append("\n\nRespond with ONLY valid JSON (no markdown): ");
         if ("MCQ".equals(targetFormat)) {
