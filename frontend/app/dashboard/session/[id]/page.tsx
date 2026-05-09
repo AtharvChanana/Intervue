@@ -221,72 +221,79 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
 
   if (isCompleted) {
     return (
-      <div className="max-w-4xl mx-auto mt-20 animate-in fade-in duration-500 pb-20">
-        <div className="w-24 h-24 bg-[#231E1A] rounded-full flex items-center justify-center mx-auto mb-8 shadow-[0_0_50px_rgba(220,159,133,0.08)]">
-          <AnimatedIcon name="task_alt" className="text-5xl text-[#EBDCC4]" />
-        </div>
+      <div className="max-w-4xl mx-auto mt-16 animate-in fade-in duration-500 pb-20">
+        {/* Hero */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-black text-[#EBDCC4] mb-4">Session Evaluated</h2>
-          <p className="text-[#B6A596]">Your final scores have been computed and apprehended by the Neural Link.</p>
+          <div className="w-20 h-20 rounded-2xl bg-[#DC9F85]/10 border border-[#DC9F85]/20 flex items-center justify-center mx-auto mb-6">
+            <AnimatedIcon name="task_alt" className="text-4xl text-[#DC9F85]" />
+          </div>
+          <h2 className="text-3xl font-black text-[#EBDCC4] mb-2">Session Complete</h2>
+          <p className="text-[#66473B] text-sm">Your performance report has been generated</p>
         </div>
 
         {!report ? (
-           <div className="text-center text-[#B6A596] animate-pulse py-10 tracking-widest text-sm uppercase">Decrypting Final Analysis...</div>
+           <div className="text-center text-[#66473B] animate-pulse py-10 tracking-widest text-sm uppercase">Computing scores...</div>
         ) : (
-          <div className="liquid-glass p-10 rounded-xl space-y-10 animate-in slide-in-from-bottom-5">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-6 bg-[#1F1A17] border border-[#66473B]/50 rounded-lg text-center">
-                <p className="text-xs font-bold text-[#B6A596] tracking-widest uppercase mb-2">Total Score</p>
-                <p className="text-5xl font-black text-[#EBDCC4]">{report.totalScore?.toFixed(0)}</p>
-              </div>
-              <div className="p-6 bg-[#1F1A17] border border-[#66473B]/50 rounded-lg text-center">
-                <p className="text-xs font-bold text-[#B6A596] tracking-widest uppercase mb-2">Technical Ability</p>
-                <p className="text-5xl font-black text-[#EBDCC4]">{report.technicalScore?.toFixed(0)}</p>
-              </div>
-              <div className="p-6 bg-[#1F1A17] border border-[#66473B]/50 rounded-lg text-center">
-                <p className="text-xs font-bold text-[#B6A596] tracking-widest uppercase mb-2">Communication</p>
-                <p className="text-5xl font-black text-[#EBDCC4]">{report.communicationScore?.toFixed(0)}</p>
-              </div>
+          <div className="space-y-6 animate-in slide-in-from-bottom-5">
+            {/* Score Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { label: 'Total Score', value: report.totalScore, color: 'from-[#DC9F85]/20 to-[#DC9F85]/5', border: 'border-[#DC9F85]/20', text: 'text-[#DC9F85]' },
+                { label: 'Technical', value: report.technicalScore, color: 'from-emerald-500/15 to-emerald-500/5', border: 'border-emerald-500/15', text: 'text-emerald-400' },
+                { label: 'Communication', value: report.communicationScore, color: 'from-blue-500/15 to-blue-500/5', border: 'border-blue-500/15', text: 'text-blue-400' },
+              ].map(c => (
+                <div key={c.label} className={`bg-gradient-to-b ${c.color} border ${c.border} rounded-2xl p-8 text-center`}>
+                  <p className="text-[9px] font-bold text-[#66473B] tracking-[0.3em] uppercase mb-3">{c.label}</p>
+                  <p className={`text-5xl font-black ${c.text}`}>{c.value?.toFixed(0) ?? '—'}</p>
+                </div>
+              ))}
             </div>
 
-            <div className="bg-[#181818] p-8 rounded-lg border border-[#66473B]/50">
-              <h4 className="text-xs font-bold text-[#B6A596] uppercase tracking-widest mb-4 flex items-center gap-2"><AnimatedIcon name="psychology" className="text-sm" /> Overall Feedback</h4>
-              <p className="text-[#EBDCC4] text-sm leading-relaxed">{report.overallFeedback}</p>
+            {/* Overall Feedback */}
+            <div className="bg-[#0D0B0A] border border-[#35211A] rounded-2xl p-8">
+              <h4 className="text-[9px] font-bold text-[#66473B] uppercase tracking-[0.3em] mb-4 flex items-center gap-2">
+                <AnimatedIcon name="psychology" className="text-sm text-[#DC9F85]" /> Overall Feedback
+              </h4>
+              <p className="text-[#B6A596] text-sm leading-relaxed">{report.overallFeedback}</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-[#1F1A17] p-6 rounded-lg border border-[#66473B]/40">
-                <h4 className="text-xs font-bold text-[#EBDCC4] uppercase tracking-widest flex items-center gap-2 mb-3">
-                  <AnimatedIcon name="trending_up" className="text-green-400 text-sm" /> Core Strengths
+            {/* Strengths & Improvements */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-[#0D0B0A] border border-emerald-500/10 rounded-2xl p-6">
+                <h4 className="text-[9px] font-bold uppercase tracking-[0.3em] flex items-center gap-2 mb-3 text-emerald-400/70">
+                  <AnimatedIcon name="trending_up" className="text-sm" /> Strengths
                 </h4>
-                <p className="text-sm text-[#B6A596] leading-relaxed italic">{report.strengthsSummary}</p>
+                <p className="text-sm text-[#B6A596] leading-relaxed">{report.strengthsSummary}</p>
               </div>
-              <div className="bg-[#1F1A17] p-6 rounded-lg border border-[#66473B]/40">
-                <h4 className="text-xs font-bold text-[#EBDCC4] uppercase tracking-widest flex items-center gap-2 mb-3">
-                  <AnimatedIcon name="flag" className="text-[#B6A596] text-sm" /> Focus Areas
+              <div className="bg-[#0D0B0A] border border-amber-500/10 rounded-2xl p-6">
+                <h4 className="text-[9px] font-bold uppercase tracking-[0.3em] flex items-center gap-2 mb-3 text-amber-400/70">
+                  <AnimatedIcon name="flag" className="text-sm" /> Focus Areas
                 </h4>
-                <p className="text-sm text-[#B6A596] leading-relaxed italic">{report.improvementTips}</p>
+                <p className="text-sm text-[#B6A596] leading-relaxed">{report.improvementTips}</p>
               </div>
             </div>
 
+            {/* Q&A Breakdown */}
             {report.qaBreakdown && report.qaBreakdown.length > 0 && (
-              <div className="space-y-4">
-                <h4 className="text-xs font-bold text-[#B6A596] uppercase tracking-widest mb-4 flex items-center gap-2"><AnimatedIcon name="assignment_turned_in" className="text-sm" /> Question Breakdown</h4>
+              <div className="space-y-3">
+                <h4 className="text-[9px] font-bold text-[#66473B] uppercase tracking-[0.3em] mb-2 flex items-center gap-2">
+                  <AnimatedIcon name="assignment_turned_in" className="text-sm" /> Question Breakdown
+                </h4>
                 {report.qaBreakdown.map((q: any, idx: number) => {
                   const isCorrect = q.userAnswer === q.correctOption;
                   return (
-                    <div key={idx} className="bg-[#181818] p-6 rounded-lg border border-[#66473B]/40">
+                    <div key={idx} className={`bg-[#0D0B0A] rounded-2xl p-6 border ${isCorrect ? 'border-emerald-500/10' : 'border-red-500/10'}`}>
                       <p className="text-sm text-[#EBDCC4] font-bold mb-4">{idx + 1}. {q.question}</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs flex-col flex sm:grid">
-                        <div className="bg-[#1F1A17] p-3 rounded-md border border-[#66473B]/40">
-                          <span className="block text-[#B6A596] uppercase tracking-widest mb-1">Your Answer</span>
-                          <span className={`font-bold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div className={`p-3 rounded-xl border ${isCorrect ? 'bg-emerald-500/5 border-emerald-500/15' : 'bg-red-500/5 border-red-500/15'}`}>
+                          <span className="block text-[#66473B] uppercase tracking-widest mb-1 text-[9px]">Your Answer</span>
+                          <span className={`font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}`}>
                             {q.userAnswer} - {q[`option${q.userAnswer}`] || ''}
                           </span>
                         </div>
-                        <div className="bg-[#1F1A17] p-3 rounded-md border border-[#66473B]/40">
-                          <span className="block text-[#B6A596] uppercase tracking-widest mb-1">Correct Answer</span>
-                          <span className="font-bold text-green-400">
+                        <div className="p-3 rounded-xl bg-emerald-500/5 border border-emerald-500/15">
+                          <span className="block text-[#66473B] uppercase tracking-widest mb-1 text-[9px]">Correct Answer</span>
+                          <span className="font-bold text-emerald-400">
                             {q.correctOption} - {q[`option${q.correctOption}`] || ''}
                           </span>
                         </div>
@@ -297,12 +304,16 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
               </div>
             )}
 
-            <div className="flex gap-4 justify-center pt-8 border-t border-[#66473B]/50 flex-col sm:flex-row">
-              <button onClick={() => router.push('/dashboard')} className="bg-transparent border border-[#66473B]/70 text-[#EBDCC4] px-8 py-4 rounded-md font-bold hover:bg-[#1F1A17] transition-all text-sm tracking-widest uppercase w-full sm:w-auto">
+            {/* Action Buttons */}
+            <div className="flex gap-4 justify-center pt-6 border-t border-[#35211A] flex-col sm:flex-row">
+              <button onClick={() => router.push('/dashboard')} className="border border-[#35211A] text-[#B6A596] px-8 py-4 rounded-xl font-bold hover:bg-[#0D0B0A] transition-colors text-xs tracking-widest uppercase w-full sm:w-auto">
                 Back to Dashboard
               </button>
-              <button onClick={() => router.push('/dashboard')} className="bg-[#DC9F85] text-[#181818] px-12 py-4 rounded-md font-bold hover:scale-105 transition-all text-sm tracking-widest uppercase shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 w-full sm:w-auto">
-                Attempt New Session <AnimatedIcon name="replay" className="text-sm" />
+              <button onClick={() => router.push('/dashboard')} className="relative group/new">
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#DC9F85] to-[#EBDCC4] rounded-xl opacity-40 blur-md group-hover/new:opacity-70 transition-opacity" />
+                <div className="relative bg-[#DC9F85] text-[#0D0B0A] px-12 py-4 rounded-xl font-bold text-xs tracking-widest uppercase flex items-center justify-center gap-2 w-full sm:w-auto hover:brightness-110 transition-all">
+                  New Session <AnimatedIcon name="replay" className="text-sm" />
+                </div>
               </button>
             </div>
           </div>
@@ -336,48 +347,72 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
         </AlertDialogContent>
       </AlertDialog>
 
-      <div className="flex justify-between items-center mb-10">
-        <h2 className="text-xl font-bold text-[#EBDCC4] tracking-widest uppercase">
-          MOCK SESSION
-        </h2>
-        <button onClick={endSession} className="text-sm font-bold text-red-500 hover:text-red-400 border border-red-500/20 bg-red-500/10 px-4 py-2 rounded-md">
+      <div className="flex justify-between items-center mb-10 pb-6 border-b border-[#35211A]">
+        <div className="flex items-center gap-4">
+          <span className="w-10 h-10 rounded-xl bg-[#DC9F85]/10 border border-[#DC9F85]/20 flex items-center justify-center">
+            <AnimatedIcon name="psychology" className="text-[#DC9F85] text-lg" />
+          </span>
+          <div>
+            <h2 className="text-lg font-black text-[#EBDCC4] tracking-widest uppercase">
+              Mock Session
+            </h2>
+            <p className="text-[9px] uppercase tracking-[0.3em] text-[#66473B]">Session #{id}</p>
+          </div>
+        </div>
+        <button onClick={endSession} className="flex items-center gap-2 text-xs font-bold text-red-400/70 hover:text-red-400 border border-red-500/15 bg-red-500/5 px-5 py-2.5 rounded-xl transition-colors">
+          <AnimatedIcon name="stop_circle" className="text-sm" />
           End Session
         </button>
       </div>
 
       {!feedback ? (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
-          <div className="liquid-glass rounded-xl p-10 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 border-b border-l border-[#66473B]/50 bg-[#1F1A17] rounded-bl-lg">
-              <span className="text-[10px] tracking-[0.2em] uppercase font-bold text-[#B6A596]">
-                {currentQuestion.questionCategory}
-              </span>
-            </div>
-            <h3 className="text-[#B6A596] text-xs font-bold uppercase tracking-widest mb-3">
-              Query 0{currentQuestion.questionNumber}
-            </h3>
-            {/* Timer display */}
-            {timeLimit > 0 && (
-              <div className={`flex items-center gap-2 mb-4 ${
-                timeLeft / timeLimit > 0.5 ? 'text-emerald-400' :
-                timeLeft / timeLimit > 0.25 ? 'text-[#B6A596]' : 'text-red-400'
-              } ${timeLeft / timeLimit <= 0.25 && timerActive ? 'animate-pulse' : ''}`}>
-                <AnimatedIcon name="timer" className="text-base" />
-                <span className="text-xl font-black font-mono">
-                  {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+          {/* Question Card */}
+          <div className="relative group">
+            <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-[#DC9F85]/30 via-transparent to-[#66473B]/20 opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="relative bg-[#0D0B0A] rounded-2xl p-10 overflow-hidden">
+              {/* Subtle glow */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-[#DC9F85]/5 blur-3xl rounded-full pointer-events-none" />
+              {/* Category + Question Number row */}
+              <div className="flex items-center justify-between mb-6 relative z-10">
+                <div className="flex items-center gap-3">
+                  <span className="w-10 h-10 rounded-xl bg-[#DC9F85]/10 border border-[#DC9F85]/20 flex items-center justify-center text-[#DC9F85] text-sm font-black">
+                    {String(currentQuestion.questionNumber).padStart(2, '0')}
+                  </span>
+                  <div>
+                    <p className="text-[9px] uppercase tracking-[0.3em] text-[#66473B]">Question</p>
+                    <p className="text-xs font-bold text-[#B6A596]">{currentQuestion.questionCategory}</p>
+                  </div>
+                </div>
+                <span className="text-[9px] tracking-[0.2em] uppercase font-bold text-[#66473B] px-3 py-1.5 border border-[#35211A] bg-[#181818] rounded-lg">
+                  {currentQuestion.questionFormat === 'OPEN_ENDED' ? 'Open Response' : 'Multiple Choice'}
                 </span>
-                {timesUp
-                  ? <span className="text-red-400 text-xs font-bold uppercase tracking-widest ml-1">Time&apos;s up!</span>
-                  : <span className="text-[10px] uppercase tracking-widest opacity-40">left</span>}
               </div>
-            )}
-            <p className="text-2xl text-[#EBDCC4] font-medium leading-relaxed">
-              {currentQuestion.questionText}
-            </p>
+              {/* Timer */}
+              {timeLimit > 0 && (
+                <div className={`flex items-center gap-3 mb-6 px-4 py-3 rounded-xl border ${
+                  timeLeft / timeLimit > 0.5 ? 'bg-emerald-500/5 border-emerald-500/15 text-emerald-400' :
+                  timeLeft / timeLimit > 0.25 ? 'bg-[#1F1A17] border-[#35211A] text-[#B6A596]' : 'bg-red-500/5 border-red-500/15 text-red-400'
+                } ${timeLeft / timeLimit <= 0.25 && timerActive ? 'animate-pulse' : ''}`}>
+                  <AnimatedIcon name="timer" className="text-lg" />
+                  <span className="text-2xl font-black font-mono tracking-wider">
+                    {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
+                  </span>
+                  {timesUp
+                    ? <span className="text-red-400 text-xs font-bold uppercase tracking-widest ml-2">Time&apos;s up!</span>
+                    : <span className="text-[10px] uppercase tracking-widest opacity-40 ml-1">remaining</span>}
+                </div>
+              )}
+              {/* Question Text */}
+              <p className="text-2xl text-[#EBDCC4] font-medium leading-relaxed relative z-10">
+                {currentQuestion.questionText}
+              </p>
+            </div>
           </div>
 
           {currentQuestion.questionFormat === 'OPEN_ENDED' ? (
-            <div className="mt-8">
+            <div className="mt-8 relative group">
+              <div className="absolute -inset-[1px] rounded-xl bg-gradient-to-r from-[#DC9F85]/20 to-transparent opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
               <textarea
                 value={answerText}
                 onChange={(e) => {
@@ -386,7 +421,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                 }}
                 rows={6}
                 placeholder="Formulate your comprehensive answer here..."
-                className="w-full bg-[#181818]/80 border border-[#66473B]/50 rounded-xl p-6 text-[#EBDCC4] text-sm focus:outline-none focus:border-[#DC9F85] transition-colors tracking-wide leading-relaxed resize-none shadow-inner"
+                className="relative w-full bg-[#0D0B0A] border border-[#35211A] rounded-xl p-6 text-[#EBDCC4] text-sm focus:outline-none focus:border-[#DC9F85]/50 transition-all duration-300 tracking-wide leading-relaxed resize-none"
               />
             </div>
           ) : (
@@ -401,89 +436,150 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                   key={opt.key}
                   onClick={() => setSelectedOption(opt.key)}
                   disabled={isSubmitting}
-                  className={`group relative liquid-glass border ${selectedOption === opt.key ? 'border-white bg-[#231E1A]' : 'border-[#66473B]/40'} rounded-xl p-6 text-left hover:border-white transition-all duration-300 disabled:opacity-50`}
+                  className={`group/opt relative rounded-xl text-left transition-all duration-300 disabled:opacity-50 ${
+                    selectedOption === opt.key ? 'scale-[1.02]' : 'hover:scale-[1.01]'
+                  }`}
                 >
-                  <div className="flex items-center gap-4">
-                    <span className={`w-8 h-8 rounded-lg border flex items-center justify-center font-bold text-xs transition-all ${selectedOption === opt.key ? 'bg-[#DC9F85] text-[#181818] border-[#66473B]/40' : 'bg-[#1F1A17] text-[#B6A596] border-[#66473B]/50 group-hover:bg-white group-hover:text-black'}`}>
-                      {opt.key}
-                    </span>
-                    <p className={`text-[#EBDCC4] transition-transform ${selectedOption === opt.key ? 'translate-x-1 font-semibold' : 'group-hover:translate-x-1'}`}>{opt.text}</p>
+                  <div className={`absolute -inset-[1px] rounded-xl transition-opacity duration-300 ${
+                    selectedOption === opt.key
+                      ? 'bg-gradient-to-br from-[#DC9F85]/60 to-[#DC9F85]/20 opacity-100'
+                      : 'bg-gradient-to-br from-[#66473B]/30 to-transparent opacity-0 group-hover/opt:opacity-100'
+                  }`} />
+                  <div className={`relative bg-[#0D0B0A] rounded-xl p-6 border transition-all duration-300 ${
+                    selectedOption === opt.key ? 'border-[#DC9F85]/40' : 'border-[#35211A] group-hover/opt:border-[#66473B]/60'
+                  }`}>
+                    <div className="flex items-center gap-4">
+                      <span className={`w-10 h-10 rounded-xl border flex items-center justify-center font-bold text-sm flex-shrink-0 transition-all duration-300 ${
+                        selectedOption === opt.key
+                          ? 'bg-[#DC9F85] text-[#0D0B0A] border-[#DC9F85]/40 shadow-[0_0_20px_rgba(220,159,133,0.2)]'
+                          : 'bg-[#181818] text-[#66473B] border-[#35211A] group-hover/opt:text-[#B6A596] group-hover/opt:border-[#66473B]/60'
+                      }`}>
+                        {opt.key}
+                      </span>
+                      <p className={`text-sm leading-relaxed transition-all duration-300 ${
+                        selectedOption === opt.key
+                          ? 'text-[#EBDCC4] font-semibold translate-x-0.5'
+                          : 'text-[#B6A596] group-hover/opt:text-[#EBDCC4] group-hover/opt:translate-x-0.5'
+                      }`}>{opt.text}</p>
+                    </div>
                   </div>
                 </button>
               ))}
             </div>
           )}
 
-          <div className="flex justify-between items-center pt-6">
+          <div className="flex justify-between items-center pt-8">
             {/* Hint button */}
             <div>
               {!hintRevealed ? (
                 <button
                   onClick={revealHint}
-                  className="flex items-center gap-2 text-[#B6A596] text-xs font-bold uppercase tracking-wider hover:text-[#B6A596] transition-colors py-2"
+                  className="flex items-center gap-2 text-[#66473B] text-xs font-bold uppercase tracking-widest hover:text-[#DC9F85] transition-colors py-2 group/hint"
                 >
-                  <AnimatedIcon name="lightbulb" className="text-sm" />
+                  <span className="w-8 h-8 rounded-lg bg-amber-500/5 border border-amber-500/15 flex items-center justify-center group-hover/hint:bg-amber-500/10 transition-colors">
+                    <AnimatedIcon name="lightbulb" className="text-sm text-amber-400/60 group-hover/hint:text-amber-400" />
+                  </span>
                   Need a hint?
                 </button>
               ) : (
-                <div className="flex items-start gap-2 p-3 bg-amber-500/5 border border-amber-400/20 rounded-xl max-w-sm">
-                  <AnimatedIcon name="lightbulb" className="text-[#B6A596] text-sm flex-shrink-0 mt-0.5" />
+                <div className="flex items-start gap-3 p-4 bg-amber-500/5 border border-amber-500/15 rounded-xl max-w-sm">
+                  <span className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <AnimatedIcon name="lightbulb" className="text-amber-400 text-sm" />
+                  </span>
                   {isLoadingHint
-                    ? <p className="text-[#B6A596]/50 text-[10px] animate-pulse uppercase tracking-widest">Generating hint...</p>
-                    : <p className="text-amber-200 text-xs leading-relaxed">{hintText}</p>}
+                    ? <p className="text-amber-400/50 text-[10px] animate-pulse uppercase tracking-widest">Generating hint...</p>
+                    : <p className="text-amber-200/80 text-xs leading-relaxed">{hintText}</p>}
                 </div>
               )}
             </div>
+            {/* Submit */}
             <button
               onClick={() => submitAnswer(selectedOption)}
               disabled={!selectedOption || isSubmitting}
-              className="bg-[#DC9F85] text-[#181818] px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
+              className="relative group/sub disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {isSubmitting ? 'Evaluating...' : (currentQuestion.questionFormat === 'OPEN_ENDED' ? 'Submit Answer' : 'Submit Option')}
-              {!isSubmitting && <AnimatedIcon name="send" className="text-sm" />}
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#DC9F85] to-[#EBDCC4] rounded-xl opacity-40 blur-md group-hover/sub:opacity-70 transition-opacity disabled:opacity-0" />
+              <div className="relative bg-[#DC9F85] text-[#0D0B0A] px-8 py-4 rounded-xl font-bold tracking-wide hover:brightness-110 transition-all flex items-center gap-2 text-sm">
+                {isSubmitting ? 'Evaluating...' : (currentQuestion.questionFormat === 'OPEN_ENDED' ? 'Submit Answer' : 'Submit Option')}
+                {!isSubmitting && <AnimatedIcon name="send" className="text-sm" />}
+              </div>
             </button>
           </div>
         </div>
       ) : (
-        <div className="liquid-glass rounded-xl p-10 animate-in flip-in-y duration-700 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-[#231E1A]">
-            <div className="h-full bg-white" style={{ width: `${feedback.score}%`}}></div>
-          </div>
-          
-          <div className="flex justify-between items-start mb-10 mt-4">
-            <div>
-              <h3 className={`text-3xl font-black mb-2 flex items-center gap-3 ${currentQuestion.questionFormat === 'OPEN_ENDED' ? (feedback.score >= 70 ? 'text-green-400' : 'text-[#B6A596]') : (feedback.score === 100 ? 'text-green-400' : 'text-red-400')}`}>
-                <AnimatedIcon name={currentQuestion.questionFormat === 'OPEN_ENDED' ? (feedback.score >= 70 ? 'check_circle' : 'change_history') : (feedback.score === 100 ? 'check_circle' : 'cancel')} className="text-4xl" />
-                {currentQuestion.questionFormat === 'OPEN_ENDED' ? `Evaluation Score: ${feedback.score}/100` : (feedback.score === 100 ? 'Correct Answer' : 'Incorrect')}
-              </h3>
-              <p className="text-[#B6A596] text-sm">Response calibrated against ideal parameters.</p>
-            </div>
-            <div className="text-right">
-              <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mb-1">Score Matrix</span>
-              <span className="text-5xl font-black text-[#EBDCC4]">{feedback.score}</span>
+        <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 space-y-6">
+          {/* Score Header Card */}
+          <div className="relative">
+            <div className={`absolute -inset-[1px] rounded-2xl bg-gradient-to-br ${
+              feedback.score >= 70 ? 'from-emerald-500/30 via-transparent to-emerald-500/10' : 'from-red-500/30 via-transparent to-red-500/10'
+            } opacity-60`} />
+            <div className="relative bg-[#0D0B0A] rounded-2xl p-10 overflow-hidden">
+              <div className={`absolute top-0 left-0 w-full h-1 bg-[#231E1A] overflow-hidden rounded-t-2xl`}>
+                <div className={`h-full transition-all duration-1000 ease-out ${feedback.score >= 70 ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' : 'bg-gradient-to-r from-red-500 to-red-400'}`} style={{ width: `${feedback.score}%` }} />
+              </div>
+
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-5">
+                  {/* Score Circle */}
+                  <div className={`relative w-20 h-20 rounded-2xl border-2 flex items-center justify-center ${
+                    feedback.score >= 70 ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-red-500/30 bg-red-500/5'
+                  }`}>
+                    <span className={`text-3xl font-black ${feedback.score >= 70 ? 'text-emerald-400' : 'text-red-400'}`}>{feedback.score}</span>
+                  </div>
+                  <div>
+                    <h3 className={`text-2xl font-black flex items-center gap-2 ${
+                      currentQuestion.questionFormat === 'OPEN_ENDED'
+                        ? (feedback.score >= 70 ? 'text-emerald-400' : 'text-[#B6A596]')
+                        : (feedback.score === 100 ? 'text-emerald-400' : 'text-red-400')
+                    }`}>
+                      <AnimatedIcon name={feedback.score >= 70 ? 'check_circle' : 'cancel'} className="text-3xl" />
+                      {currentQuestion.questionFormat === 'OPEN_ENDED'
+                        ? `Score: ${feedback.score}/100`
+                        : (feedback.score === 100 ? 'Correct' : 'Incorrect')}
+                    </h3>
+                    <p className="text-[#66473B] text-xs mt-1">Response evaluated against ideal parameters</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="bg-[#181818] p-6 rounded-lg mb-10 border border-[#66473B]/40 flex items-center justify-center min-h-[100px]">
-             {feedback.score === 100 ? (
-                <p className="text-green-400 font-bold tracking-widest uppercase text-sm">Your Response was Accurate</p>
-             ) : (
-                <p className="text-red-400 font-bold uppercase tracking-widest text-sm flex items-center gap-3">
-                   Correct Option: <span className="px-5 py-2 bg-[#231E1A] border border-[#66473B]/50 text-[#EBDCC4] rounded-md ml-1">{feedback.idealAnswer}</span>
-                </p>
-             )}
-          </div>
+          {/* Correct Answer Card (MCQ only) */}
+          {currentQuestion.questionFormat !== 'OPEN_ENDED' && feedback.score !== 100 && (
+            <div className="bg-[#0D0B0A] border border-[#35211A] rounded-2xl p-6 flex items-center gap-4">
+              <span className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-sm flex-shrink-0">
+                <AnimatedIcon name="lightbulb" className="text-lg" />
+              </span>
+              <div>
+                <p className="text-[9px] uppercase tracking-[0.3em] text-[#66473B] mb-1">Correct Answer</p>
+                <p className="text-[#EBDCC4] font-bold">{feedback.idealAnswer}</p>
+              </div>
+            </div>
+          )}
 
-          <div className="flex justify-end pt-6 border-t border-[#66473B]/50">
+          {currentQuestion.questionFormat !== 'OPEN_ENDED' && feedback.score === 100 && (
+            <div className="bg-emerald-500/5 border border-emerald-500/15 rounded-2xl p-6 flex items-center gap-4">
+              <span className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                <AnimatedIcon name="verified" className="text-emerald-400 text-lg" />
+              </span>
+              <p className="text-emerald-400 font-bold text-sm tracking-wide">Your response was accurate</p>
+            </div>
+          )}
+
+          {/* Next / Finish Button */}
+          <div className="flex justify-end pt-4">
             <button onClick={() => {
               if (feedback.isSessionComplete || !feedback.nextQuestion) {
                   setIsCompleted(true);
               } else {
                   nextQuestion();
               }
-            }} className="bg-[#DC9F85] text-[#181818] px-8 py-4 rounded-md font-bold tracking-tight hover:scale-105 transition-transform flex items-center gap-2">
-              {(feedback.isSessionComplete || !feedback.nextQuestion) ? 'FINISH SESSION PORTION' : 'PROCEED TO NEXT QUESTION'}
-              <AnimatedIcon name="arrow_forward" className="text-sm" />
+            }} className="relative group/next">
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#DC9F85] to-[#EBDCC4] rounded-xl opacity-40 blur-md group-hover/next:opacity-70 transition-opacity" />
+              <div className="relative bg-[#DC9F85] text-[#0D0B0A] px-8 py-4 rounded-xl font-bold tracking-wide hover:brightness-110 transition-all flex items-center gap-2 text-sm">
+                {(feedback.isSessionComplete || !feedback.nextQuestion) ? 'View Final Report' : 'Next Question'}
+                <AnimatedIcon name="arrow_forward" className="text-sm" />
+              </div>
             </button>
           </div>
         </div>
