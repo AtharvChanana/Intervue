@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
-import UserAvatar from "@/components/UserAvatar";
+import UserAvatar, { getProfileImageUrl } from "@/components/UserAvatar";
 
 export default function DashboardLayout({
   children,
@@ -1151,7 +1151,12 @@ export default function DashboardLayout({
                 </span>
                 <div className="w-8 h-8 rounded-full border border-[#DC9F85] bg-[#1A1512] flex items-center justify-center overflow-hidden">
                   {userProfile?.profilePictureUrl
-                    ? <img src={userProfile.profilePictureUrl} alt="avatar" className="w-full h-full object-cover" />
+                    ? <img
+                        key={userProfile.profilePictureUrl}
+                        src={getProfileImageUrl(userProfile.profilePictureUrl)}
+                        alt="avatar"
+                        className="w-full h-full object-cover"
+                      />
                     : <span className="text-[#DC9F85] text-xs font-bold uppercase">{userProfile?.name?.[0] || 'U'}</span>
                   }
                 </div>
