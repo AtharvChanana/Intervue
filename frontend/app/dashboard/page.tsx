@@ -486,7 +486,7 @@ export default function DashboardPage() {
                 <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-[0.2em]">Last 6 months activity</p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-zinc-700 text-[9px] font-bold uppercase">Less</span>
-                  {['bg-white/[0.04] border border-white/[0.06]','bg-blue-950 border border-blue-800/40','bg-blue-700/80','bg-[#DC9F85]'].map((c,i) => (
+                  {['bg-[#231E1A] border border-[#35211A]','bg-[#3D2920] border border-[#66473B]/60','bg-[#66473B]','bg-[#DC9F85] shadow-[0_0_8px_rgba(220,159,133,0.6)]'].map((c,i) => (
                     <div key={i} className={`w-2.5 h-2.5 rounded-[2px] ${c}`} />
                   ))}
                   <span className="text-zinc-700 text-[9px] font-bold uppercase">More</span>
