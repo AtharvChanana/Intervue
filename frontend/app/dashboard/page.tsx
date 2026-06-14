@@ -604,23 +604,23 @@ export default function DashboardPage() {
 
       <div className="dashboard-card dashboard-card-mobile flex flex-col mb-6 md:mb-8 p-0 border-[#66473B]">
           <div className="w-full h-full">
-            <div className="p-8 pb-6 border-b border-[#66473B]/40">
-              <h3 className="text-[#EBDCC4] text-lg font-black tracking-widest uppercase">Resume Parsing</h3>
-              <p className="text-[#B6A596] text-[10px] uppercase font-bold tracking-[0.1em] mt-1">AI Context Configuration</p>
+            <div className="px-5 py-4 md:p-8 md:pb-6 border-b border-[#66473B]/40">
+              <h3 className="text-[#EBDCC4] text-lg font-black tracking-widest uppercase">Your Resume</h3>
+              <p className="text-[#B6A596] text-[10px] uppercase font-bold tracking-[0.1em] mt-1">Helps tailor your interviews</p>
             </div>
 
             {!activeResume ? (
               <div className="flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-10 px-5 py-6 md:px-10 md:py-10">
-                <div className="w-20 h-20 rounded-full border border-[#66473B]/50 flex items-center justify-center bg-[#231E1A] shadow-inner cursor-pointer shrink-0" onClick={() => document.getElementById('upload-input')?.click()}>
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-[#66473B]/50 flex items-center justify-center bg-[#231E1A] shadow-inner cursor-pointer shrink-0" onClick={() => document.getElementById('upload-input')?.click()}>
                   {isUploading ? (
-                    <AnimatedIcon name="refresh" className="text-3xl text-[#B6A596] animate-spin" />
+                    <AnimatedIcon name="refresh" className="text-2xl md:text-3xl text-[#B6A596] animate-spin" />
                   ) : (
-                    <AnimatedIcon name="upload_file" className="text-3xl text-[#B6A596]" />
+                    <AnimatedIcon name="upload_file" className="text-2xl md:text-3xl text-[#B6A596]" />
                   )}
                 </div>
                 <div className="flex-1">
                   <p className="text-[#EBDCC4] font-bold text-base mb-1">No resume uploaded</p>
-                  <p className="text-[#B6A596] text-sm leading-relaxed mb-6">Upload a PDF resume to give the AI context about your background for more personalized mock interviews.</p>
+                  <p className="text-[#B6A596] text-sm leading-relaxed mb-6">Upload your resume (PDF) so the AI can ask questions relevant to your experience.</p>
                   <label className={`inline-flex items-center gap-2 bg-[#231E1A] hover:bg-white text-[#EBDCC4] hover:text-black px-8 py-3 text-[10px] font-black rounded-full uppercase tracking-[0.2em] transition-colors shadow-xl ${isUploading ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}`}>
                     <input
                       id="upload-input"
@@ -654,13 +654,13 @@ export default function DashboardPage() {
               </div>
             ) : (
               <div className="flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-10 px-5 py-6 md:px-10 md:py-10">
-                <div className="w-20 h-20 rounded-2xl border border-[#66473B]/50 bg-[#231E1A] flex items-center justify-center shadow-inner shrink-0">
-                  <AnimatedIcon name="description" className="text-[#EBDCC4] text-3xl" />
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl border border-[#66473B]/50 bg-[#231E1A] flex items-center justify-center shadow-inner shrink-0">
+                  <AnimatedIcon name="description" className="text-[#EBDCC4] text-2xl md:text-3xl" />
                 </div>
                 <div className="flex-1">
                   <p className="text-[#EBDCC4] font-bold text-base mb-1">{activeResume.fileName}</p>
-                  <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest mb-3">Active System Context</p>
-                  <p className="text-[#B6A596] text-sm leading-relaxed">This resume is being used to personalize your AI mock interviews. Remove it to upload a different one.</p>
+                  <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest mb-3">Currently active</p>
+                  <p className="text-[#B6A596] text-sm leading-relaxed">Your interviews will be personalized based on this resume. Remove it to upload a different one.</p>
                 </div>
                 <button
                   onClick={async () => {
