@@ -370,7 +370,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
           {/* Question Card */}
           <div className="relative group">
             <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-br from-[#DC9F85]/30 via-transparent to-[#66473B]/20 opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="relative bg-[#0D0B0A] rounded-2xl p-10 overflow-hidden">
+            <div className="relative bg-[#0D0B0A] rounded-2xl p-6 md:p-10 overflow-hidden">
               {/* Subtle glow */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-[#DC9F85]/5 blur-3xl rounded-full pointer-events-none" />
               {/* Category + Question Number row */}
@@ -404,7 +404,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                 </div>
               )}
               {/* Question Text */}
-              <p className="text-2xl text-[#EBDCC4] font-medium leading-relaxed relative z-10">
+              <p className="text-lg md:text-2xl text-[#EBDCC4] font-medium leading-relaxed relative z-10">
                 {currentQuestion.questionText}
               </p>
             </div>
@@ -445,7 +445,7 @@ export default function SessionPage({ params }: { params: Promise<{ id: string }
                       ? 'bg-gradient-to-br from-[#DC9F85]/60 to-[#DC9F85]/20 opacity-100'
                       : 'bg-gradient-to-br from-[#66473B]/30 to-transparent opacity-0 group-hover/opt:opacity-100'
                   }`} />
-                  <div className={`relative bg-[#0D0B0A] rounded-xl p-6 border transition-all duration-300 ${
+                  <div className={`relative bg-[#0D0B0A] rounded-xl p-4 md:p-6 border transition-all duration-300 ${
                     selectedOption === opt.key ? 'border-[#DC9F85]/40' : 'border-[#35211A] group-hover/opt:border-[#66473B]/60'
                   }`}>
                     <div className="flex items-center gap-4">
