@@ -115,9 +115,9 @@ export default function SessionsArchivePage() {
 
   return (
     <div className="max-w-6xl mx-auto pb-20 animate-in fade-in duration-500">
-      <div className="mb-10">
-        <h2 className="text-3xl font-black text-[#EBDCC4] mb-2">Session Archive</h2>
-        <p className="text-[#B6A596] text-sm">Review your historical mock interviews, coding assessments, and AI evaluations.</p>
+      <div className="mb-6 md:mb-10">
+        <h2 className="text-2xl md:text-3xl font-black text-[#EBDCC4] mb-2">Session Archive</h2>
+        <p className="text-[#B6A596] text-xs md:text-sm">Review your historical mock interviews, coding assessments, and AI evaluations.</p>
       </div>
 
       {/* Tabs */}
@@ -152,75 +152,126 @@ export default function SessionsArchivePage() {
           </p>
         </div>
       ) : (
-        <div className="bg-[#181818] border border-[#66473B]/50 rounded-2xl overflow-hidden shadow-2xl">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[800px]">
-              <thead className="bg-[#181818] border-b border-[#66473B]/50">
-                <tr>
-                  <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Date</th>
-                  <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Title</th>
-                  <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Type / Difficulty</th>
-                  <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Status</th>
-                  <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest text-right">Score</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {filteredSessions.map((session, idx) => {
-                  const score = getScore(session);
-                  const isClickable = session.type === 'dsa' || session.status === 'COMPLETED' || session.status === 'IN_PROGRESS';
-                  return (
-                    <tr
-                      key={`${session.type}-${session.sessionId}-${idx}`}
-                      onClick={() => handleRowClick(session)}
-                      className={`group transition-colors ${
-                        isClickable
-                          ? 'hover:bg-[#231E1A] cursor-pointer'
-                          : 'opacity-50 grayscale cursor-not-allowed'
-                      }`}
-                    >
-                      <td className="p-6">
-                        <span className="text-sm font-medium text-[#EBDCC4]">{formatDate(session.createdAt)}</span>
-                      </td>
-                      <td className="p-6">
-                        <span className="text-sm text-[#EBDCC4] font-bold">{getLabel(session)}</span>
-                      </td>
-                      <td className="p-6">
-                        <div className="flex items-center gap-2">
-                          {getTypeTag(session)}
-                          <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider ${
-                            session.difficulty === 'HARD' ? 'bg-red-500/10 text-red-400' :
-                            session.difficulty === 'MEDIUM' ? 'bg-amber-500/10 text-[#B6A596]' :
-                            'bg-emerald-500/10 text-emerald-400'
-                          }`}>
-                            {session.difficulty}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-6">
-                        <div className="flex items-center gap-2">
-                          {session.status === 'COMPLETED' && <span className="w-2 h-2 rounded-full bg-emerald-500"></span>}
-                          {session.status === 'IN_PROGRESS' && <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>}
-                          {session.status === 'ABANDONED' && <span className="w-2 h-2 rounded-full bg-red-500"></span>}
-                          <span className="text-xs font-bold text-[#B6A596]">{session.status.replace('_', ' ')}</span>
-                        </div>
-                      </td>
-                      <td className="p-6 text-right">
-                        {score != null ? (
-                          <div className="inline-flex items-end gap-1">
-                            <span className="text-2xl font-black text-[#EBDCC4]">{Number(score).toFixed(0)}</span>
-                            <span className="text-[#B6A596] text-[10px] uppercase tracking-widest font-bold mb-1">/ 100</span>
+        <>
+          {/* Desktop table view */}
+          <div className="hidden md:block bg-[#181818] border border-[#66473B]/50 rounded-2xl overflow-hidden shadow-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead className="bg-[#181818] border-b border-[#66473B]/50">
+                  <tr>
+                    <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Date</th>
+                    <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Title</th>
+                    <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Type / Difficulty</th>
+                    <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Status</th>
+                    <th className="p-6 text-[10px] font-bold text-[#B6A596] uppercase tracking-widest text-right">Score</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {filteredSessions.map((session, idx) => {
+                    const score = getScore(session);
+                    const isClickable = session.type === 'dsa' || session.status === 'COMPLETED' || session.status === 'IN_PROGRESS';
+                    return (
+                      <tr
+                        key={`${session.type}-${session.sessionId}-${idx}`}
+                        onClick={() => handleRowClick(session)}
+                        className={`group transition-colors ${
+                          isClickable
+                            ? 'hover:bg-[#231E1A] cursor-pointer'
+                            : 'opacity-50 grayscale cursor-not-allowed'
+                        }`}
+                      >
+                        <td className="p-6">
+                          <span className="text-sm font-medium text-[#EBDCC4]">{formatDate(session.createdAt)}</span>
+                        </td>
+                        <td className="p-6">
+                          <span className="text-sm text-[#EBDCC4] font-bold">{getLabel(session)}</span>
+                        </td>
+                        <td className="p-6">
+                          <div className="flex items-center gap-2">
+                            {getTypeTag(session)}
+                            <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider ${
+                              session.difficulty === 'HARD' ? 'bg-red-500/10 text-red-400' :
+                              session.difficulty === 'MEDIUM' ? 'bg-amber-500/10 text-[#B6A596]' :
+                              'bg-emerald-500/10 text-emerald-400'
+                            }`}>
+                              {session.difficulty}
+                            </span>
                           </div>
-                        ) : (
-                          <span className="text-sm text-[#B6A596] font-medium">--</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        </td>
+                        <td className="p-6">
+                          <div className="flex items-center gap-2">
+                            {session.status === 'COMPLETED' && <span className="w-2 h-2 rounded-full bg-emerald-500"></span>}
+                            {session.status === 'IN_PROGRESS' && <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>}
+                            {session.status === 'ABANDONED' && <span className="w-2 h-2 rounded-full bg-red-500"></span>}
+                            <span className="text-xs font-bold text-[#B6A596]">{session.status.replace('_', ' ')}</span>
+                          </div>
+                        </td>
+                        <td className="p-6 text-right">
+                          {score != null ? (
+                            <div className="inline-flex items-end gap-1">
+                              <span className="text-2xl font-black text-[#EBDCC4]">{Number(score).toFixed(0)}</span>
+                              <span className="text-[#B6A596] text-[10px] uppercase tracking-widest font-bold mb-1">/ 100</span>
+                            </div>
+                          ) : (
+                            <span className="text-sm text-[#B6A596] font-medium">--</span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile card view */}
+          <div className="md:hidden space-y-3">
+            {filteredSessions.map((session, idx) => {
+              const score = getScore(session);
+              const isClickable = session.type === 'dsa' || session.status === 'COMPLETED' || session.status === 'IN_PROGRESS';
+              return (
+                <div
+                  key={`m-${session.type}-${session.sessionId}-${idx}`}
+                  onClick={() => handleRowClick(session)}
+                  className={`bg-[#1A1512] border border-[#66473B]/40 rounded-xl p-4 transition-colors ${
+                    isClickable ? 'active:bg-[#231E1A] cursor-pointer' : 'opacity-50 cursor-not-allowed'
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1 min-w-0 mr-3">
+                      <p className="text-sm font-bold text-[#EBDCC4] truncate">{getLabel(session)}</p>
+                      <p className="text-[11px] text-[#B6A596] mt-0.5">{formatDate(session.createdAt)}</p>
+                    </div>
+                    {score != null ? (
+                      <div className="text-right shrink-0">
+                        <span className="text-xl font-black text-[#EBDCC4]">{Number(score).toFixed(0)}</span>
+                        <span className="text-[#B6A596] text-[9px] uppercase tracking-widest font-bold block">/ 100</span>
+                      </div>
+                    ) : (
+                      <span className="text-sm text-[#B6A596] font-medium shrink-0">--</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {getTypeTag(session)}
+                    <span className={`px-2 py-1 rounded text-[10px] uppercase font-bold tracking-wider ${
+                      session.difficulty === 'HARD' ? 'bg-red-500/10 text-red-400' :
+                      session.difficulty === 'MEDIUM' ? 'bg-amber-500/10 text-[#B6A596]' :
+                      'bg-emerald-500/10 text-emerald-400'
+                    }`}>
+                      {session.difficulty}
+                    </span>
+                    <div className="flex items-center gap-1.5 ml-auto">
+                      {session.status === 'COMPLETED' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>}
+                      {session.status === 'IN_PROGRESS' && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>}
+                      {session.status === 'ABANDONED' && <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>}
+                      <span className="text-[10px] font-bold text-[#B6A596] uppercase">{session.status.replace('_', ' ')}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
 
       {apiError && (
