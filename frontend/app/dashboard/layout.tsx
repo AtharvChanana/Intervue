@@ -790,27 +790,9 @@ export default function DashboardLayout({
           <div className="space-y-6">
             <div className="border border-[#66473B]/40 bg-[#231E1A] p-4 rounded-xl">
               <div className="flex justify-between items-center mb-3">
-                <label className="text-[10px] font-bold text-[#B6A596] uppercase tracking-[0.2em]">Email Access</label>
-                <button onClick={() => setShowEmailUpdateForm(!showEmailUpdateForm)} className="text-[10px] font-bold text-[#DC9F85] hover:text-[#DC9F85] uppercase tracking-widest transition-colors flex items-center gap-1 bg-[#DC9F85]/10 px-2 flex py-1 rounded">
-                  <AnimatedIcon name="edit" className="text-[14px]" /> {showEmailUpdateForm ? "Cancel" : "Change Email"}
-                </button>
+                <label className="text-[10px] font-bold text-[#B6A596] uppercase tracking-[0.2em]">Email Address</label>
               </div>
-              {!showEmailUpdateForm ? (
-                <input type="email" readOnly className="w-full bg-[#181818] border border-[#66473B]/40 rounded-lg p-3 text-[#B6A596] cursor-not-allowed" value={settingsEmail} />
-              ) : (
-                <div className="space-y-4 mt-2 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <div>
-                    <input type="email" autoComplete="new-password" id="new_email_no_autofill" name="new_email_no_autofill" className="w-full bg-[#1A1A1A] border border-blue-500/50 rounded-lg p-3 text-[#EBDCC4] focus:outline-none focus:border-blue-500 transition-colors placeholder:text-[#66473B]" placeholder="Enter new email address" value={newEmailInput} onChange={e => setNewEmailInput(e.target.value)} />
-                  </div>
-                  <div>
-                    <input type="password" autoComplete="new-password" id="current_password_no_autofill" name="current_password_no_autofill" className="w-full bg-[#1A1A1A] border border-[#66473B]/50 rounded-lg p-3 text-[#EBDCC4] focus:outline-none focus:border-[#66473B] transition-colors placeholder:text-[#66473B]" placeholder="Confirm your current password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} />
-                  </div>
-                  <button onClick={handleUpdateEmailRequest} disabled={isProcessingOTP || !newEmailInput || !oldPassword} className="w-full bg-blue-600 text-[#EBDCC4] py-3 rounded-lg font-bold tracking-widest uppercase text-xs hover:bg-[#DC9F85] transition-colors shadow-[0_0_20px_rgba(59,130,246,0.2)] disabled:opacity-50">
-                    {isProcessingOTP ? "Processing..." : "Send Secure Code"}
-                  </button>
-                  <p className="text-[10px] text-[#B6A596] leading-relaxed"><strong className="text-red-400">Warning:</strong> For security reasons, you can only change your registered email address exactly one time per account.</p>
-                </div>
-              )}
+              <input type="email" readOnly className="w-full bg-[#181818] border border-[#66473B]/40 rounded-lg p-3 text-[#B6A596] cursor-not-allowed" value={settingsEmail} />
             </div>
 
             <div>
