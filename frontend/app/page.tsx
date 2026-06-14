@@ -161,7 +161,7 @@ function FeaturesSection() {
               <span className="display-font text-3xl md:text-4xl font-bold" style={{ color: 'var(--coral-rust)' }}>
                 {s.value}
               </span>
-              <span className="text-[10px] uppercase tracking-[0.25em]" style={{ color: 'var(--burnt-umber)' }}>
+              <span className="text-[10px] uppercase tracking-[0.25em]" style={{ color: 'var(--muted-sage)' }}>
                 {s.label}
               </span>
             </div>
@@ -520,16 +520,7 @@ export default function LandingPage() {
         {/* Features Section */}
         <FeaturesSection />
 
-        {/* Footer */}
-        <footer className="px-8 md:px-12 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex gap-8 text-[10px] tracking-widest uppercase font-medium" style={{ color: 'var(--burnt-umber)' }}>
-            <span>© 2025 INTERVUE SYSTEMS</span>
-          </div>
-          <div className="text-[10px] tracking-widest uppercase font-medium" style={{ color: 'var(--burnt-umber)' }}>
-            ALL RIGHTS RESERVED
-          </div>
-        </footer>
-
+        {/* Footer Removed */}
         {/* Rotating Badge */}
         <div className="fixed bottom-8 right-8 z-50 pointer-events-none md:pointer-events-auto">
           <div className="relative w-24 h-24 flex items-center justify-center">
