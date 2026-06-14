@@ -324,3 +324,13 @@
   background-color: #DC9F85;
   transition: width 1.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
+
+/* Mobile-responsive card padding */
+@media (max-width: 767px) {
+  .dashboard-card-mobile {
+    padding: 1.25rem;
+  }
+  .dashboard-card-mobile.p-0 {
+    padding: 0;
+  }
+}

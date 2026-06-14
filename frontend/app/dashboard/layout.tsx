@@ -92,8 +92,10 @@ export default function DashboardLayout({
   const [isProcessingOTP, setIsProcessingOTP] = useState(false);
   const [resendCountdown, setResendCountdown] = useState(0);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [showMobileMore, setShowMobileMore] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMoreRef = useRef<HTMLDivElement>(null);
   const [notifications, setNotifications] = useState<{id: string, message: string, time: string, read: boolean}[]>([]);
   const notifRef = useRef<HTMLDivElement>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -148,6 +150,9 @@ export default function DashboardLayout({
         }
         if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
             setShowProfileDropdown(false);
+        }
+        if (mobileMoreRef.current && !mobileMoreRef.current.contains(e.target as Node)) {
+            setShowMobileMore(false);
         }
     };
     document.addEventListener('mousedown', clickOutside);
@@ -916,135 +921,128 @@ export default function DashboardLayout({
         </div>
       )}
 
-      {/* Mobile Top Navbar (Hidden on Desktop) */}
-      <div className="md:hidden fixed top-0 w-full z-40 bg-[#181818] border-b border-[#66473B]/40 flex justify-between items-center px-6 h-16">
+      {/* Mobile Top Navbar (Hidden on Desktop) — Brand only, no hamburger */}
+      <div className="md:hidden fixed top-0 w-full z-40 bg-[#181818]/95 backdrop-blur-md border-b border-[#66473B]/30 flex justify-between items-center px-4 h-14">
+        <div className="flex items-center gap-2.5">
+          <Logo className="w-5 h-5" />
+          <h1 className="font-bold text-sm text-[#EBDCC4] uppercase tracking-widest">Intervue</h1>
+        </div>
         <div className="flex items-center gap-3">
-          <Logo className="w-6 h-6" />
-          <h1 className="font-bold text-md text-[#EBDCC4] mt-1">Intervue</h1>
-        </div>
-        <button onClick={() => setIsMobileSidebarOpen(true)} className="text-[#EBDCC4] bg-[#1F1A17] hover:bg-[#231E1A] transition-colors p-2 rounded-md border border-[#66473B]/40 flex items-center justify-center">
-          <AnimatedIcon name="menu" className="text-2xl" />
-        </button>
-      </div>
-
-      {/* Mobile Overlay */}
-      {isMobileSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-[#181818]/90 backdrop-blur-sm z-40 md:hidden transition-opacity" 
-          onClick={() => setIsMobileSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar Navigation (Mobile Only) */}
-      <aside className={`fixed left-0 top-0 h-screen w-72 bg-[#181818] border-r border-white/[0.03] shadow-[40px_0_80px_rgba(0,0,0,0.9)] z-50 flex flex-col py-8 font-manrope text-sm tracking-wide transform transition-transform duration-300 overflow-y-auto md:hidden ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="px-8 mb-12">
-          <div className="flex items-center gap-3 pt-4 pb-8 mb-6 border-b border-[#66473B]/40 w-full relative">
-            <Logo className="w-8 h-8" />
-            <div>
-              <h1 className="font-bold text-lg text-[#EBDCC4] mt-1">Intervue</h1>
-              <p className="text-[10px] text-[#B6A596] uppercase tracking-[0.2em] leading-tight">Precision Training</p>
-            </div>
-            <button onClick={() => setIsMobileSidebarOpen(false)} className="md:hidden absolute right-0 top-5 text-[#EBDCC4] bg-[#1F1A17] p-1.5 rounded-md border border-[#66473B]/40">
-               <AnimatedIcon name="close" className="text-sm" />
-            </button>
-          </div>
-        </div>
-        
-        <nav className="flex-grow">
-          <ul className="space-y-1">
-            <li>
-              <Link 
-                onClick={(e) => { 
-                    if(isSessionActive) { 
-                        e.preventDefault(); 
-                        toast.error("Please complete or end your current session before navigating away."); 
-                    } else {
-                        setIsMobileSidebarOpen(false);
-                    }
-                }}
-                className={`flex items-center gap-3 py-3 px-8 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname === '/dashboard' ? 'bg-[#1F1A17] text-[#EBDCC4] border-l-2 border-white' : 'text-[#B6A596] hover:text-[#EBDCC4] hover:bg-[#231E1A]'}`} 
-                href="/dashboard">
-                <AnimatedIcon name="grid_view" className="text-xl" />
-                <span>Dashboard</span>
-              </Link>
-            </li>
-            <li>
-              <Link 
-                onClick={(e) => { 
-                    if(isSessionActive) { 
-                        e.preventDefault(); 
-                        toast.error("Please complete or end your current session before navigating away."); 
-                    } else {
-                        setIsMobileSidebarOpen(false);
-                    }
-                }}
-                className={`flex items-center gap-3 py-3 px-8 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname?.includes('/sessions') ? 'bg-[#231E1A] text-[#EBDCC4] border-l-2 border-[#DC9F85]' : 'text-[#B6A596] hover:text-[#EBDCC4] hover:bg-[#231E1A]'}`} 
-                href="/dashboard/sessions">
-                <AnimatedIcon name="video_call" className="text-xl" />
-                <span>Mock Sessions</span>
-              </Link>
-            </li>
-            <li>
-              <Link 
-                onClick={(e) => { 
-                    if(isSessionActive) { 
-                        e.preventDefault(); 
-                        toast.error("Please complete or end your current session before navigating away."); 
-                    } else {
-                        setIsMobileSidebarOpen(false);
-                    }
-                }}
-                className={`flex items-center gap-3 py-3 px-8 transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''} ${pathname?.includes('/leaderboard') ? 'bg-[#231E1A] text-[#EBDCC4] border-l-2 border-[#DC9F85]' : 'text-[#B6A596] hover:text-[#EBDCC4] hover:bg-[#231E1A]'}`} 
-                href="/dashboard/leaderboard">
-                <AnimatedIcon name="leaderboard" className="text-xl" />
-                <span>Leaderboard</span>
-              </Link>
-            </li>
-          </ul>
-          <div className="mt-10 px-8">
-            <button 
-              disabled={isSessionActive}
-              onClick={() => { if(isSessionActive) { toast.error("Please complete or end your current session before starting a new one."); return; } handleOpenModal(); }} 
-              className={`editorial-btn w-full py-3 px-4 text-[10px] ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''}`}>
-              + New Session
-            </button>
-          </div>
-        </nav>
-        
-        <div className="px-8 space-y-2 border-t border-[#66473B]/40 pt-6 mt-6">
-           <button 
-             onClick={() => { setIsMobileSidebarOpen(false); setShowNotifications(!showNotifications); }}
-             className={`md:hidden w-full flex items-center justify-between py-3 px-4 rounded-md text-left transition-colors bg-[#1F1A17] text-[#EBDCC4] hover:text-[#EBDCC4]`}>
-            <div className="flex items-center gap-3">
-                <AnimatedIcon name="notifications" className="text-xl" />
-                <span>Alerts</span>
-            </div>
+          {/* Notifications bell on mobile top bar */}
+          <button
+            onClick={() => { setShowNotifications(!showNotifications); if (!showNotifications) markAsRead(); }}
+            className="relative text-[#B6A596] hover:text-[#EBDCC4] transition-colors"
+          >
+            <AnimatedIcon name="notifications" className="text-xl" />
             {notifications.some(n => !n.read) && (
-                <span className="w-1.5 h-1.5 bg-[#DC9F85] rounded-full animate-pulse shadow-[0_0_8px_rgba(220,159,133,0.8)]"></span>
+              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-[#DC9F85] rounded-full" />
             )}
           </button>
-           <button 
-             onClick={() => { setIsMobileSidebarOpen(false); handleOpenSettings(); }}
-             className={`md:hidden w-full flex items-center gap-3 py-3 px-4 rounded-md text-left transition-colors bg-[#1F1A17] text-[#EBDCC4] hover:text-[#EBDCC4]`}>
-            <AnimatedIcon name="settings" className="text-xl" />
-            <span>Settings</span>
-          </button>
-           <button 
-             onClick={() => { setIsMobileSidebarOpen(false); setShowProfileModal(true); }}
-             className={`md:hidden w-full flex items-center gap-3 py-3 px-4 rounded-md text-left transition-colors bg-[#1F1A17] text-[#EBDCC4] hover:text-[#EBDCC4]`}>
-            <AnimatedIcon name="account_circle" className="text-xl" />
-            <span>Profile</span>
-          </button>
-
-           <button 
-             disabled={isSessionActive}
-             onClick={() => { if(isSessionActive) { toast.error("Please complete or end your current session before logging out."); return; } setShowLogoutConfirm(true); }} 
-             className={`w-full flex items-center gap-3 py-3 px-4 rounded-md text-left transition-colors mt-4 ${isSessionActive ? 'opacity-30 cursor-not-allowed' : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'}`}>
-            <AnimatedIcon name="logout" className="text-xl" />
-            <span>Logout</span>
+          {/* Profile avatar */}
+          <button onClick={() => setShowProfileModal(true)} className="w-7 h-7 rounded-full border border-[#DC9F85]/60 bg-[#1A1512] flex items-center justify-center overflow-hidden">
+            {userProfile?.profilePictureUrl
+              ? <img src={getProfileImageUrl(userProfile.profilePictureUrl)} alt="avatar" className="w-full h-full object-cover" />
+              : <span className="text-[#DC9F85] text-[10px] font-bold uppercase">{userProfile?.name?.[0] || 'U'}</span>
+            }
           </button>
         </div>
-      </aside>
+      </div>
+
+      {/* ============ MOBILE BOTTOM NAVIGATION BAR ============ */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#181818]/95 backdrop-blur-md border-t border-[#66473B]/30" ref={mobileMoreRef}>
+        {/* More menu popup */}
+        {showMobileMore && (
+          <div className="absolute bottom-full left-0 right-0 bg-[#181818]/98 backdrop-blur-md border-t border-[#66473B]/30 animate-in slide-in-from-bottom-2 duration-200 pb-1">
+            <div className="grid grid-cols-2 gap-1 p-3">
+              <button
+                onClick={() => { setShowMobileMore(false); handleOpenSettings(); }}
+                className="flex items-center gap-2.5 py-3 px-4 rounded-lg bg-[#1F1A17] text-[#B6A596] hover:text-[#EBDCC4] hover:bg-[#231E1A] transition-colors"
+              >
+                <AnimatedIcon name="settings" className="text-lg" />
+                <span className="text-xs font-bold uppercase tracking-widest">Settings</span>
+              </button>
+              <button
+                onClick={() => {
+                  setShowMobileMore(false);
+                  if (isSessionActive) { toast.error('Please complete or end your current session before starting a new one.'); return; }
+                  if (userProfile && !userProfile.emailVerified) { toast.error('Your email is not verified.'); return; }
+                  setShowDsaModal(true);
+                }}
+                disabled={isSessionActive}
+                className={`flex items-center gap-2.5 py-3 px-4 rounded-lg bg-[#1F1A17] text-[#B6A596] hover:text-[#EBDCC4] hover:bg-[#231E1A] transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed' : ''}`}
+              >
+                <AnimatedIcon name="code" className="text-lg" />
+                <span className="text-xs font-bold uppercase tracking-widest">Code</span>
+              </button>
+              <button
+                disabled={isSessionActive}
+                onClick={() => { setShowMobileMore(false); if (isSessionActive) { toast.error('End your session before logging out.'); return; } setShowLogoutConfirm(true); }}
+                className={`flex items-center gap-2.5 py-3 px-4 rounded-lg transition-colors ${isSessionActive ? 'opacity-30 cursor-not-allowed bg-[#1F1A17] text-[#B6A596]' : 'bg-red-500/8 text-red-400 hover:bg-red-500/15'}`}
+              >
+                <AnimatedIcon name="logout" className="text-lg" />
+                <span className="text-xs font-bold uppercase tracking-widest">Logout</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className="flex items-stretch justify-around h-16 px-1">
+          {/* Dashboard */}
+          <Link
+            href="/dashboard"
+            onClick={(e) => { if (isSessionActive) { e.preventDefault(); toast.error('Please complete your session first.'); } }}
+            className={`flex flex-col items-center justify-center flex-1 gap-0.5 transition-colors ${isSessionActive ? 'opacity-30' : ''} ${pathname === '/dashboard' ? 'text-[#DC9F85]' : 'text-[#B6A596]'}`}
+          >
+            <AnimatedIcon name="grid_view" className="text-xl" />
+            <span className="text-[9px] font-bold uppercase tracking-wider">Home</span>
+          </Link>
+
+          {/* Sessions */}
+          <Link
+            href="/dashboard/sessions"
+            onClick={(e) => { if (isSessionActive) { e.preventDefault(); toast.error('Please complete your session first.'); } }}
+            className={`flex flex-col items-center justify-center flex-1 gap-0.5 transition-colors ${isSessionActive ? 'opacity-30' : ''} ${pathname?.includes('/sessions') ? 'text-[#DC9F85]' : 'text-[#B6A596]'}`}
+          >
+            <AnimatedIcon name="video_call" className="text-xl" />
+            <span className="text-[9px] font-bold uppercase tracking-wider">Sessions</span>
+          </Link>
+
+          {/* New Session (primary CTA) */}
+          <button
+            disabled={isSessionActive}
+            onClick={() => {
+              if (isSessionActive) { toast.error('Please complete your session first.'); return; }
+              if (userProfile && !userProfile.emailVerified) { toast.error('Verify your email first.'); return; }
+              handleOpenModal();
+            }}
+            className={`flex flex-col items-center justify-center flex-1 gap-0.5 transition-colors ${isSessionActive ? 'opacity-30' : 'text-[#DC9F85]'}`}
+          >
+            <div className="w-10 h-10 rounded-full bg-[#DC9F85] flex items-center justify-center -mt-4 shadow-[0_0_20px_rgba(220,159,133,0.3)]">
+              <AnimatedIcon name="add" className="text-xl text-[#181818]" />
+            </div>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-[#DC9F85] -mt-0.5">New</span>
+          </button>
+
+          {/* Leaderboard */}
+          <Link
+            href="/dashboard/leaderboard"
+            onClick={(e) => { if (isSessionActive) { e.preventDefault(); toast.error('Please complete your session first.'); } }}
+            className={`flex flex-col items-center justify-center flex-1 gap-0.5 transition-colors ${isSessionActive ? 'opacity-30' : ''} ${pathname?.includes('/leaderboard') ? 'text-[#DC9F85]' : 'text-[#B6A596]'}`}
+          >
+            <AnimatedIcon name="leaderboard" className="text-xl" />
+            <span className="text-[9px] font-bold uppercase tracking-wider">Ranks</span>
+          </Link>
+
+          {/* More */}
+          <button
+            onClick={() => setShowMobileMore(!showMobileMore)}
+            className={`flex flex-col items-center justify-center flex-1 gap-0.5 transition-colors ${showMobileMore ? 'text-[#DC9F85]' : 'text-[#B6A596]'}`}
+          >
+            <AnimatedIcon name="more_horiz" className="text-xl" />
+            <span className="text-[9px] font-bold uppercase tracking-wider">More</span>
+          </button>
+        </div>
+      </nav>
 
       {/* Main Container */}
       <div className="flex-1 flex flex-col ml-0 min-h-screen">
@@ -1406,7 +1404,8 @@ export default function DashboardLayout({
         </AlertDialog>
 
         {/* Main Content Canvas */}
-        <main className="mt-20 md:mt-20 p-6 md:p-12 flex-1">
+        {/* Main Content Canvas — extra bottom padding on mobile for bottom nav */}
+        <main className="mt-14 md:mt-20 px-4 py-5 md:p-12 pb-24 md:pb-12 flex-1">
           {children}
         </main>
       </div>

@@ -312,56 +312,56 @@ export default function DashboardPage() {
 
   return (
     <div className="animate-in fade-in duration-1000 pb-20">
-      <div className="flex justify-between items-end mb-16">
+      <div className="flex justify-between items-end mb-8 md:mb-16">
         <div className="max-w-2xl">
-          <h2 className="display-font text-4xl lg:text-5xl font-black uppercase tracking-widest mb-4 text-[#EBDCC4]">Dashboard</h2>
-          <p className="text-[#B6A596] text-sm tracking-widest font-medium overflow-hidden whitespace-nowrap">YOUR RECENT PERFORMANCE METRICS</p>
+          <h2 className="display-font text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-widest mb-2 md:mb-4 text-[#EBDCC4]">Dashboard</h2>
+          <p className="text-[#B6A596] text-xs md:text-sm tracking-widest font-medium overflow-hidden whitespace-nowrap">YOUR RECENT PERFORMANCE METRICS</p>
           {error && <p className="text-red-400 mt-4 text-xs font-bold">WARNING: Offline Analytics Cache Served. Engine Connection Fault.</p>}
         </div>
       </div>
 
       {/* TOP MATRIX */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
         {/* Metric 01 */}
-        <div className="dashboard-card flex flex-col justify-between">
-          <div className="flex justify-between items-start mb-12">
+        <div className="dashboard-card dashboard-card-mobile flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-6 md:mb-12">
             <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Average Score</span>
             <div className="w-2 h-2 rounded-full bg-[#DC9F85] shadow-[0_0_8px_rgba(220,159,133,0.6)]"></div>
           </div>
           <div>
-            <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
-            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Global Percentile</span>
+            <h3 className="display-font text-5xl md:text-7xl lg:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.averageScore?.toFixed(0) || 0}</h3>
+            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-2 md:mt-4">Global Percentile</span>
           </div>
         </div>
 
         {/* Metric 02 */}
-        <div className="dashboard-card flex flex-col justify-between">
-          <div className="flex justify-between items-start mb-12">
+        <div className="dashboard-card dashboard-card-mobile flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-6 md:mb-12">
             <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Sessions Completed</span>
           </div>
           <div>
-            <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.completedSessions || 0}</h3>
-            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Total Interviews</span>
+            <h3 className="display-font text-5xl md:text-7xl lg:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.completedSessions || 0}</h3>
+            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-2 md:mt-4">Total Interviews</span>
           </div>
         </div>
 
         {/* Metric 03 */}
-        <div className="dashboard-card flex flex-col justify-between">
-          <div className="flex justify-between items-start mb-12">
+        <div className="dashboard-card dashboard-card-mobile flex flex-col justify-between">
+          <div className="flex justify-between items-start mb-6 md:mb-12">
             <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Roles Practiced</span>
           </div>
           <div>
-            <h3 className="display-font text-7xl md:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.distinctRolesPracticed || 0}</h3>
-            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-4">Unique Job Profiles</span>
+            <h3 className="display-font text-5xl md:text-7xl lg:text-8xl font-black text-[#EBDCC4] tracking-tighter">{stats?.distinctRolesPracticed || 0}</h3>
+            <span className="text-[10px] uppercase tracking-widest text-[#B6A596] block mt-2 md:mt-4">Unique Job Profiles</span>
           </div>
         </div>
       </div>
 
       {/* ANALYTICS ENGINE */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
         {/* Skill Analytics */}
-        <div className="dashboard-card flex flex-col">
-          <div className="flex items-center justify-between mb-12">
+        <div className="dashboard-card dashboard-card-mobile flex flex-col">
+          <div className="flex items-center justify-between mb-6 md:mb-12">
             <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596]">Skill Analytics</h3>
             {latestReport && <span className="text-[10px] uppercase tracking-widest text-[#DC9F85] font-bold">LATEST SESSION</span>}
           </div>
@@ -418,8 +418,8 @@ export default function DashboardPage() {
         </div>
 
         {/* AI Performance Report */}
-        <div className="dashboard-card flex flex-col">
-          <div className="flex items-center justify-between mb-12">
+        <div className="dashboard-card dashboard-card-mobile flex flex-col">
+          <div className="flex items-center justify-between mb-6 md:mb-12">
             <h3 className="text-[10px] uppercase tracking-[0.4em] text-[#DC9F85] font-bold">AI Performance Report</h3>
             <div className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-[#DC9F85] animate-pulse"></div>
@@ -456,18 +456,18 @@ export default function DashboardPage() {
       </div>
 
       {/* Bottom Row: Streak Tracking */}
-      <div className="grid grid-cols-1 gap-6 mb-8">
-        <div className="dashboard-card border-[#66473B]">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-8">
-            <div className="flex items-center gap-12">
+      <div className="grid grid-cols-1 gap-4 md:gap-6 mb-6 md:mb-8">
+        <div className="dashboard-card dashboard-card-mobile border-[#66473B]">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-8 mb-6 md:mb-8">
+            <div className="flex items-center gap-6 md:gap-12">
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596] mb-2">Current Streak</span>
-                <h4 className="display-font text-6xl md:text-7xl font-black text-[#DC9F85] tracking-tighter">{currentStreak} DAYS</h4>
+                <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596] mb-1 md:mb-2">Current Streak</span>
+                <h4 className="display-font text-4xl md:text-6xl lg:text-7xl font-black text-[#DC9F85] tracking-tighter">{currentStreak} DAYS</h4>
               </div>
-              <div className="h-12 w-[1px] bg-[#35211A] hidden md:block"></div>
+              <div className="h-8 md:h-12 w-[1px] bg-[#35211A] hidden md:block"></div>
               <div className="flex flex-col">
-                <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596] mb-2">Total Active</span>
-                <h4 className="display-font text-6xl md:text-7xl font-black text-[#EBDCC4] tracking-tighter">{totalActiveDays} DAYS</h4>
+                <span className="text-[10px] uppercase tracking-[0.4em] text-[#B6A596] mb-1 md:mb-2">Total Active</span>
+                <h4 className="display-font text-4xl md:text-6xl lg:text-7xl font-black text-[#EBDCC4] tracking-tighter">{totalActiveDays} DAYS</h4>
               </div>
             </div>
             
@@ -544,11 +544,11 @@ export default function DashboardPage() {
       </div>
 
       {/* PROGRESS CHART */}
-      <div className="dashboard-card mb-8 flex flex-col">
+      <div className="dashboard-card dashboard-card-mobile mb-6 md:mb-8 flex flex-col">
         <div className="flex items-center gap-3 mb-6">
           <AnimatedIcon name="trending_up" className="text-[#EBDCC4]" />
-          <h3 className="text-[#EBDCC4] text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
-          <span className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
+          <h3 className="text-[#EBDCC4] text-base md:text-xl font-black tracking-widest uppercase">Progress Over Time</h3>
+          <span className="text-[#B6A596] text-[9px] md:text-[10px] font-bold uppercase tracking-widest ml-auto">Avg score · last 52 weeks</span>
         </div>
         {history.filter(h => h.status === 'COMPLETED').length === 0 ? (
           <div className="h-40 flex flex-col items-center justify-center border border-dashed border-[#66473B]/50 rounded-2xl">
@@ -602,7 +602,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <div className="dashboard-card flex flex-col mb-8 p-0 border-[#66473B]">
+      <div className="dashboard-card dashboard-card-mobile flex flex-col mb-6 md:mb-8 p-0 border-[#66473B]">
           <div className="w-full h-full">
             <div className="p-8 pb-6 border-b border-[#66473B]/40">
               <h3 className="text-[#EBDCC4] text-lg font-black tracking-widest uppercase">Resume Parsing</h3>
@@ -610,7 +610,7 @@ export default function DashboardPage() {
             </div>
 
             {!activeResume ? (
-              <div className="flex items-center gap-10 px-10 py-10">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-10 px-5 py-6 md:px-10 md:py-10">
                 <div className="w-20 h-20 rounded-full border border-[#66473B]/50 flex items-center justify-center bg-[#231E1A] shadow-inner cursor-pointer shrink-0" onClick={() => document.getElementById('upload-input')?.click()}>
                   {isUploading ? (
                     <AnimatedIcon name="refresh" className="text-3xl text-[#B6A596] animate-spin" />
@@ -653,7 +653,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center gap-10 px-10 py-10">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-10 px-5 py-6 md:px-10 md:py-10">
                 <div className="w-20 h-20 rounded-2xl border border-[#66473B]/50 bg-[#231E1A] flex items-center justify-center shadow-inner shrink-0">
                   <AnimatedIcon name="description" className="text-[#EBDCC4] text-3xl" />
                 </div>
