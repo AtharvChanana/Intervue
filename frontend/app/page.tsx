@@ -409,21 +409,10 @@ export default function LandingPage() {
 
       <div className="min-h-screen flex flex-col relative body-font" style={{ color: 'var(--warm-beige)' }}>
 
-        {/* Nav */}
-        <nav className="absolute top-0 w-full px-8 md:px-12 py-10 flex items-center justify-between z-50">
-          <div className="flex items-center gap-4">
-            <span className="text-[10px] tracking-[0.3em] font-medium" style={{ color: 'var(--muted-sage)' }}>INTERVUE—PROTOCOL 01</span>
-          </div>
-          <div className="flex-1 mx-12 hidden md:block">
-            <div className="h-[1px] w-full" style={{ backgroundColor: 'var(--burnt-umber)' }} />
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] tracking-widest font-bold" style={{ color: 'var(--burnt-umber)' }}>PRECISION TRAINING</span>
-          </div>
-        </nav>
+        {/* Nav removed — was 'INTERVUE—PROTOCOL 01' / 'PRECISION TRAINING' */}
 
         {/* Hero */}
-        <main className="flex-1 flex flex-col pt-40 md:pt-52">
+        <main className="flex-1 flex flex-col pt-16 md:pt-28">
           <div className="px-8 md:px-12 mb-6">
             <div className="flex items-center gap-4">
               <div className="w-6 h-[1px]" style={{ backgroundColor: 'var(--coral-rust)' }} />
@@ -452,17 +441,13 @@ export default function LandingPage() {
                 <p className="text-xl md:text-2xl font-light leading-relaxed max-w-lg" style={{ color: 'var(--warm-beige)' }}>
                   Master your next interview with realistic AI-powered sessions. Get instant feedback, track your progress, and build the confidence to land your dream role.
                 </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--coral-rust)' }} />
-                  <span className="text-xs uppercase tracking-widest font-medium" style={{ color: 'var(--muted-sage)' }}>Sessions Active Now</span>
-                </div>
               </div>
 
               {/* Right Auth Form */}
               <div className="lg:col-start-7 lg:col-span-6 flex flex-col">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--muted-sage)' }}>
-                    {isLogin ? 'Access Your Profile' : 'Register Protocol'}
+                    {isLogin ? 'Sign in' : 'Create account'}
                   </span>
                   <button
                     onClick={() => setIsLogin(!isLogin)}
@@ -487,7 +472,7 @@ export default function LandingPage() {
                   <input
                     required
                     type="email"
-                    placeholder="EMAIL@PROTOCOL.SH"
+                    placeholder="YOUR EMAIL"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="form-input-editorial w-full px-4 py-4 text-sm tracking-widest rounded-sm"
@@ -516,10 +501,10 @@ export default function LandingPage() {
                 {isLogin && (
                   <button
                     onClick={() => { setShowForgotModal(true); setForgotStep(1); setForgotEmail(''); setForgotOtp(''); setForgotNewPassword(''); }}
-                    className="mt-3 text-[10px] uppercase tracking-[0.2em] text-left transition-colors"
-                    style={{ color: 'var(--burnt-umber)' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--muted-sage)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--burnt-umber)')}
+                    className="mt-3 text-[10px] uppercase tracking-[0.2em] text-left font-bold transition-colors"
+                    style={{ color: 'var(--coral-rust)' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--warm-beige)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--coral-rust)')}
                   >
                     Forgot Password? →
                   </button>
@@ -565,7 +550,7 @@ export default function LandingPage() {
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(24,24,24,0.97)' }}>
             <div className="w-full max-w-md border p-8 animate-in zoom-in-95 duration-200" style={{ backgroundColor: 'var(--matte-black)', borderColor: 'var(--deep-earth)', borderRadius: '2px' }}>
               <div className="mb-2">
-                <span className="text-[10px] uppercase tracking-[0.3em] font-medium" style={{ color: 'var(--muted-sage)' }}>Password Recovery Protocol</span>
+                <span className="text-[10px] uppercase tracking-[0.3em] font-medium" style={{ color: 'var(--muted-sage)' }}>Reset Password</span>
               </div>
               <h2 className="display-font text-2xl font-bold uppercase mb-6" style={{ color: 'var(--warm-beige)' }}>
                 {forgotStep === 1 ? 'Enter Email' : 'Enter Code'}
@@ -576,7 +561,7 @@ export default function LandingPage() {
                 <div className="space-y-4">
                   <input
                     className="form-input-editorial w-full px-4 py-4 text-sm tracking-widest rounded-sm"
-                    placeholder="EMAIL@PROTOCOL.SH"
+                    placeholder="YOUR EMAIL"
                     type="email"
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
@@ -636,7 +621,7 @@ export default function LandingPage() {
           <div className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(24,24,24,0.97)' }}>
             <div className="w-full max-w-md border p-8 animate-in zoom-in-95 duration-200" style={{ backgroundColor: 'var(--matte-black)', borderColor: 'var(--deep-earth)', borderRadius: '2px' }}>
               <div className="mb-2">
-                <span className="text-[10px] uppercase tracking-[0.3em] font-medium" style={{ color: 'var(--muted-sage)' }}>Email Verification Protocol</span>
+                <span className="text-[10px] uppercase tracking-[0.3em] font-medium" style={{ color: 'var(--muted-sage)' }}>Verify Email</span>
               </div>
               <h2 className="display-font text-2xl font-bold uppercase mb-2" style={{ color: 'var(--warm-beige)' }}>
                 Verify Email
