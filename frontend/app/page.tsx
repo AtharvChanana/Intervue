@@ -97,9 +97,7 @@ function FeaturesSection() {
         {/* Section Header */}
         <div className="mb-20 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <span className="text-[10px] uppercase tracking-[0.4em] block mb-4" style={{ color: 'var(--burnt-umber)' }}>
-              Protocol Capabilities
-            </span>
+
             <h2 className="display-font text-5xl md:text-7xl font-bold uppercase leading-[0.85] tracking-tight" style={{ color: 'var(--warm-beige)' }}>
               System<br />Features
             </h2>
