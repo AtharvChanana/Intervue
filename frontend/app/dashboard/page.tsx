@@ -297,18 +297,17 @@ export default function DashboardPage() {
 
       {/* NEW USER EMPTY STATE */}
       {isNewUser ? (
-        <div className="dashboard-card flex flex-col items-center justify-center py-16 md:py-24 animate-in fade-in duration-700 mb-8">
-          <h3 className="display-font text-xl md:text-2xl font-black text-[#EBDCC4] tracking-widest uppercase mb-8">
-            No Sessions Yet
-          </h3>
-
+        <div className="flex flex-col items-center justify-center min-h-[30vh] animate-in fade-in duration-700">
           <button
             onClick={() => window.dispatchEvent(new Event('open_session_modal'))}
-            className="flex items-center gap-2 px-6 py-3 bg-[#DC9F85] text-[#181818] rounded-full font-black text-xs uppercase tracking-[0.2em] transition-all hover:bg-[#EBDCC4]"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#DC9F85] text-[#181818] rounded-full font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:bg-[#EBDCC4] mb-4"
           >
-            <AnimatedIcon name="play_arrow" className="text-lg" />
-            Start Your First Session
+            <AnimatedIcon name="add" className="text-base" />
+            Start First Session
           </button>
+          <p className="text-[#66473B] text-[10px] font-bold uppercase tracking-widest">
+            Your performance metrics will appear here
+          </p>
         </div>
       ) : (<>
 
