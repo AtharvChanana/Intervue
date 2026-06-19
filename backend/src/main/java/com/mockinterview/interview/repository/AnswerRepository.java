@@ -2,6 +2,7 @@ package com.mockinterview.interview.repository;
 
 import com.mockinterview.interview.model.Answer;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -19,4 +20,8 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
 
     @Query("SELECT AVG(a.score) FROM Answer a WHERE a.question.session.user.id = ?1")
     Double findAverageScoreByUserId(Long userId);
+
+    @Modifying
+    @Query("DELETE FROM Answer a WHERE a.question.session.user.id = ?1")
+    void deleteBySessionUserId(Long userId);
 }

@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface DsaSessionRepository extends JpaRepository<DsaSession, Long> {
     Optional<DsaSession> findByIdAndUserId(Long id, Long userId);
     List<DsaSession> findByUserIdOrderByCreatedAtDesc(Long userId);
+    void deleteByUserId(Long userId);
 }

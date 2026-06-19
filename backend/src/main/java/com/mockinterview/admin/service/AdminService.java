@@ -2,17 +2,23 @@ package com.mockinterview.admin.service;
 
 import com.mockinterview.admin.dto.AdminSessionDto;
 import com.mockinterview.admin.dto.AdminStatsDto;
+import com.mockinterview.admin.repository.SiteVisitRepository;
+import com.mockinterview.dsa.repository.DsaSessionRepository;
 import com.mockinterview.interview.model.SessionStatus;
+import com.mockinterview.interview.repository.AnswerRepository;
 import com.mockinterview.interview.repository.InterviewSessionRepository;
+import com.mockinterview.interview.repository.QuestionRepository;
 import com.mockinterview.interview.repository.SessionScoreRepository;
 import com.mockinterview.jobrole.repository.JobRoleRepository;
-import com.mockinterview.admin.repository.SiteVisitRepository;
+import com.mockinterview.notification.repository.NotificationRepository;
+import com.mockinterview.resume.repository.ResumeRepository;
 import com.mockinterview.user.model.User;
 import com.mockinterview.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +29,11 @@ public class AdminService {
     private final SessionScoreRepository scoreRepository;
     private final JobRoleRepository jobRoleRepository;
     private final SiteVisitRepository siteVisitRepository;
+    private final AnswerRepository answerRepository;
+    private final QuestionRepository questionRepository;
+    private final ResumeRepository resumeRepository;
+    private final NotificationRepository notificationRepository;
+    private final DsaSessionRepository dsaSessionRepository;
 
     public AdminStatsDto getPlatformStats() {
         long totalUsers = userRepository.count();
@@ -41,10 +52,19 @@ public class AdminService {
                 .totalSiteVisits(totalVisits).build();
     }
 
+    @Transactional
     public void deleteUser(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new RuntimeException("User not found with id: " + userId);
         }
+        // Delete in FK order: answers → questions → scores → sessions → dsa → resumes → notifications → user
+        answerRepository.deleteBySessionUserId(userId);
+        questionRepository.deleteBySessionUserId(userId);
+        scoreRepository.deleteBySessionUserId(userId);
+        sessionRepository.deleteByUserId(userId);
+        dsaSessionRepository.deleteByUserId(userId);
+        resumeRepository.deleteByUserId(userId);
+        notificationRepository.deleteByUserId(userId);
         userRepository.deleteById(userId);
     }
 
@@ -80,3 +100,4 @@ public class AdminService {
             }).toList();
     }
 }
+

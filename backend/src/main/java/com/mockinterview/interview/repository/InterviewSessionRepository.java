@@ -16,7 +16,9 @@ public interface InterviewSessionRepository extends JpaRepository<InterviewSessi
     List<InterviewSession> findByUserIdAndStatus(Long userId, SessionStatus status);
     long countByUserId(Long userId);
     long countByUserIdAndStatus(Long userId, SessionStatus status);
+    void deleteByUserId(Long userId);
 
     @Query("SELECT COUNT(DISTINCT s.jobRole.id) FROM InterviewSession s WHERE s.user.id = ?1")
     long countDistinctRolesByUserId(Long userId);
 }
+

@@ -2,6 +2,7 @@ package com.mockinterview.interview.repository;
 
 import com.mockinterview.interview.model.SessionScore;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -22,4 +23,9 @@ public interface SessionScoreRepository extends JpaRepository<SessionScore, Long
            "GROUP BY u.id " +
            "ORDER BY MAX(ss.totalScore) DESC")
     List<com.mockinterview.interview.dto.LeaderboardResponse> getGlobalLeaderboard(org.springframework.data.domain.Pageable pageable);
+
+    @Modifying
+    @Query("DELETE FROM SessionScore ss WHERE ss.session.user.id = ?1")
+    void deleteBySessionUserId(Long userId);
 }
+
