@@ -3,10 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetchApi } from '@/lib/api';
-import MagicCard from '@/components/MagicCard';
 import AnimatedIcon from '@/components/AnimatedIcon';
 import { Skeleton } from '@/components/ui/skeleton';
-import { toast } from 'sonner';
 import { Toaster } from '@/components/ui/sonner';
 
 interface DashboardStats {
@@ -43,14 +41,10 @@ export default function DashboardPage() {
   const router = useRouter();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [history, setHistory] = useState<SessionHistory[]>([]);
-  const [dsaHistory, setDsaHistory] = useState<any[]>([]);
   const [latestReport, setLatestReport] = useState<SessionReport | null>(null);
-  const [activeResume, setActiveResume] = useState<any>(null);
-  const [userProfile, setUserProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -61,27 +55,25 @@ export default function DashboardPage() {
 
     const loadDashboard = async () => {
       try {
-        const [statsData, historyData, resumeData, profileData, dsaData] = await Promise.all([
+        const [statsData, historyData] = await Promise.all([
           fetchApi('/dashboard/stats').catch(() => null),
           fetchApi('/dashboard/history').catch(() => []),
-          fetchApi('/resume/latest').catch(() => null),
-          fetchApi('/user/profile').catch(() => null),
-          fetchApi('/dsa/all').catch(() => []),
         ]);
         
         if (statsData) setStats(statsData);
-        if (profileData) setUserProfile(profileData);
         if (historyData) {
             setHistory(historyData);
+            // Detect new user: no sessions at all
+            if (historyData.length === 0 && (!statsData || statsData.totalSessions === 0)) {
+              setIsNewUser(true);
+            }
             const latestCompleted = historyData.find((h: any) => h.status === 'COMPLETED');
             if (latestCompleted) {
                 const reportData = await fetchApi('/dashboard/session/' + latestCompleted.sessionId).catch(() => null);
                 if (reportData) setLatestReport(reportData);
             }
         }
-        if (Array.isArray(dsaData)) setDsaHistory(dsaData);
-        if (resumeData) setActiveResume(resumeData);
-      } catch (e) {
+      } catch {
         setError(true);
       } finally {
         setLoading(false);
@@ -163,24 +155,7 @@ export default function DashboardPage() {
     );
   }
 
-  const handleRetry = (jobRole: string, difficulty: string, interviewType: string) => {
-      router.push('/dashboard/session');
-  };
 
-  const MetricSlider = ({ label, score, color }: { label: string, score: number, color: string }) => (
-      <div className="mb-6 group">
-          <div className="flex justify-between items-end mb-2">
-              <span className="text-[#EBDCC4] text-xs font-bold uppercase tracking-widest">{label}</span>
-              <span className={`text-xl font-black ${color}`}>{score || 0}</span>
-          </div>
-          <div className="h-1.5 w-full bg-[#231E1A] rounded-full overflow-hidden border border-[#66473B]/40 relative">
-              <div 
-                  className={`absolute top-0 left-0 h-full rounded-full transition-all duration-[2000ms] shadow-[0_0_15px_currentColor]`}
-                  style={{ width: `${score || 0}%`, backgroundColor: '#DC9F85' }}
-              ></div>
-          </div>
-      </div>
-  );
 
   // === STREAK & ACTIVITY COMPUTATION (derived from history, no extra API call) ===
   const activityMap: Record<string, number> = {};
@@ -319,6 +294,47 @@ export default function DashboardPage() {
           {error && <p className="text-red-400 mt-4 text-xs font-bold">WARNING: Offline Analytics Cache Served. Engine Connection Fault.</p>}
         </div>
       </div>
+
+      {/* NEW USER EMPTY STATE */}
+      {isNewUser ? (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] animate-in fade-in duration-700">
+          {/* Decorative ring */}
+          <div className="relative mb-10">
+            <div className="w-40 h-40 rounded-full border border-[#66473B]/20 flex items-center justify-center">
+              <div className="w-28 h-28 rounded-full border border-[#66473B]/30 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-[#1A1512] border border-[#66473B]/50 flex items-center justify-center shadow-[0_0_40px_rgba(220,159,133,0.08)]">
+                  <AnimatedIcon name="mic" className="text-[#DC9F85] text-3xl" />
+                </div>
+              </div>
+            </div>
+            {/* Orbiting dots */}
+            <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#DC9F85]/40 shadow-[0_0_8px_rgba(220,159,133,0.4)]"></div>
+            <div className="absolute bottom-4 left-0 w-1.5 h-1.5 rounded-full bg-[#66473B]/60"></div>
+          </div>
+
+          <div className="text-center max-w-md mb-10">
+            <h3 className="display-font text-2xl md:text-3xl font-black text-[#EBDCC4] tracking-widest uppercase mb-3">
+              No Sessions Yet
+            </h3>
+            <p className="text-[#B6A596] text-sm leading-relaxed">
+              Your performance metrics, skill analytics, and progress charts will appear here once you complete your first interview session.
+            </p>
+          </div>
+
+          <button
+            onClick={() => window.dispatchEvent(new Event('open_session_modal'))}
+            className="group relative flex items-center gap-3 px-10 py-4 bg-[#DC9F85] text-[#181818] rounded-full font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(220,159,133,0.3)] hover:shadow-[0_0_50px_rgba(220,159,133,0.5)] hover:scale-105 transition-all duration-300"
+          >
+            <AnimatedIcon name="play_arrow" className="text-xl" />
+            Start Your First Session
+            <span className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </button>
+
+          <p className="text-[#66473B] text-[10px] uppercase tracking-widest mt-6 font-bold">
+            AI-powered · Personalized · Real-time feedback
+          </p>
+        </div>
+      ) : (<>
 
       {/* TOP MATRIX */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
@@ -602,89 +618,7 @@ export default function DashboardPage() {
         )}
       </div>
 
-      <div className="dashboard-card dashboard-card-mobile flex flex-col mb-6 md:mb-8 p-0 border-[#66473B]">
-          <div className="w-full h-full">
-            <div className="px-5 py-4 md:p-8 md:pb-6 border-b border-[#66473B]/40">
-              <h3 className="text-[#EBDCC4] text-lg font-black tracking-widest uppercase">Your Resume</h3>
-              <p className="text-[#B6A596] text-[10px] uppercase font-bold tracking-[0.1em] mt-1">Helps tailor your interviews</p>
-            </div>
-
-            {!activeResume ? (
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-10 px-5 py-6 md:px-10 md:py-10">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-[#66473B]/50 flex items-center justify-center bg-[#231E1A] shadow-inner cursor-pointer shrink-0" onClick={() => document.getElementById('upload-input')?.click()}>
-                  {isUploading ? (
-                    <AnimatedIcon name="refresh" className="text-2xl md:text-3xl text-[#B6A596] animate-spin" />
-                  ) : (
-                    <AnimatedIcon name="upload_file" className="text-2xl md:text-3xl text-[#B6A596]" />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <p className="text-[#EBDCC4] font-bold text-base mb-1">No resume uploaded</p>
-                  <p className="text-[#B6A596] text-sm leading-relaxed mb-6">Upload your resume (PDF) so the AI can ask questions relevant to your experience.</p>
-                  <label className={`inline-flex items-center gap-2 bg-[#231E1A] hover:bg-white text-[#EBDCC4] hover:text-black px-8 py-3 text-[10px] font-black rounded-full uppercase tracking-[0.2em] transition-colors shadow-xl ${isUploading ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'cursor-pointer'}`}>
-                    <input
-                      id="upload-input"
-                      type="file" accept=".pdf" className="hidden" disabled={isUploading}
-                      onChange={async (e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          if (userProfile && !userProfile.emailVerified) {
-                            toast.error('Email not verified. Please go to your Profile and verify your email first.');
-                            e.target.value = '';
-                            return;
-                          }
-                          const file = e.target.files[0];
-                          const formData = new FormData();
-                          formData.append("file", file);
-                          setIsUploading(true);
-                          try {
-                            const resp = await fetchApi('/resume/upload', { method: 'POST', body: formData });
-                            setActiveResume(resp);
-                            toast.success('Resume uploaded successfully.');
-                          } catch (err: any) {
-                            toast.error('Upload failed: ' + err.message);
-                          } finally {
-                            setIsUploading(false);
-                          }
-                        }
-                      }}
-                    />
-                    {isUploading ? 'UPLOADING...' : 'UPLOAD RESUME'}
-                  </label>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-5 md:gap-10 px-5 py-6 md:px-10 md:py-10">
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl border border-[#66473B]/50 bg-[#231E1A] flex items-center justify-center shadow-inner shrink-0">
-                  <AnimatedIcon name="description" className="text-[#EBDCC4] text-2xl md:text-3xl" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-[#EBDCC4] font-bold text-base mb-1">{activeResume.fileName}</p>
-                  <p className="text-[#B6A596] text-[10px] font-bold uppercase tracking-widest mb-3">Currently active</p>
-                  <p className="text-[#B6A596] text-sm leading-relaxed">Your interviews will be personalized based on this resume. Remove it to upload a different one.</p>
-                </div>
-                <button
-                  onClick={async () => {
-                    try {
-                      await fetchApi('/resume', { method: 'DELETE' });
-                      setActiveResume(null);
-                      setConfirmDelete(false);
-                      toast.success('Resume removed.');
-                    } catch(err: any) {
-                      toast.error('Removal failed.');
-                    }
-                  }}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all border border-red-500/20 text-[10px] font-bold uppercase tracking-widest shrink-0"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M3 7h18" />
-                  </svg>
-                  Remove
-                </button>
-              </div>
-            )}
-          </div>
-      </div>
+      </>)}
       <Toaster position="top-center" theme="dark" richColors />
     </div>
   );

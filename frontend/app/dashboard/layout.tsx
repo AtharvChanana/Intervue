@@ -55,6 +55,11 @@ export default function DashboardLayout({
   const [customJobRoleText, setCustomJobRoleText] = useState('');
   const [timePerQuestion, setTimePerQuestion] = useState(0); // 0 = unlimited
 
+  // Resume state (for session modal)
+  const [modalResume, setModalResume] = useState<any>(null);
+  const [isUploadingModalResume, setIsUploadingModalResume] = useState(false);
+  const modalResumeInputRef = useRef<HTMLInputElement>(null);
+
   // DSA Modal State
   const [showDsaModal, setShowDsaModal] = useState(false);
   const [dsaTopic, setDsaTopic] = useState('RANDOM');
@@ -157,10 +162,20 @@ export default function DashboardLayout({
     };
     document.addEventListener('mousedown', clickOutside);
 
+    // Listen for open_session_modal event dispatched by dashboard empty state
+    const openModalHandler = () => handleOpenModal();
+    window.addEventListener('open_session_modal', openModalHandler);
+
     return () => {
         window.removeEventListener('new_notification', handleNewNotif);
         document.removeEventListener('mousedown', clickOutside);
+        window.removeEventListener('open_session_modal', openModalHandler);
     };
+  }, []);
+
+  // Fetch resume once on mount for the session modal
+  useEffect(() => {
+    fetchApi('/resume/latest').then(r => { if (r) setModalResume(r); }).catch(() => {});
   }, []);
 
   const markAsRead = () => {
@@ -620,6 +635,82 @@ export default function DashboardLayout({
                       <span className="text-[10px] font-bold text-[#B6A596] uppercase tracking-widest">Timer</span>
                       <span className="text-sm font-bold text-[#EBDCC4]">{timePerQuestion === 0 ? 'Unlimited' : `${timePerQuestion / 60} min / question`}</span>
                     </div>
+                  </div>
+
+                  {/* Resume Section */}
+                  <div className="rounded-2xl border border-[#66473B]/40 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-[#66473B]/30 bg-[#1A1512]">
+                      <span className="text-[10px] font-bold text-[#B6A596] uppercase tracking-[0.2em]">Resume</span>
+                      <p className="text-[9px] text-[#66473B] uppercase tracking-widest mt-0.5">Helps tailor your interview questions</p>
+                    </div>
+                    {modalResume ? (
+                      <div className="flex items-center gap-3 px-4 py-3 bg-[#1F1A17]">
+                        <div className="w-9 h-9 rounded-xl bg-[#231E1A] border border-[#66473B]/40 flex items-center justify-center shrink-0">
+                          <AnimatedIcon name="description" className="text-[#DC9F85] text-base" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[#EBDCC4] text-xs font-bold truncate">{modalResume.fileName}</p>
+                          <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-widest">Active ✓</p>
+                        </div>
+                        <button
+                          onClick={async () => {
+                            try {
+                              await fetchApi('/resume', { method: 'DELETE' });
+                              setModalResume(null);
+                              toast.success('Resume removed.');
+                            } catch { toast.error('Removal failed.'); }
+                          }}
+                          className="text-[9px] font-bold uppercase tracking-widest text-red-400/70 hover:text-red-400 transition-colors px-2 py-1 rounded-lg hover:bg-red-500/10"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-3 px-4 py-3 bg-[#1F1A17]">
+                        <div className="w-9 h-9 rounded-xl bg-[#231E1A] border border-dashed border-[#66473B]/50 flex items-center justify-center shrink-0 cursor-pointer" onClick={() => modalResumeInputRef.current?.click()}>
+                          {isUploadingModalResume ? (
+                            <div className="w-3 h-3 border border-[#B6A596] border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <AnimatedIcon name="upload_file" className="text-[#B6A596] text-base" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-[#B6A596] text-xs font-bold">No resume uploaded</p>
+                          <p className="text-[9px] text-[#66473B] uppercase tracking-widest">Optional — upload PDF to personalize questions</p>
+                        </div>
+                        <label className={`text-[9px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg border transition-colors cursor-pointer ${
+                          isUploadingModalResume ? 'opacity-50 pointer-events-none text-[#B6A596] border-[#333]' : 'text-[#EBDCC4] border-[#444] hover:border-[#DC9F85]/50 hover:text-[#DC9F85]'
+                        }`}>
+                          <input
+                            ref={modalResumeInputRef}
+                            type="file" accept=".pdf" className="hidden" disabled={isUploadingModalResume}
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              if (userProfile && !userProfile.emailVerified) {
+                                toast.error('Verify your email first before uploading a resume.');
+                                e.target.value = '';
+                                return;
+                              }
+                              const formData = new FormData();
+                              formData.append('file', file);
+                              setIsUploadingModalResume(true);
+                              try {
+                                const resp = await fetchApi('/resume/upload', { method: 'POST', body: formData });
+                                setModalResume(resp);
+                                toast.success('Resume uploaded!');
+                              } catch (err: any) {
+                                toast.error('Upload failed: ' + err.message);
+                              } finally {
+                                setIsUploadingModalResume(false);
+                                e.target.value = '';
+                              }
+                            }}
+                          />
+                          {isUploadingModalResume ? 'Uploading...' : 'Upload'}
+                        </label>
+                      </div>
+                    )}
                   </div>
 
                   {isStarting && (
