@@ -297,42 +297,18 @@ export default function DashboardPage() {
 
       {/* NEW USER EMPTY STATE */}
       {isNewUser ? (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] animate-in fade-in duration-700">
-          {/* Decorative ring */}
-          <div className="relative mb-10">
-            <div className="w-40 h-40 rounded-full border border-[#66473B]/20 flex items-center justify-center">
-              <div className="w-28 h-28 rounded-full border border-[#66473B]/30 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-[#1A1512] border border-[#66473B]/50 flex items-center justify-center shadow-[0_0_40px_rgba(220,159,133,0.08)]">
-                  <AnimatedIcon name="mic" className="text-[#DC9F85] text-3xl" />
-                </div>
-              </div>
-            </div>
-            {/* Orbiting dots */}
-            <div className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#DC9F85]/40 shadow-[0_0_8px_rgba(220,159,133,0.4)]"></div>
-            <div className="absolute bottom-4 left-0 w-1.5 h-1.5 rounded-full bg-[#66473B]/60"></div>
-          </div>
-
-          <div className="text-center max-w-md mb-10">
-            <h3 className="display-font text-2xl md:text-3xl font-black text-[#EBDCC4] tracking-widest uppercase mb-3">
-              No Sessions Yet
-            </h3>
-            <p className="text-[#B6A596] text-sm leading-relaxed">
-              Your performance metrics, skill analytics, and progress charts will appear here once you complete your first interview session.
-            </p>
-          </div>
+        <div className="dashboard-card flex flex-col items-center justify-center py-16 md:py-24 animate-in fade-in duration-700 mb-8">
+          <h3 className="display-font text-xl md:text-2xl font-black text-[#EBDCC4] tracking-widest uppercase mb-8">
+            No Sessions Yet
+          </h3>
 
           <button
             onClick={() => window.dispatchEvent(new Event('open_session_modal'))}
-            className="group relative flex items-center gap-3 px-10 py-4 bg-[#DC9F85] text-[#181818] rounded-full font-black text-sm uppercase tracking-[0.2em] shadow-[0_0_30px_rgba(220,159,133,0.3)] hover:shadow-[0_0_50px_rgba(220,159,133,0.5)] hover:scale-105 transition-all duration-300"
+            className="flex items-center gap-2 px-6 py-3 bg-[#DC9F85] text-[#181818] rounded-full font-black text-xs uppercase tracking-[0.2em] transition-all hover:bg-[#EBDCC4]"
           >
-            <AnimatedIcon name="play_arrow" className="text-xl" />
+            <AnimatedIcon name="play_arrow" className="text-lg" />
             Start Your First Session
-            <span className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
-
-          <p className="text-[#66473B] text-[10px] uppercase tracking-widest mt-6 font-bold">
-            AI-powered · Personalized · Real-time feedback
-          </p>
         </div>
       ) : (<>
 
