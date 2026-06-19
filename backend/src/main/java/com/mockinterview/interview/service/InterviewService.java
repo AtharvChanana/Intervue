@@ -48,7 +48,7 @@ public class InterviewService {
                                     .title(name)
                                     .description("Custom role created by user")
                                     .category("Custom")
-                                    .active(true)
+                                    .active(false)
                                     .build()
                     ));
         } else {

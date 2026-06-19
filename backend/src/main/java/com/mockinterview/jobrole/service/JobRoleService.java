@@ -14,7 +14,9 @@ public class JobRoleService {
     private final JobRoleRepository jobRoleRepository;
 
     public List<JobRoleResponse> getAllActive() {
-        return jobRoleRepository.findByActiveTrue().stream().map(this::toResponse).toList();
+        return jobRoleRepository.findByActiveTrue().stream()
+                .filter(role -> !"Custom".equalsIgnoreCase(role.getCategory()))
+                .map(this::toResponse).toList();
     }
     public List<JobRoleResponse> getAll() {
         return jobRoleRepository.findAll().stream().map(this::toResponse).toList();
