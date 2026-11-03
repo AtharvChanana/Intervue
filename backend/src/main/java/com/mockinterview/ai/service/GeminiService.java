@@ -20,6 +20,7 @@ public class GeminiService {
     @Value("${gemini.api.url}") private String apiUrl;
 
     @Value("${groq.api.key:}") private String groqApiKey;
+    @Value("${groq.model:openai/gpt-oss-20b}") private String groqModel;
     private final String GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
     private final RestTemplate restTemplate;
@@ -105,17 +106,28 @@ public class GeminiService {
     private String callGemini(String prompt) {
         // === FAST PATH: Try Groq first (2-5s) if API key is configured ===
         if (groqApiKey != null && !groqApiKey.trim().isEmpty()) {
+            log.debug("Attempting Groq AI call...");
             try {
-                return callGroq(prompt);
+                String result = callGroq(prompt);
+                log.debug("Groq AI call succeeded.");
+                return result;
             } catch (Exception e) {
                 log.warn("Groq primary failed ({}), falling back to Gemini.", e.getMessage());
             }
+        } else {
+            log.warn("groq.api.key is not configured — skipping Groq, trying Gemini.");
         }
 
         // === FALLBACK: Gemini ===
+        if (apiKey == null || apiKey.trim().isEmpty()) {
+            log.error("CRITICAL: Neither groq.api.key nor gemini.api.key is configured! Serving hardcoded fallback.");
+            return getHardcodedFallback(prompt);
+        }
+
         int maxRetries = 2;
         for (int attempt = 1; attempt <= maxRetries; attempt++) {
             try {
+                log.debug("Attempting Gemini AI call (attempt {})...", attempt);
                 Map<String, Object> body = Map.of(
                     "contents", List.of(Map.of("parts", List.of(Map.of("text", prompt)))),
                     "generationConfig", Map.of("temperature", 0.7, "maxOutputTokens", 512, "responseMimeType", "application/json"));
@@ -126,7 +138,11 @@ public class GeminiService {
                     apiUrl, HttpMethod.POST, new HttpEntity<>(body, headers), String.class);
                 if (resp.getStatusCode() == HttpStatus.OK && resp.getBody() != null) {
                     JsonNode root = objectMapper.readTree(resp.getBody());
-                    return root.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText("");
+                    String text = root.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText("");
+                    log.debug("Gemini AI call succeeded.");
+                    return text;
+                } else {
+                    log.error("Gemini returned non-OK status: {} body: {}", resp.getStatusCode(), resp.getBody());
                 }
             } catch (Exception e) {
                 log.error("Gemini fallback error (attempt {}): {}", attempt, e.getMessage());
@@ -150,7 +166,8 @@ public class GeminiService {
         if (prompt.contains("\"extractedSkills\"")) {
             return "{\"extractedSkills\":\"Java, Spring Boot, React, Next.js\",\"experienceSummary\":\"Strong automated fallback experience.\",\"educationSummary\":\"Computer Science\"}";
         } else if (prompt.contains("\"questionText\"")) {
-            boolean isMcq = prompt.contains("\"questionFormat\":\"MCQ\"") || prompt.contains("format: MCQ");
+            // Detect MCQ vs OPEN_ENDED by checking which format instruction was given in the prompt
+            boolean isMcq = prompt.contains("format: MCQ") || prompt.contains("You MUST generate an interview question exactly of this format: MCQ");
             if (isMcq) {
                 return String.format("{\"questionFormat\":\"MCQ\",\"questionText\":\"Which of the following best describes a core responsibility of a %s?\",\"optionA\":\"Managing database migrations\",\"optionB\":\"Fulfilling the primary duties of the role\",\"optionC\":\"Only writing documentation\",\"optionD\":\"Exclusively handling deployments\",\"correctOption\":\"B\",\"explanation\":\"A %s's core responsibilities align with option B.\"}", role, role);
             } else {
@@ -173,22 +190,37 @@ public class GeminiService {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(groqApiKey);
+        headers.setBearerAuth(groqApiKey.trim());
 
         Map<String, Object> message = Map.of("role", "user", "content", prompt);
         Map<String, Object> body = Map.of(
-            "model", "llama3-8b-8192",
+            "model", groqModel,
             "messages", List.of(message),
             "response_format", Map.of("type", "json_object")
         );
 
-        org.springframework.http.ResponseEntity<String> response = restTemplate.postForEntity(
-            GROQ_URL, new HttpEntity<>(body, headers), String.class);
         try {
+            org.springframework.http.ResponseEntity<String> response = restTemplate.postForEntity(
+                GROQ_URL, new HttpEntity<>(body, headers), String.class);
+
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException("Groq HTTP " + response.getStatusCode() + ": " + response.getBody());
+            }
+
             com.fasterxml.jackson.databind.JsonNode root = objectMapper.readTree(response.getBody());
-            return root.path("choices").get(0).path("message").path("content").asText();
-        } catch(Exception e) {
-            throw new RuntimeException("Groq Parse Error: " + e.getMessage());
+            String content = root.path("choices").get(0).path("message").path("content").asText();
+            if (content == null || content.isBlank()) {
+                throw new RuntimeException("Groq returned empty content. Full response: " + response.getBody());
+            }
+            return content;
+        } catch (org.springframework.web.client.HttpClientErrorException e) {
+            throw new RuntimeException("Groq API error " + e.getStatusCode() + " — check your API key. Body: " + e.getResponseBodyAsString());
+        } catch (org.springframework.web.client.HttpServerErrorException e) {
+            throw new RuntimeException("Groq server error " + e.getStatusCode() + ": " + e.getResponseBodyAsString());
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Groq call failed: " + e.getMessage(), e);
         }
     }
 
