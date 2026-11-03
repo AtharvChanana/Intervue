@@ -177,7 +177,7 @@ public class GeminiService {
 
         Map<String, Object> message = Map.of("role", "user", "content", prompt);
         Map<String, Object> body = Map.of(
-            "model", "llama-3.1-8b-instant",
+            "model", "llama3-8b-8192",
             "messages", List.of(message),
             "response_format", Map.of("type", "json_object")
         );
